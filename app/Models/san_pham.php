@@ -40,6 +40,6 @@ class san_pham extends Model
 
     public function product_images()
     {
-        return $this->hasMany(product_images::class, 'ma_san_pham', 'ma_san_pham');
+        return $this->hasMany(anh_san_pham::class, 'ma_san_pham', 'ma_san_pham');
     }
 }
