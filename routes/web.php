@@ -13,4 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/sanpham',[App\Http\Controllers\TestController::class,'tat_ca_san_pham']);
+Route::get('/test',[App\Http\Controllers\TestController::class,'tat_ca_san_pham']);
