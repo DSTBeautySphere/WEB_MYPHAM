@@ -47,7 +47,9 @@ class san_phamController extends Controller
 
     public function chi_tiet_san_pham(Request $request)
     {
-        $sanpham=san_pham::where('ma_san_pham',$request->ma_san_pham)->first();
+        $sanpham = san_pham::with(['loai_san_pham', 'nha_cung_cap', 'khuyen_mai_san_pham', 'anh_san_pham'])
+        ->where('ma_san_pham', $request->ma_san_pham)
+        ->first();
         return response()->json($sanpham,200);
     }
 
