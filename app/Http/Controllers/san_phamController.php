@@ -19,7 +19,7 @@ class san_phamController extends Controller
     public function lay_san_pham()
     {
         $sanPhams = san_pham::with(['loai_san_pham', 'nha_cung_cap', 'khuyen_mai_san_pham', 'anh_san_pham'])->get();     
-        return response()->json($sanPhams);
+        return view('sanpham', ['products' => $sanPhams]);
     }
 
     public function lay_san_pham_phan_trang(Request $request)

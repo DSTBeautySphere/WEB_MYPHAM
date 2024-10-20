@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/test',[App\Http\Controllers\TestController::class,'tat_ca_san_pham']);
 
 //san_pham
-Route::get('/view_sanpham',[App\Http\Controllers\san_phamController::class,'view_san_pham']);
+//Route::get('/view_sanpham',[App\Http\Controllers\san_phamController::class,'lay_san_pham']);
 Route::get('/sanpham',[App\Http\Controllers\san_phamController::class,'lay_san_pham']);
 Route::get('/sanphamphantrang',[App\Http\Controllers\san_phamController::class,'lay_san_pham_phan_trang']);
 Route::get('/locsanphamtheoloai',[App\Http\Controllers\san_phamController::class,'loc_san_pham_theo_loai']);
