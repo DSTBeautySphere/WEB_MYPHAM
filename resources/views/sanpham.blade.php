@@ -24,8 +24,8 @@
             <thead>
               <tr class="table-info">
                 <th scope="col">Tất Cả SP</th>
-                <th scope="col">Url: /sanpham </th>
-                <th scope="col">lay_san_pham()</th>
+                <th scope="col">Url: /laysanphamall </th>
+                <th scope="col">lay_san_pham_all()</th>
               </tr>
             </thead>
             <tbody>

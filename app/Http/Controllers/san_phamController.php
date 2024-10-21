@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\san_pham;
 use App\Models\loai_san_pham;
 use App\Models\dong_san_pham;
+use App\Models\nha_cung_cap;
 use GuzzleHttp\Psr7\Response;
 
 class san_phamController extends Controller
@@ -16,12 +17,95 @@ class san_phamController extends Controller
         return view('sanpham');
     }
 
-    public function lay_san_pham()
+    public function lay_san_pham_all()
     {
-        $sanPhams = san_pham::with(['loai_san_pham', 'nha_cung_cap', 'khuyen_mai_san_pham', 'anh_san_pham'])->get();     
-        return response()->json($sanPhams);
+        $dongSanPhams = dong_san_pham::with(['loai_san_pham.san_pham', 'loai_san_pham.san_pham.khuyen_mai_san_pham', 'loai_san_pham.san_pham.anh_san_pham'])->get();
+    
+        
+        $data = [
+            'dong_san_pham' => []
+        ];
+    
+        foreach ($dongSanPhams as $dongSanPham) {
+            
+            $item = [
+                'ma_dong_san_pham' => $dongSanPham->ma_dong_san_pham,
+                'ten_dong_san_pham' => $dongSanPham->ten_dong_san_pham,
+                'mo_ta'=>$dongSanPham->mo_ta,
+                'created_at'=>$dongSanPham->created_at,
+                'updated_at'=>$dongSanPham->updated_at,
+                'loai_san_pham' => []
+            ];
+    
+            foreach ($dongSanPham->loai_san_pham as $loaiSanPham) {
+                
+                $loaiItem = [
+                    'ma_loai_san_pham' => $loaiSanPham->ma_loai_san_pham,
+                    'ma_dong_san_pham'=>$loaiSanPham->ma_dong_san_pham,
+                    'ten_loai_san_pham' => $loaiSanPham->ten_loai_san_pham,
+                    'mo_ta' => $loaiSanPham->mo_ta,
+                    'created_at'=>$loaiSanPham->created_at,
+                    'updated_at'=>$loaiSanPham->updated_at,
+                    'san_pham' => []
+                ];
+    
+                foreach ($loaiSanPham->san_pham as $sanPham) { 
+                   
+                    $sanPhamItem = [
+                        'ma_san_pham' => $sanPham->ma_san_pham,
+                        'ma_loai_san_pham'=>$sanPham->ma_loai_san_pham,
+                        
+                        'ten_san_pham' => $sanPham->ten_san_pham,
+                        'mau_sac' => $sanPham->mau_sac,
+                        'tinh_trang' => $sanPham->tinh_trang,
+                        'gia_ban' => $sanPham->gia_ban,
+                        'mo_ta' => $sanPham->mo_ta,
+                        'created_at' => $sanPham->created_at,
+                        'updated_at' => $sanPham->updated_at,
+                        'nha_cung_cap' => [
+                            'ma_nha_cung_cap' => $sanPham->nha_cung_cap->ma_nha_cung_cap,
+                            'ten_nha_cung_cap' => $sanPham->nha_cung_cap->ten_nha_cung_cap,
+                            'dia_chi' => $sanPham->nha_cung_cap->dia_chi,
+                            'so_dien_thoai' => $sanPham->nha_cung_cap->so_dien_thoai,
+                            'email' => $sanPham->nha_cung_cap->email,
+                            'created_at' => $sanPham->nha_cung_cap->created_at,
+                            'updated_at' => $sanPham->nha_cung_cap->updated_at,
+                        ],
+                        'khuyen_mai_san_pham' => $sanPham->khuyen_mai_san_pham->map(function($khuyenMai) {
+                            return [
+                                'ma_khuyen_mai' => $khuyenMai->ma_khuyen_mai,
+                                'muc_giam_gia' => $khuyenMai->muc_giam_gia,
+                                'ngay_bat_dau' => $khuyenMai->ngay_bat_dau,
+                                'ngay_ket_thuc' => $khuyenMai->ngay_ket_thuc,
+                                'dieu_kien_ap_dung' => $khuyenMai->dieu_kien_ap_dung,
+                                'created_at' => $khuyenMai->created_at,
+                                'updated_at' => $khuyenMai->updated_at,
+                            ];
+                        }),
+                        'anh_san_pham' => $sanPham->anh_san_pham->map(function($anh) {
+                            return [
+                                'ma_anh_san_pham' => $anh->ma_anh_san_pham,
+                                'url_anh' => $anh->url_anh,
+                                'la_anh_chinh' => $anh->la_anh_chinh,
+                                'created_at' => $anh->created_at,
+                                'updated_at' => $anh->updated_at,
+                            ];
+                        }),
+                    ];
+    
+                    $loaiItem['san_pham'][] = $sanPhamItem; 
+                }
+    
+                $item['loai_san_pham'][] = $loaiItem; 
+            }
+    
+            $data['dong_san_pham'][] = $item; 
+        }
+    
+        // Trả về dữ liệu dưới dạng JSON
+        return response()->json($data);
     }
-
+    
     public function lay_san_pham_phan_trang(Request $request)
     {
         $sosanpham = $request->input('so_san_pham', 4);
@@ -30,10 +114,18 @@ class san_phamController extends Controller
         return response()->json($sanpham);
     }
 
+    public function lay_san_pham()
+    {
+        
+        $sanpham = san_pham::with(['loai_san_pham', 'nha_cung_cap', 'khuyen_mai_san_pham', 'anh_san_pham'])->get();
+                    
+        return response()->json($sanpham);
+    }
+
 
     public function loc_san_pham_theo_loai(Request $request)
     {
-        $sanpham=san_pham::where('ma_loai_san_pham',$request->ma_loai_san_pham)->get();
+        $sanpham=san_pham::with(['loai_san_pham', 'nha_cung_cap', 'khuyen_mai_san_pham', 'anh_san_pham'])->where('ma_loai_san_pham',$request->ma_loai_san_pham)->get();
         return response()->json($sanpham,200);
     }
 
@@ -147,6 +239,14 @@ class san_phamController extends Controller
             'message' => 'Cập nhật thành công!',
             'data' => $sanpham
         ], 200);
+    }
+
+    public function lay_san_pham_form(Request $request)
+    {
+        $sosanpham = $request->input('so_san_pham', 4);
+        $sanpham = san_pham::with(['loai_san_pham', 'nha_cung_cap', 'khuyen_mai_san_pham', 'anh_san_pham'])
+                    ->paginate($sosanpham);
+        return response()->json($sanpham);
     }
 
 
