@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\nha_cung_capController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,8 +14,21 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+include 'admin.php';
 
 Route::get('/test',[App\Http\Controllers\TestController::class,'tat_ca_san_pham']);
+
+
+Route::middleware(['user'])->group(function(){
+
+});
+Route::post('/dangKy', [AuthController::class, 'dangKy']);
+Route::post('/dangNhap', [AuthController::class, 'dangNhap']);
+Route::post('/dangXuat', [AuthController::class, 'dangXuat']);
+
+
+
+
 
 //san_pham
 //Route::get('/view_sanpham',[App\Http\Controllers\san_phamController::class,'lay_san_pham']);
@@ -23,6 +38,11 @@ Route::get('/locsanphamtheoloai',[App\Http\Controllers\san_phamController::class
 Route::get('/locsanphamtheodong',[App\Http\Controllers\san_phamController::class,'loc_san_pham_theo_dong']);
 Route::get('/chitietsanpham',[App\Http\Controllers\san_phamController::class,'chi_tiet_san_pham']);
 Route::get('/locsanphamtheogia',[App\Http\Controllers\san_phamController::class,'loc_san_pham_theo_gia']);
+
+//nha cung cap
+Route::get('/nhacungcap',[nha_cung_capController::class, 'danh_sach_NCC' ]);
+
+
 //CURD
 Route::post('/themsanpham',[App\Http\Controllers\san_phamController::class,'them_san_pham']);
 Route::post('/xoasanpham',[App\Http\Controllers\san_phamController::class,'xoa_san_pham']);

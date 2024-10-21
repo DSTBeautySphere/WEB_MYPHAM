@@ -1,1110 +1,245 @@
-@extends('index')
-@section('content')
-    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <style>
+        .container {
+            width: 80%; 
+            margin: auto;
+            margin-top: 10px; 
+        }
+    </style>
+</head>
+<body>
+    <h3 style="width:80%; margin:auto">san_phamController</h3>
+    <div class="container">
+        <table class="table">
+            <thead>
+              <tr class="table-info">
+                <th scope="col">Tất Cả SP</th>
+                <th scope="col">Url: /sanpham </th>
+                <th scope="col">lay_san_pham()</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-success">
+                <td>GET</td>
+                <td>#</td>
+                <td>#</td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
 
-<div class="main__slice">
-  <div class="slider">
-      <div class="slide active" style="background-image:url(./assets/img/slider/slide-6.jpg)">
-          <div class="container">
-              <div class="caption">
-                  <h1>Giảm giá 30%</h1>
-                  <p>Giảm giá cực sốc trong tháng 6!</p>
-                  <a href="listProduct.html" class="btn btn--default">Xem ngay</a>
-
-              </div>
-          </div>
-      </div>
-      <div class="slide active" style="background-image:url(./assets/img/slider/slide-4.jpg)">
-          <div class="container">
-              <div class="caption">
-                  <h1>Giảm giá 30%</h1>
-                  <p>Giảm giá cực sốc trong tháng 6!</p>
-                  <a href="listProduct.html" class="btn btn--default">Xem ngay</a>
-
-              </div>
-          </div>
-      </div>
-      <div class="slide active" style="background-image:url(./assets/img/slider/slide-5.jpg)">
-          <div class="container">
-              <div class="caption">
-                  <h1>Giảm giá 30%</h1>
-                  <p>Giảm giá cực sốc trong tháng 6!</p>
-                  <a href="listProduct.html" class="btn btn--default">Xem ngay</a>
-
-              </div>
-          </div>
-      </div>
+    <div class="container">
+      <table class="table">
+          <thead>
+            <tr class="table-info">
+              <th scope="col">Lấy Sản Phẩm Phân Trang</th>
+              <th scope="col">Url: /sanphamphantrang</th>
+              <th scope="col">lay_san_pham_phan_trang()</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="table-success">
+              <td>GET</td>
+              <td>?so_san_pham=4</td>
+              <td>{"so_san_pham":4}</td>
+            </tr>
+          </tbody>
+        </table>
   </div>
-  <!-- controls  -->
-  <div class="controls">
-      <div class="prev">
-          <i class="fas fa-chevron-left"></i>
-      </div>
-      <div class="next">
-          <i class="fas fa-chevron-right"></i>
-      </div>
+
+    <div class="container">
+        <table class="table">
+            <thead>
+              <tr class="table-info">
+                <th scope="col">Lọc SP Theo Loai</th>
+                <th scope="col">Url: /locsanphamtheoloai </th>
+                <th scope="col">loc_san_pham_theo_loai()</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-success">
+                <td>GET</td>
+                <td>?ma_loai_san_pham=1</td>
+                <td>
+                    {
+                        "ma_loai_san_pham": 1   
+                    }   
+                </td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+
+    <div class="container">
+        <table class="table">
+            <thead>
+              <tr class="table-info">
+                <th scope="col">Lọc SP Theo Dong</th>
+                <th scope="col">Url: /locsanphamtheodong </th>
+                <th scope="col">loc_san_pham_theo_dong()</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-success">
+                <td>GET</td>
+                <td>?ma_dong_san_pham=1</td>
+                <td>
+                    {
+                        "ma_dong_san_pham": 1   
+                    }   
+                </td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+
+    <div class="container">
+      <table class="table">
+          <thead>
+            <tr class="table-info">
+              <th scope="col">Xem Chi Tiet SP</th>
+              <th scope="col">Url: /chitietsanpham </th>
+              <th scope="col">chi_tiet_san_pham()</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="table-success">
+              <td>GET</td>
+              <td>?ma_san_pham=1</td>
+              <td>
+                  {
+                      "ma_san_pham": 1   
+                  }   
+              </td>
+            </tr>
+          </tbody>
+        </table>
   </div>
-  <!-- indicators -->
-  <div class="indicator">
+  <div class="container">
+    <table class="table">
+        <thead>
+          <tr class="table-info">
+            <th scope="col">Lọc Sản Phẩm Theo Giá</th>
+            <th scope="col">Url: /locsanphamtheogia </th>
+            <th scope="col">loc_san_pham_theo_gia()</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="table-success">
+            <td>GET</td>
+            <td>
+              Tối Thiểu: ?min=500<br>
+              Tối Đa   : ?max=350000<br>
+              Khoản    : ?min=300&max=1000000
+            </td>
+            <td>
+                {
+                    "min":500  
+                } <br>
+                {
+                    "max":350000  
+                } <br>
+                {
+                    "min":500,
+                    "max":350000  
+                }
+            </td>
+          </tr>
+        </tbody>
+      </table>
   </div>
+  <div class="container">
+    <table class="table">
+        <thead>
+          <tr class="table-info">
+            <th scope="col">Thêm Sản Phẩm</th>
+            <th scope="col">Url: /themsanpham </th>
+            <th scope="col">them_san_pham()</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="table-success">
+            <td>POST</td>
+            <td>#</td>
+            <td>
+              {<br>
+                "ma_loai_san_pham": 1,<br>
+                "ma_nha_cung_cap": 1,<br>
+                "ten_san_pham": "Son môi",<br>
+                "mau_sac": "Đỏ",<br>
+                "tinh_trang": "hahaha",<br>
+                "gia_ban": 200000,<br>
+                "mo_ta": "Son môi màu đỏ, không chứa chì"<br>
+              } 
+            </td>
+          </tr>
+        </tbody>
+      </table>
 </div>
-<!--Product Category -->
-<div class="main__tabnine">
-  <div class="grid wide">
-      <!-- Tab items -->
-      <div class="tabs">
-          <div class="tab-item active">
-              Bán Chạy
-          </div>
-          <div class="tab-item">
-              Giá tốt
-          </div>
-          <div class="tab-item">
-              Mới Nhập
-          </div>
-          <div class="line"></div>
-      </div>
-      <!-- Tab content -->
-      <div class="tab-content">
-          <div class="tab-pane active">
-              <div class="row">
 
-                @foreach($products as $product)
-                <div class="col l-2 m-4 s-6">
-                    <div class="product">
-                      <div class="product__avt" style="background-image: url({{ $product->anh_san_pham->first()->url_anh}});">
-                      </div>
-                        <div class="product__info">
-                            <h3 class="product__name">{{ $product->ten_san_pham }}</h3>
-                            <div class="product__price">
-                              <div class="price__old">
-                                  300.000 đ
-                              </div>
-                              <div class="price__new">{{ number_format($product->gia_ban, 0, ',', '.') }} <span class="price__unit">đ</span></div>
-                            </div>
-                        </div>
-                        <a href="#" class="viewDetail">Xem chi tiết</a>
-                        <a href="#" class="addToCart">Thêm vào giỏ</a>
-                    </div>
-                </div>
-                @endforeach
-
-
-                  {{-- <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product1.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product5.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product2.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product3.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product6.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product4.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product1.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product2.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product4.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product3.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product6.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product5.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div> --}}
-              </div>
-          </div>
-          {{-- <div class="tab-pane">
-              <div class="row">
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product4.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product5.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product2.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product3.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product6.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product4.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product1.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product2.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product4.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product3.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product6.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product5.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div class="tab-pane">
-              <div class="row">
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product2.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product5.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product2.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product3.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product6.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product4.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product1.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product2.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product4.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product3.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product6.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-                  <div class="col l-2 m-4 s-6">
-                      <div class="product">
-                          <div class="product__avt" style="background-image: url(./assets/img/product/product5.jpg);">
-                          </div>
-                          <div class="product__info">
-                              <h3 class="product__name">Kem dưỡng da NestPlae</h3>
-                              <div class="product__price">
-                                  <div class="price__old">
-                                      300.000 đ
-                                  </div>
-                                  <div class="price__new">200.000 <span class="price__unit">đ</span></div>
-                              </div>
-                              <div class="product__sale">
-                                  <span class="product__sale-percent">24%%</span>
-                                  <span class="product__sale-text">Giảm</span>
-                              </div>
-                          </div>
-                          <a href="product.html" class="viewDetail">Xem chi tiết</a>
-                          <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-                      </div>
-                  </div>
-              </div>
-          </div> --}}
-      </div>
-  </div>
+<div class="container">
+  <table class="table">
+      <thead>
+        <tr class="table-info">
+          <th scope="col">Xóa Sản Phẩm</th>
+          <th scope="col">Url: /xoasanpham </th>
+          <th scope="col">xoa_san_pham()</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-success">
+          <td>POST</td>
+          <td>#</td>
+          <td>
+              {
+                  "ma_san_pham": 6  
+              }   
+          </td>
+        </tr>
+      </tbody>
+    </table>
 </div>
-<!-- HightLight  -->
-{{-- <div class="main__frame">
-  <div class="grid wide">
-      <h3 class="category__title">Ngọc Ánh Cometics</h3>
-      <h3 class="category__heading">SẢN PHẨM NỔI BẬT</h3>
-      <div class="owl-carousel hight owl-theme">
-          <div class="product">
-              <div class="product__avt" style="background-image: url(./assets/img/product/product1.jpg);">
-              </div>
-              <div class="product__info">
-                  <h3 class="product__name">Son môi cao cấp</h3>
-                  <div class="product__price">
-                      <div class="price__old">
-                          100.000 đ
-                      </div>
-                      <div class="price__new"> 70.000<span class="price__unit">đ</span></div>
-                  </div>
-                  <div class="product__sale">
-                      <span class="product__sale-percent">23</span>
-                      <span class="product__sale-text">Giảm</span>
-                  </div>
-              </div>
-              <a href="product.html" class="viewDetail">Xem chi tiết</a>
-              <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-          </div>
-          <div class="product">
-              <div class="product__avt" style="background-image: url(./assets/img/product/product1.jpg);">
-              </div>
-              <div class="product__info">
-                  <h3 class="product__name">Son môi cao cấp</h3>
-                  <div class="product__price">
-                      <div class="price__old">
-                          100.000 đ
-                      </div>
-                      <div class="price__new"> 70.000<span class="price__unit">đ</span></div>
-                  </div>
-                  <div class="product__sale">
-                      <span class="product__sale-percent">23</span>
-                      <span class="product__sale-text">Giảm</span>
-                  </div>
-              </div>
-              <a href="product.html" class="viewDetail">Xem chi tiết</a>
-              <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
 
-          </div>
-          <div class="product">
-              <div class="product__avt" style="background-image: url(./assets/img/product/product1.jpg);">
-              </div>
-              <div class="product__info">
-                  <h3 class="product__name">Son môi cao cấp</h3>
-                  <div class="product__price">
-                      <div class="price__old">
-                          100.000 đ
-                      </div>
-                      <div class="price__new"> 70.000<span class="price__unit">đ</span></div>
-                  </div>
-                  <div class="product__sale">
-                      <span class="product__sale-percent">23</span>
-                      <span class="product__sale-text">Giảm</span>
-                  </div>
-              </div>
-              <a href="product.html" class="viewDetail">Xem chi tiết</a>
-              <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-
-          </div>
-          <div class="product">
-              <div class="product__avt" style="background-image: url(./assets/img/product/product1.jpg);">
-              </div>
-              <div class="product__info">
-                  <h3 class="product__name">Son môi cao cấp</h3>
-                  <div class="product__price">
-                      <div class="price__old">
-                          100.000 đ
-                      </div>
-                      <div class="price__new"> 70.000<span class="price__unit">đ</span></div>
-                  </div>
-                  <div class="product__sale">
-                      <span class="product__sale-percent">23</span>
-                      <span class="product__sale-text">Giảm</span>
-                  </div>
-              </div>
-              <a href="product.html" class="viewDetail">Xem chi tiết</a>
-              <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-
-          </div>
-          <div class="product">
-              <div class="product__avt" style="background-image: url(./assets/img/product/product1.jpg);">
-              </div>
-              <div class="product__info">
-                  <h3 class="product__name">Son môi cao cấp</h3>
-                  <div class="product__price">
-                      <div class="price__old">
-                          100.000 đ
-                      </div>
-                      <div class="price__new"> 70.000<span class="price__unit">đ</span></div>
-                  </div>
-                  <div class="product__sale">
-                      <span class="product__sale-percent">23</span>
-                      <span class="product__sale-text">Giảm</span>
-                  </div>
-              </div>
-              <a href="product.html" class="viewDetail">Xem chi tiết</a>
-              <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-
-          </div>
-          <div class="product">
-              <div class="product__avt" style="background-image: url(./assets/img/product/product1.jpg);">
-              </div>
-              <div class="product__info">
-                  <h3 class="product__name">Son môi cao cấp</h3>
-                  <div class="product__price">
-                      <div class="price__old">
-                          100.000 đ
-                      </div>
-                      <div class="price__new"> 70.000<span class="price__unit">đ</span></div>
-                  </div>
-                  <div class="product__sale">
-                      <span class="product__sale-percent">23</span>
-                      <span class="product__sale-text">Giảm</span>
-                  </div>
-              </div>
-              <a href="product.html" class="viewDetail">Xem chi tiết</a>
-              <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-
-          </div>
-          <div class="product">
-              <div class="product__avt" style="background-image: url(./assets/img/product/product1.jpg);">
-              </div>
-              <div class="product__info">
-                  <h3 class="product__name">Son môi cao cấp</h3>
-                  <div class="product__price">
-                      <div class="price__old">
-                          100.000 đ
-                      </div>
-                      <div class="price__new"> 70.000<span class="price__unit">đ</span></div>
-                  </div>
-                  <div class="product__sale">
-                      <span class="product__sale-percent">23</span>
-                      <span class="product__sale-text">Giảm</span>
-                  </div>
-              </div>
-              <a href="product.html" class="viewDetail">Xem chi tiết</a>
-              <a href="cart.html" class="addToCart">Thêm vào giỏ</a>
-
-          </div>
-      </div>
-  </div>
+<div class="container">
+  <table class="table">
+      <thead>
+        <tr class="table-info">
+          <th scope="col">Cập Nhật Sản Phẩm</th>
+          <th scope="col">Url: /capnhatsanpham </th>
+          <th scope="col">cap_nhat_san_pham()</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-success">
+          <td>POST</td>
+          <td>#</td>
+          <td>
+            {<br>
+              "ma_san_pham":1,<br>
+              "ma_loai_san_pham": 1,<br>
+              "ma_nha_cung_cap": 1,<br>
+              "ten_san_pham": "Son môi",<br>
+              "mau_sac": "Đỏ",<br>
+              "tinh_trang": "hahaha",<br>
+              "gia_ban": 200000,<br>
+              "mo_ta": "Son môi màu đỏ, không chứa chì"<br>
+           }  
+          </td>
+        </tr>
+      </tbody>
+    </table>
 </div>
-<!-- Sales Policy -->
-<div class="main__policy">
-  <div class="row">
-      <div class="col l-3 m-6">
-          <div class="policy bg-1">
-              <img src="./assets/img/policy/policy1.png" class="policy__img"></img>
-              <div class="policy__info">
-                  <h3 class="policy__title">GIAO HÀNG MIỄN PHÍ</h3>
-                  <p class="policy__description">Cho đơn hàng từ 300K</p>
-              </div>
-          </div>
-      </div>
-      <div class="col l-3 m-6">
-          <div class="policy bg-2">
-              <img src="./assets/img/policy/policy2.png" class="policy__img"></img>
-              <div class="policy__info">
-                  <h3 class="policy__title">ĐỔI TRẢ HÀNG</h3>
-                  <p class="policy__description">Trong 3 ngày đầu tiên</p>
-              </div>
-          </div>
-      </div>
-      <div class="col l-3 m-6">
-          <div class="policy bg-1">
-              <img src="./assets/img/policy/policy3.png" class="policy__img"></img>
-              <div class="policy__info">
-                  <h3 class="policy__title">HÀNG CHÍNH HÃNG</h3>
-                  <p class="policy__description">Cam kết chất lượng</p>
-              </div>
-          </div>
-      </div>
-      <div class="col l-3 m-6">
-          <div class="policy bg-2">
-              <img src="./assets/img/policy/policy4.png" class="policy__img"></img>
-              <div class="policy__info">
-                  <h3 class="policy__title">TƯ VẤN 24/24</h3>
-                  <p class="policy__description">Giải đáp mọi thắc mắc</p>
-              </div>
-          </div>
-      </div>
 
-  </div>
-</div> --}}
-<!-- News -->
-<div class="main__frame bg-3">
-  <div class="grid wide">
-      <h3 class="category__title">Ngọc Ánh Cometics</h3>
-      <h3 class="category__heading">Tin Tức</h3>
-      <div class="owl-carousel news owl-theme">
-          <a href="news.html" class="news">
-              <div class="news__img">
-                  <img src="./assets/img/news/news1.jpg" alt="">
-              </div>
-              <div class="news__body">
-                  <h3 class="news__body-title">Trang điểm đúng cách</h3>
-                  <div class="new__body-date">13/6/2021</div>
-                  <p class="news__description">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. In sit molestiae aperiam modi cum deserunt, maxime blanditiis voluptate officiis accusantium minima pariatur harum tenetur quo iste iusto commodi. Modi, culpa?
-                  </p>
-              </div>
-          </a>
-          <a href="news.html" class="news">
-              <div class="news__img">
-                  <img src="./assets/img/news/news1.jpg" alt="">
-              </div>
-              <div class="news__body">
-                  <h3 class="news__body-title">Trang điểm đúng cách</h3>
-                  <div class="new__body-date">13/6/2021</div>
-                  <p class="news__description">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. In sit molestiae aperiam modi cum deserunt, maxime blanditiis voluptate officiis accusantium minima pariatur harum tenetur quo iste iusto commodi. Modi, culpa?
-                  </p>
-              </div>
-          </a>
-          <a href="news.html" class="news">
-              <div class="news__img">
-                  <img src="./assets/img/news/news1.jpg" alt="">
-              </div>
-              <div class="news__body">
-                  <h3 class="news__body-title">Trang điểm đúng cách</h3>
-                  <div class="new__body-date">13/6/2021</div>
-                  <p class="news__description">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. In sit molestiae aperiam modi cum deserunt, maxime blanditiis voluptate officiis accusantium minima pariatur harum tenetur quo iste iusto commodi. Modi, culpa?
-                  </p>
-              </div>
-          </a>
-      </div>
-  </div>
-</div>
-<div class="main__bands">
-  <div class="grid wide">
-      <div class="owl-carousel bands">
-          <a href="listProduct.html" class="band__item" style="background-image: url(./assets/img/band/band1.png)"></a>
-          <a href="listProduct.html" class="band__item" style="background-image: url(./assets/img/band/band2.png)"></a>
-          <a href="listProduct.html" class="band__item" style="background-image: url(./assets/img/band/band3.png)"></a>
-          <a href="listProduct.html" class="band__item" style="background-image: url(./assets/img/band/band4.png)"></a>
-          <a href="listProduct.html" class="band__item" style="background-image: url(./assets/img/band/band5.png)"></a>
-          <a href="listProduct.html" class="band__item" style="background-image: url(./assets/img/band/band6.png)"></a>
-          <a href="listProduct.html" class="band__item" style="background-image: url(./assets/img/band/band7.png)"></a>
-      </div>
-  </div>
-</div>
-@endsection
+
+</body>
+</html>
