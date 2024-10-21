@@ -37,7 +37,7 @@ class san_pham extends Model
     {
         return $this->hasMany(khuyen_mai_san_pham::class, 'ma_san_pham', 'ma_san_pham');
     }
-
+  
     public function anh_san_pham()
     {
         return $this->hasMany(anh_san_pham::class, 'ma_san_pham', 'ma_san_pham');

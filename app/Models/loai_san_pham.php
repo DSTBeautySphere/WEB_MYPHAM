@@ -28,4 +28,9 @@ class loai_san_pham extends Model
     {
         return $this->hasMany(san_pham::class, 'ma_loai_san_pham', 'ma_loai_san_pham');
     }
+
+    public function nha_cung_cap()
+    {
+        return $this->hasOne(nha_cung_cap::class, 'ma_nha_cung_cap', 'ma_nha_cung_cap');
+    }
 }
