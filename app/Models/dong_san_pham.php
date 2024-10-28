@@ -8,18 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class dong_san_pham extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'ma_dong_san_pham';
-    protected $table = 'dong_san_pham';
-    
-    protected $fillable = [
-        'ten_dong_san_pham',
-        'mo_ta',
-        'created_at',
-        'updated_at'
-    ];
 
-    public function loai_san_pham()
-    {
-        return $this->hasMany(loai_san_pham::class, 'ma_dong_san_pham', 'ma_dong_san_pham');
-    }
+    protected $table = 'dong_san_pham';
+    protected $primaryKey = 'ma_dong_san_pham';
+    protected $fillable = ['ten_dong_san_pham', 'mo_ta'];
 }

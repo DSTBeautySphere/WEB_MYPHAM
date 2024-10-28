@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class gio_hang extends Model
+class yeu_thich extends Model
 {
     use HasFactory;
 
-    protected $table = 'gio_hang';
-    protected $primaryKey = 'ma_gio_hang';
-    protected $fillable = ['ma_user', 'ma_san_pham', 'so_luong', 'gia_ban', 'ngay_tao', 'trang_thai'];
-
+    protected $table = 'yeu_thich';
+    protected $primaryKey = 'ma_yeu_thich';
+    protected $fillable = ['ma_user', 'ma_san_pham', 'ngay_tao'];
+    public $incrementing = false;
     public function user()
     {
         return $this->belongsTo(User::class, 'ma_user');

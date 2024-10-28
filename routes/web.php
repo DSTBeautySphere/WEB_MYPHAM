@@ -33,6 +33,10 @@ Route::post('/dangXuat', [AuthController::class, 'dangXuat']);
 //san_pham
 //Route::get('/view_sanpham',[App\Http\Controllers\san_phamController::class,'lay_san_pham']);
 Route::get('/sanpham',[App\Http\Controllers\san_phamController::class,'lay_san_pham']);
+
+Route::get('/view_sanpham',[App\Http\Controllers\san_phamController::class,'view_san_pham']);
+Route::get('/laysanphamall',[App\Http\Controllers\san_phamController::class,'lay_san_pham_all']);
+
 Route::get('/sanphamphantrang',[App\Http\Controllers\san_phamController::class,'lay_san_pham_phan_trang']);
 Route::get('/locsanphamtheoloai',[App\Http\Controllers\san_phamController::class,'loc_san_pham_theo_loai']);
 Route::get('/locsanphamtheodong',[App\Http\Controllers\san_phamController::class,'loc_san_pham_theo_dong']);
@@ -47,4 +51,11 @@ Route::get('/nhacungcap',[nha_cung_capController::class, 'danh_sach_NCC' ]);
 Route::post('/themsanpham',[App\Http\Controllers\san_phamController::class,'them_san_pham']);
 Route::post('/xoasanpham',[App\Http\Controllers\san_phamController::class,'xoa_san_pham']);
 Route::post('/capnhatsanpham',[App\Http\Controllers\san_phamController::class,'cap_nhat_san_pham']);
-//
+//F
+Route::get('/laysanpham',[App\Http\Controllers\san_phamController::class,'lay_san_pham']);
+//end_san_pham
+
+
+//dong_san_pham
+Route::get('/view_dongsanpham',[App\Http\Controllers\dong_san_phamController::class,'view_dongsanpham']);
+Route::get('/laydongsanpham',[App\Http\Controllers\dong_san_phamController::class,'lay_dong_san_pham']);

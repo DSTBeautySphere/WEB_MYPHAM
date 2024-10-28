@@ -8,19 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class vi_dien_tu extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'ma_vi';
+
     protected $table = 'vi_dien_tu';
-    
-    protected $fillable = [
-        'ma_user',
-        'so_du',
-        'ngay_cap_nhat',
-        'created_at',
-        'updated_at'
-    ];
+    protected $primaryKey = 'ma_vi';
+    protected $fillable = ['ma_user', 'so_du', 'ngay_cap_nhat'];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'ma_user', 'ma_user');
+        return $this->belongsTo(User::class, 'ma_user');
     }
 }
