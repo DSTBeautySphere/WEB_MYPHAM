@@ -19,9 +19,7 @@ class san_phamController extends Controller
 
     public function lay_san_pham_all()
     {
-        $dongSanPhams = dong_san_pham::with(['loai_san_pham.san_pham', 'loai_san_pham.san_pham.khuyen_mai_san_pham', 'loai_san_pham.san_pham.anh_san_pham'])->get();
-    
-        
+        $dongSanPhams = dong_san_pham::all();     
         $data = [
             'dong_san_pham' => []
         ];
@@ -32,8 +30,6 @@ class san_phamController extends Controller
                 'ma_dong_san_pham' => $dongSanPham->ma_dong_san_pham,
                 'ten_dong_san_pham' => $dongSanPham->ten_dong_san_pham,
                 'mo_ta'=>$dongSanPham->mo_ta,
-                'created_at'=>$dongSanPham->created_at,
-                'updated_at'=>$dongSanPham->updated_at,
                 'loai_san_pham' => []
             ];
     
@@ -44,8 +40,6 @@ class san_phamController extends Controller
                     'ma_dong_san_pham'=>$loaiSanPham->ma_dong_san_pham,
                     'ten_loai_san_pham' => $loaiSanPham->ten_loai_san_pham,
                     'mo_ta' => $loaiSanPham->mo_ta,
-                    'created_at'=>$loaiSanPham->created_at,
-                    'updated_at'=>$loaiSanPham->updated_at,
                     'san_pham' => []
                 ];
     
@@ -53,23 +47,15 @@ class san_phamController extends Controller
                    
                     $sanPhamItem = [
                         'ma_san_pham' => $sanPham->ma_san_pham,
-                        'ma_loai_san_pham'=>$sanPham->ma_loai_san_pham,
-                        
+                        'ma_loai_san_pham'=>$sanPham->ma_loai_san_pham,                
                         'ten_san_pham' => $sanPham->ten_san_pham,
-                        'mau_sac' => $sanPham->mau_sac,
-                        'tinh_trang' => $sanPham->tinh_trang,
-                        'gia_ban' => $sanPham->gia_ban,
-                        'mo_ta' => $sanPham->mo_ta,
-                        'created_at' => $sanPham->created_at,
-                        'updated_at' => $sanPham->updated_at,
+                        'bien_the_san_pham'=>[],
                         'nha_cung_cap' => [
                             'ma_nha_cung_cap' => $sanPham->nha_cung_cap->ma_nha_cung_cap,
                             'ten_nha_cung_cap' => $sanPham->nha_cung_cap->ten_nha_cung_cap,
                             'dia_chi' => $sanPham->nha_cung_cap->dia_chi,
                             'so_dien_thoai' => $sanPham->nha_cung_cap->so_dien_thoai,
                             'email' => $sanPham->nha_cung_cap->email,
-                            'created_at' => $sanPham->nha_cung_cap->created_at,
-                            'updated_at' => $sanPham->nha_cung_cap->updated_at,
                         ],
                         'khuyen_mai_san_pham' => $sanPham->khuyen_mai_san_pham->map(function($khuyenMai) {
                             return [
@@ -78,8 +64,6 @@ class san_phamController extends Controller
                                 'ngay_bat_dau' => $khuyenMai->ngay_bat_dau,
                                 'ngay_ket_thuc' => $khuyenMai->ngay_ket_thuc,
                                 'dieu_kien_ap_dung' => $khuyenMai->dieu_kien_ap_dung,
-                                'created_at' => $khuyenMai->created_at,
-                                'updated_at' => $khuyenMai->updated_at,
                             ];
                         }),
                         'anh_san_pham' => $sanPham->anh_san_pham->map(function($anh) {
@@ -87,11 +71,25 @@ class san_phamController extends Controller
                                 'ma_anh_san_pham' => $anh->ma_anh_san_pham,
                                 'url_anh' => $anh->url_anh,
                                 'la_anh_chinh' => $anh->la_anh_chinh,
-                                'created_at' => $anh->created_at,
-                                'updated_at' => $anh->updated_at,
                             ];
                         }),
                     ];
+
+                    foreach($sanPham->bien_the_san_pham as $bthe_sp)
+                    {
+                        $bienthesp=[
+                            'ma_bien_the'=>$bthe_sp->ma_bien_the,
+                            'ma_san_pham'=>$bthe_sp->ma_san_pham,
+                            'mau_sac'=>$bthe_sp->mau_sac,
+                            'loai_da'=>$bthe_sp->loai_da,
+                            'dung_tich'=>$bthe_sp->dung_tich,
+                            'so_luong_ton_kho'=>$bthe_sp->so_luong_ton_kho,
+                            'gia_ban'=>$bthe_sp->gia_ban,
+                        ];
+
+                        $sanPhamItem['bien_the_san_pham'][]=$bienthesp;
+
+                    }
     
                     $loaiItem['san_pham'][] = $sanPhamItem; 
                 }
@@ -108,7 +106,7 @@ class san_phamController extends Controller
     
     public function lay_san_pham_phan_trang(Request $request)
     {
-        $sosanpham = $request->input('so_san_pham', 2);
+        $sosanpham = $request->input('so_san_pham', 4);
         $sanpham = san_pham::with(['loai_san_pham', 'nha_cung_cap', 'khuyen_mai_san_pham', 'anh_san_pham'])
                     ->paginate($sosanpham);
         return response()->json($sanpham);
@@ -117,7 +115,7 @@ class san_phamController extends Controller
     public function lay_san_pham()
     {
         
-        $sanpham = san_pham::with(['loai_san_pham', 'nha_cung_cap', 'khuyen_mai_san_pham', 'anh_san_pham'])->get();
+        $sanpham = san_pham::with(['loai_san_pham', 'nha_cung_cap', 'khuyen_mai_san_pham', 'anh_san_pham','bien_the_san_pham'])->get();
                     
         return response()->json($sanpham);
     }
