@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\bien_the_san_pham;
 use Illuminate\Http\Request;
 use App\Models\san_pham;
 use App\Models\loai_san_pham;
@@ -116,7 +117,7 @@ class san_phamController extends Controller
     {
         
         $sanpham = san_pham::with(['loai_san_pham', 'nha_cung_cap', 'khuyen_mai_san_pham', 'anh_san_pham','bien_the_san_pham'])->get();
-                    
+        
         return response()->json($sanpham);
     }
 
@@ -167,34 +168,61 @@ class san_phamController extends Controller
 
     }
 
-
     public function them_san_pham(Request $request)
     {
-        $request->validate([
-            'ma_loai_san_pham' => 'required|exists:loai_san_pham,ma_loai_san_pham',
-            'ma_nha_cung_cap' => 'required|exists:nha_cung_cap,ma_nha_cung_cap',
-            'ten_san_pham' => 'required|string|max:255',
-            'mau_sac' => 'nullable|string|max:255',
-            'tinh_trang' => 'required|string|max:50',
-            'gia_ban' => 'required|numeric|min:0', 
-            'mo_ta' => 'nullable|string'
-        ]);
+            $request->validate([
+                'ma_loai_san_pham' => 'required|integer|exists:loai_san_pham,ma_loai_san_pham',
+                'ma_nha_cung_cap' => 'required|integer|exists:nha_cung_cap,ma_nha_cung_cap',
+                'ten_san_pham' => 'required|string|max:255',
+                'bien_the' => 'required|array',
+                'bien_the.*.mau_sac' => 'required|string|max:50',
+                'bien_the.*.loai_da' => 'required|string|max:50',
+                'bien_the.*.dung_tich' => 'required|numeric|min:0',
+                'bien_the.*.so_luong_ton_kho' => 'required|integer|min:0',
+                'bien_the.*.gia_ban' => 'required|numeric|min:0',
+            ]);
 
-        $sanpham = san_pham::create([
-            'ma_loai_san_pham' => $request->input('ma_loai_san_pham'),
-            'ma_nha_cung_cap' => $request->input('ma_nha_cung_cap'),
-            'ten_san_pham' => $request->input('ten_san_pham'),
-            'mau_sac' => $request->input('mau_sac'),
-            'tinh_trang' => $request->input('tinh_trang'),
-            'gia_ban' => $request->input('gia_ban'), 
-            'mo_ta' => $request->input('mo_ta')
-        ]);
+            try {
+                // Tạo sản phẩm mới
+                $sanPham = san_pham::create([
+                    'ma_loai_san_pham' => $request->ma_loai_san_pham,
+                    'ma_nha_cung_cap' => $request->ma_nha_cung_cap,
+                    'ten_san_pham' => $request->ten_san_pham,
+                ]);
 
-        return response()->json([
-            'message' => 'Thêm Thành Công!',
-            'data' => $sanpham
-        ], 201);
-    }
+                $bienTheList = [];
+                // Duyệt qua từng biến thể để thêm vào bảng `bien_the_san_pham`
+                foreach ($request->bien_the as $bienTheData) {
+                    $bienThe = bien_the_san_pham::create([
+                        'ma_san_pham' => $sanPham->ma_san_pham,
+                        'mau_sac' => $bienTheData['mau_sac'],
+                        'loai_da' => $bienTheData['loai_da'],
+                        'dung_tich' => $bienTheData['dung_tich'],
+                        'so_luong_ton_kho' => $bienTheData['so_luong_ton_kho'],
+                        'gia_ban' => $bienTheData['gia_ban'],
+                    ]);
+                    $bienTheList[] = $bienThe; 
+                }
+
+                // Trả về JSON gồm thông tin sản phẩm và các biến thể
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Sản phẩm và biến thể đã được thêm thành công.',
+                    'data' => [
+                        'san_pham' => $sanPham,
+                        'bien_the' => $bienTheList
+                    ]
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Lỗi khi thêm sản phẩm: ' . $e->getMessage()
+                ]);
+            }
+        }
+
+
+   
 
     public function xoa_san_pham(Request $request)
     {
