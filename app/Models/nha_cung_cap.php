@@ -17,6 +17,8 @@ class nha_cung_cap extends Model
         'so_dien_thoai',
         'email',
     ];
+    public $timestamps = false;
+
 
     public function san_pham()
     {

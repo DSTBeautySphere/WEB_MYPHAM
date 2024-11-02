@@ -11,4 +11,6 @@ class nhom_tuy_chon extends Model
     protected $table = 'nhom_tuy_chon';
     protected $primaryKey = 'ma_nhom_tuy_chon';
     protected $fillable = ['ten_nhom_tuy_chon'];
+    public $timestamps = false;
+
 }

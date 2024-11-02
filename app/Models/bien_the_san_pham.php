@@ -19,6 +19,8 @@ class bien_the_san_pham extends Model
         'so_luong_ton_kho',
         'gia_ban',
     ];
+    public $timestamps = false;
+
 
     public function san_pham()
     {

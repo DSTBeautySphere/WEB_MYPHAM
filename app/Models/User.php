@@ -28,8 +28,14 @@ class User extends Authenticatable
         'trang_thai'
         ];
 
+        public $timestamps = false;
+
         protected $hidden = [
             'mat_khau',
+        ];
+
+         protected $casts = [
+            'mat_khau' => 'hashed',
         ];
     
         public function gio_hang()

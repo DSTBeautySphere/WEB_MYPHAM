@@ -18,6 +18,8 @@ class khuyen_mai_san_pham extends Model
         'ngay_ket_thuc',
         'dieu_kien_ap_dung',
     ];
+    public $timestamps = false;
+
 
     public function san_pham()
     {

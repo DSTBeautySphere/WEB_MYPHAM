@@ -17,6 +17,8 @@ class loai_san_pham extends Model
         'mo_ta'
 
     ];
+    public $timestamps = false;
+
 
     public function dong_san_pham()
     {

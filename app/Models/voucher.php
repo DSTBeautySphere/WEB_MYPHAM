@@ -23,4 +23,6 @@ class voucher extends Model
         'dieu_kien_ap_dung', 
         'trang_thai'
     ];
+    public $timestamps = false;
+
 }

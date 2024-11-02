@@ -12,6 +12,8 @@ class vi_dien_tu extends Model
     protected $table = 'vi_dien_tu';
     protected $primaryKey = 'ma_vi';
     protected $fillable = ['ma_user', 'so_du', 'ngay_cap_nhat'];
+    public $timestamps = false;
+
 
     public function user()
     {

@@ -17,6 +17,8 @@ class don_dat extends Model
         'tong_tien', 
         'trang_thai'
     ];
+    public $timestamps = false;
+
 
     public function user()
     {

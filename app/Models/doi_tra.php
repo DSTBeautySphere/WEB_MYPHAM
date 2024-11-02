@@ -11,7 +11,9 @@ class doi_tra extends Model
 
     protected $table = 'doi_tra';
     protected $primaryKey = 'ma_doi_tra';
-    protected $fillable = ['ma_don_dat', 'ma_san_pham', 'ly_do_doi_tra', 'ngay_yeu_cau', 'trang_thai'];
+    protected $fillable = ['ma_don_dat', 'ma_bien_the', 'ly_do_doi_tra', 'ngay_yeu_cau', 'trang_thai'];
+    public $timestamps = false;
+
 
     public function don_dat()
     {
@@ -20,6 +22,6 @@ class doi_tra extends Model
 
     public function san_pham()
     {
-        return $this->belongsTo(san_pham::class, 'ma_san_pham');
+        return $this->belongsTo(bien_the_san_pham::class, 'ma_bien_the');
     }
 }

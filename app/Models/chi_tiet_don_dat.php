@@ -11,15 +11,17 @@ class chi_tiet_don_dat extends Model
 
     protected $table = 'chi_tiet_don_dat';
     protected $primaryKey = 'ma_chi_tiet_don_dat';
-    protected $fillable = ['ma_don_dat', 'ma_san_pham', 'so_luong', 'gia_ban'];
+    protected $fillable = ['ma_don_dat', 'ma_bien_the', 'so_luong', 'gia_ban'];
+    public $timestamps = false;
+
 
     public function don_dat()
     {
         return $this->belongsTo(don_dat::class, 'ma_don_dat');
     }
 
-    public function san_pham()
+    public function bien_the_san_pham()
     {
-        return $this->belongsTo(san_pham::class, 'ma_san_pham');
+        return $this->belongsTo(bien_the_san_pham::class, 'ma_bien_the');
     }
 }

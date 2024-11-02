@@ -26,7 +26,7 @@ class AuthController extends Controller
         $user->so_dien_thoai = $request->so_dien_thoai;
         $user->dia_chi = $request->dia_chi;
         $user->gioi_tinh = $request->gioi_tinh;
-        $user->phan_quyen = 'Khach hang';
+        // $user->phan_quyen = 'Khach hang';
         $user->save();
         return response()->json(['message' => 'User registered successfully'], 201);
     }
@@ -39,7 +39,8 @@ class AuthController extends Controller
 
         $credentials = $request->only('ten_dang_nhap', 'mat_khau');
 
-        if (Auth::attempt(['ten_dang_nhap' => $credentials['ten_dang_nhap'], 'password' => $credentials['mat_khau']])) {
+        if (Auth::attempt(['ten_dang_nhap' => $credentials['ten_dang_nhap'], 'mat_khau' => $credentials['mat_khau']])) {
+
             $user = Auth::user();
             return response()->json([
                 'message' => 'Login successful',

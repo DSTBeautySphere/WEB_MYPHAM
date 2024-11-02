@@ -11,6 +11,8 @@ class mo_ta extends Model
     protected $table = 'mo_ta';
     protected $primaryKey = 'ma_mo_ta';
     protected $fillable = ['ma_san_pham', 'ten_mo_ta'];
+    public $timestamps = false;
+
 
     public function san_pham()
     {

@@ -12,6 +12,8 @@ class tra_loi_danh_gia extends Model
     protected $table = 'tra_loi_danh_gia';
     protected $primaryKey = 'ma_tra_loi';
     protected $fillable = ['ma_danh_gia', 'nguoi_tra_loi', 'noi_dung', 'ngay_tra_loi'];
+    public $timestamps = false;
+
 
     public function danh_gia()
     {

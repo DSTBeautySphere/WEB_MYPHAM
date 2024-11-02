@@ -13,6 +13,8 @@ class yeu_thich extends Model
     protected $primaryKey = 'ma_yeu_thich';
     protected $fillable = ['ma_user', 'ma_san_pham', 'ngay_tao'];
     public $incrementing = false;
+    public $timestamps = false;
+
     public function user()
     {
         return $this->belongsTo(User::class, 'ma_user');

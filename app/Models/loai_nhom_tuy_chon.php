@@ -13,6 +13,8 @@ class loai_nhom_tuy_chon extends Model
     protected $primaryKey = null;
     public $incrementing = false;
     protected $fillable = ['ma_nhom_tuy_chon', 'ma_loai_san_pham'];
+    public $timestamps = false;
+
 
     public function loai_san_pham()
     {

@@ -16,6 +16,8 @@ class san_pham extends Model
         'ma_nha_cung_cap',
         'ten_san_pham'
     ];
+    public $timestamps = false;
+
 
     public function bien_the_san_pham()
     {

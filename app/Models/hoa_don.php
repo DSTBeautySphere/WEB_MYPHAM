@@ -18,6 +18,8 @@ class hoa_don extends Model
         'phuong_thuc_thanh_toan', 
         'tong_tien'
     ];
+    public $timestamps = false;
+
 
     public function user()
     {

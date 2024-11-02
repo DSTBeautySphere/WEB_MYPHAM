@@ -19,7 +19,7 @@ class User
     {
         if (Auth::check()) {
            
-            if (Auth::user()->phan_quyen == 'Khach hang') {
+            if (Auth::user()) {
               return $next($request);
             } else {
                return redirect('/')->with('error', 'Bạn không có quyền truy cập.');
