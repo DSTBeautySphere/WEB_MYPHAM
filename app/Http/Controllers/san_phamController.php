@@ -124,8 +124,19 @@ class san_phamController extends Controller
 
     public function loc_san_pham_theo_loai(Request $request)
     {
-        $sanpham=san_pham::with(['loai_san_pham', 'nha_cung_cap', 'khuyen_mai_san_pham', 'anh_san_pham'])->where('ma_loai_san_pham',$request->ma_loai_san_pham)->get();
-        return response()->json($sanpham,200);
+        $request->validate([
+            'ma_loai_san_pham' => 'required|integer|exists:loai_san_pham,ma_loai_san_pham'
+        ]);
+
+        $ma_loai_san_pham = $request->input('ma_loai_san_pham');
+
+        // Lọc sản phẩm theo loại trực tiếp trong Controller
+        $sanPhams = san_pham::where('ma_loai_san_pham', $ma_loai_san_pham)->get();
+
+        return response()->json([
+            
+           $sanPhams
+        ]);
     }
 
     public function loc_san_pham_theo_dong(Request $request)

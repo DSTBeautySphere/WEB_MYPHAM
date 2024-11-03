@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\gio_hangController;
 use App\Http\Controllers\nha_cung_capController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +28,7 @@ Route::post('/dangNhap', [AuthController::class, 'dangNhap']);
 Route::post('/dangXuat', [AuthController::class, 'dangXuat']);
 
 
-
+Route::post('/themgioHang', [gio_hangController::class,"themSP_GH"]);
 
 
 //san_pham
@@ -39,7 +40,7 @@ Route::get('/laysanphamall',[App\Http\Controllers\san_phamController::class,'lay
 
 Route::get('/sanphamphantrang',[App\Http\Controllers\san_phamController::class,'lay_san_pham_phan_trang']);
 Route::get('/locsanphamtheoloai',[App\Http\Controllers\san_phamController::class,'loc_san_pham_theo_loai']);
-Route::get('/locsanphamtheodong',[App\Http\Controllers\san_phamController::class,'loc_san_pham_theo_dong']);
+//Route::get('/locsanphamtheodong',[App\Http\Controllers\san_phamController::class,'loc_san_pham_theo_dong']);
 Route::get('/chitietsanpham',[App\Http\Controllers\san_phamController::class,'chi_tiet_san_pham']);
 Route::get('/locsanphamtheogia',[App\Http\Controllers\san_phamController::class,'loc_san_pham_theo_gia']);
 
