@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\gio_hangController;
+use App\Http\Controllers\loai_san_phamController;
 use App\Http\Controllers\nha_cung_capController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +45,7 @@ Route::get('/locsanphamtheoloai',[App\Http\Controllers\san_phamController::class
 Route::get('/chitietsanpham',[App\Http\Controllers\san_phamController::class,'chi_tiet_san_pham']);
 Route::get('/locsanphamtheogia',[App\Http\Controllers\san_phamController::class,'loc_san_pham_theo_gia']);
 
+
 //nha cung cap
 Route::get('/nhacungcap',[nha_cung_capController::class, 'danh_sach_NCC' ]);
 
@@ -60,3 +62,8 @@ Route::get('/laysanpham',[App\Http\Controllers\san_phamController::class,'lay_sa
 //dong_san_pham
 Route::get('/view_dongsanpham',[App\Http\Controllers\dong_san_phamController::class,'view_dongsanpham']);
 Route::get('/laydongsanpham',[App\Http\Controllers\dong_san_phamController::class,'lay_dong_san_pham']);
+
+
+// loai san pham
+
+Route::get('/danhsachloai',[loai_san_phamController::class,'loadLoaiSanPham']);

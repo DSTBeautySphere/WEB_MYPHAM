@@ -193,27 +193,27 @@ class san_phamController extends Controller
                     'ten_san_pham' => $request->ten_san_pham,
                 ]);
 
-                $bienTheList = [];
-                // Duyệt qua từng biến thể để thêm vào bảng `bien_the_san_pham`
-                foreach ($request->bien_the as $bienTheData) {
-                    $bienThe = bien_the_san_pham::create([
-                        'ma_san_pham' => $sanPham->ma_san_pham,
-                        'mau_sac' => $bienTheData['mau_sac'],
-                        'loai_da' => $bienTheData['loai_da'],
-                        'dung_tich' => $bienTheData['dung_tich'],
-                        'so_luong_ton_kho' => $bienTheData['so_luong_ton_kho'],
-                        'gia_ban' => $bienTheData['gia_ban'],
-                    ]);
-                    $bienTheList[] = $bienThe; 
-                }
+                // $bienTheList = [];
+                // // Duyệt qua từng biến thể để thêm vào bảng `bien_the_san_pham`
+                // foreach ($request->bien_the as $bienTheData) {
+                //     $bienThe = bien_the_san_pham::create([
+                //         'ma_san_pham' => $sanPham->ma_san_pham,
+                //         'mau_sac' => $bienTheData['mau_sac'],
+                //         'loai_da' => $bienTheData['loai_da'],
+                //         'dung_tich' => $bienTheData['dung_tich'],
+                //         'so_luong_ton_kho' => $bienTheData['so_luong_ton_kho'],
+                //         'gia_ban' => $bienTheData['gia_ban'],
+                //     ]);
+                //     $bienTheList[] = $bienThe; 
+                // }
 
-                // Trả về JSON gồm thông tin sản phẩm và các biến thể
+               
                 return response()->json([
                     'success' => true,
-                    'message' => 'Sản phẩm và biến thể đã được thêm thành công.',
+                    'message' => 'Sản phẩm được thêm thành công.',
                     'data' => [
                         'san_pham' => $sanPham,
-                        'bien_the' => $bienTheList
+                        //'bien_the' => $bienTheList
                     ]
                 ]);
             } catch (\Exception $e) {
@@ -236,38 +236,38 @@ class san_phamController extends Controller
 
     public function cap_nhat_san_pham(Request $request)
     {
-        
+            // Xác thực yêu cầu
         $request->validate([
-            'ma_san_pham' => 'required|exists:san_pham,ma_san_pham',
-            'ma_loai_san_pham' => 'nullable|exists:loai_san_pham,ma_loai_san_pham',
-            'ma_nha_cung_cap' => 'nullable|exists:nha_cung_cap,ma_nha_cung_cap',
-            'ten_san_pham' => 'nullable|string|max:255',
-            'mau_sac' => 'nullable|string|max:255',
-            'tinh_trang' => 'nullable|string|max:50',
-            'gia_ban' => 'nullable|numeric|min:0',
-            'mo_ta' => 'nullable|string'
+            'ma_san_pham' => 'required|integer|exists:san_pham,ma_san_pham',
+            'ma_loai_san_pham' => 'required|integer|exists:loai_san_pham,ma_loai_san_pham',
+            'ma_nha_cung_cap' => 'required|integer|exists:nha_cung_cap,ma_nha_cung_cap',
+            'ten_san_pham' => 'required|string|max:255',
         ]);
 
-        
-        $sanpham = san_pham::where('ma_san_pham', $request->input('ma_san_pham'))->first();
+        try {
+          
+            $sanPham = san_pham::find($request->ma_san_pham);
 
-        
-        $sanpham->ma_loai_san_pham = $request->input('ma_loai_san_pham', $sanpham->ma_loai_san_pham);
-        $sanpham->ma_nha_cung_cap = $request->input('ma_nha_cung_cap', $sanpham->ma_nha_cung_cap);
-        $sanpham->ten_san_pham = $request->input('ten_san_pham', $sanpham->ten_san_pham);
-        $sanpham->mau_sac = $request->input('mau_sac', $sanpham->mau_sac);
-        $sanpham->tinh_trang = $request->input('tinh_trang', $sanpham->tinh_trang);
-        $sanpham->gia_ban = $request->input('gia_ban', $sanpham->gia_ban);
-        $sanpham->mo_ta = $request->input('mo_ta', $sanpham->mo_ta);
+            
+            $sanPham->update([
+                'ma_loai_san_pham' => $request->ma_loai_san_pham,
+                'ma_nha_cung_cap' => $request->ma_nha_cung_cap,
+                'ten_san_pham' => $request->ten_san_pham,
+            ]);
 
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Sản phẩm đã được cập nhật thành công.',
+                'data' => $sanPham
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi khi cập nhật sản phẩm: ' . $e->getMessage()
+            ]);
+        }
         
-        $sanpham->save();
-
-        
-        return response()->json([
-            'message' => 'Cập nhật thành công!',
-            'data' => $sanpham
-        ], 200);
     }
 
     public function lay_san_pham_form(Request $request)

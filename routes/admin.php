@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\bien_the_san_phamController;
 use App\Http\Controllers\loai_san_phamController;
 use App\Http\Controllers\nha_cung_capController;
 use App\Http\Controllers\san_phamController;
@@ -18,8 +19,14 @@ use Illuminate\Support\Facades\Route;
     Route::post('/xoasanpham',[App\Http\Controllers\san_phamController::class,'xoa_san_pham']);
     Route::post('/capnhatsanpham',[App\Http\Controllers\san_phamController::class,'cap_nhat_san_pham']);
     
+    //bien the san pham
+    Route::get('/danhsachbienthesanpham',[bien_the_san_phamController::class,'loadBienTheSanPham']);
+    Route::post('/thembienthesanpham',[bien_the_san_phamController::class,'themBienTheSanPham']);
+    Route::post('/xoabienthesanpham',[bien_the_san_phamController::class,'xoaBienTheSanPham']);
+    Route::post('/suabienthesanpham',[bien_the_san_phamController::class,'suaBienTheSanPham']);
 
     //loai_san_pham
+    Route::get('/danhsachloai',[loai_san_phamController::class,'loadLoaiSanPham']);
     Route::post('/themloaisanpham',[loai_san_phamController::class,'themLoaiSanPham']);
     Route::post('/xoaloaisanpham',[loai_san_phamController::class,'xoaLoaiSanPham']);
     Route::post('/sualoaisanpham',[loai_san_phamController::class,'suaLoaiSanPham']);
