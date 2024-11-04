@@ -9,6 +9,37 @@ use Illuminate\Http\Request;
 class loai_san_phamController extends Controller
 {
     //
+    public function loadLoaiSanPham(Request $request)
+    {
+        
+        $request->validate([
+            'ma_dong_san_pham' => 'required|integer|exists:dong_san_pham,ma_dong_san_pham',
+        ]);
+
+        try {
+            // Tìm loại sản phẩm theo dòng sản phẩm
+            $loaiSanPhamList = loai_san_pham::where('ma_dong_san_pham', $request->ma_dong_san_pham)->get();
+
+            // Kiểm tra nếu không tìm thấy loại sản phẩm
+            if ($loaiSanPhamList->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không tìm thấy loại sản phẩm nào cho dòng sản phẩm này.'
+                ], 404);
+            }
+
+            
+            return response()->json([
+                'success' => true,
+                'data' => $loaiSanPhamList
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi khi load loại sản phẩm: ' . $e->getMessage()
+            ]);
+        }
+    }
     public function themLoaiSanPham(Request $request){
         // Xác thực dữ liệu đầu vào
         $request->validate([
