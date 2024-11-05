@@ -36,6 +36,12 @@ use Illuminate\Support\Facades\Route;
     Route::delete('/xoanhacungcap/{id}',[nha_cung_capController::class,'xoaNCC']);
     Route::post('/suanhacungcap/{id}',[nha_cung_capController::class,'suaNCC']);
 
+    //don hang
+    Route::post('themdondat',[App\Http\Controllers\don_datController::class,'themDonDat']);
+
+    //chi tiet don dat
+    Route::post('themchitietdondat',[App\Http\Controllers\chi_tiet_don_datController::class,'themChiTietDonDat']);
+
 
 
 
