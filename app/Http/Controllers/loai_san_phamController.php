@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\loai_nhom_tuy_chon;
 use App\Models\loai_san_pham;
+use App\Models\nhom_tuy_chon;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 
 class loai_san_phamController extends Controller
@@ -139,6 +141,19 @@ class loai_san_phamController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Lỗi khi cập nhật loại sản phẩm: ' . $e->getMessage()]);
         }
+    }
+
+    public function layNhomTuyChonTheoLoai(Request $request)
+    {
+        $loaiSanPham=loai_san_pham::find($request->ma_loai_san_pham);
+        $tuyChonTheoLoai=$loaiSanPham->nhom_tuy_chon()->with('tuy_chon')->get();
+        return Response()->json($tuyChonTheoLoai);
+    }
+
+    public function layLoaiSanPham()
+    {
+        $loaiSanPham=loai_san_pham::all();
+        return Response()->json($loaiSanPham);
     }
 
     

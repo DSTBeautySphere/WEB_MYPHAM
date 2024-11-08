@@ -13,4 +13,9 @@ class nhom_tuy_chon extends Model
     protected $fillable = ['ten_nhom_tuy_chon'];
     public $timestamps = false;
 
+    public function tuy_chon()
+    {
+        return $this->hasMany(tuy_chon::class, 'ma_nhom_tuy_chon');
+    }
+
 }

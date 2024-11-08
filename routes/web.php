@@ -67,3 +67,5 @@ Route::get('/laydongsanpham',[App\Http\Controllers\dong_san_phamController::clas
 // loai san pham
 
 Route::get('/danhsachloai',[loai_san_phamController::class,'loadLoaiSanPham']);
+Route::get('/laynhomtuychontheoloai',[App\Http\Controllers\loai_san_phamController::class,'layNhomTuyChonTheoLoai']);
+Route::get('/layloaisanpham',[App\Http\Controllers\loai_san_phamController::class,'layLoaiSanPham']);

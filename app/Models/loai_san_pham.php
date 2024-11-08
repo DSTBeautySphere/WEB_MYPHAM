@@ -34,4 +34,9 @@ class loai_san_pham extends Model
     {
         return $this->hasOne(nha_cung_cap::class, 'ma_nha_cung_cap', 'ma_nha_cung_cap');
     }
+
+    public function nhom_tuy_chon()
+    {
+        return $this->belongsToMany(nhom_tuy_chon::class, 'loai_nhom_tuy_chon', 'ma_loai_san_pham', 'ma_nhom_tuy_chon');
+    }
 }
