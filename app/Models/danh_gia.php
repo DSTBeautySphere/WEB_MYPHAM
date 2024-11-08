@@ -11,7 +11,7 @@ class danh_gia extends Model
 
     protected $table = 'danh_gia';
     protected $primaryKey = 'ma_danh_gia';
-    protected $fillable = ['ma_san_pham', 'ma_user', 'noi_dung', 'diem', 'ngay_danh_gia'];
+    protected $fillable = ['ma_san_pham', 'ma_user', 'noi_dung', 'so_sao', 'ngay_danh_gia'];
     public $timestamps = false;
 
 

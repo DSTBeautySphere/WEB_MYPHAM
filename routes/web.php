@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\danh_giaController;
 use App\Http\Controllers\gio_hangController;
 use App\Http\Controllers\loai_san_phamController;
 use App\Http\Controllers\nha_cung_capController;
@@ -44,7 +45,7 @@ Route::get('/locsanphamtheoloai',[App\Http\Controllers\san_phamController::class
 //Route::get('/locsanphamtheodong',[App\Http\Controllers\san_phamController::class,'loc_san_pham_theo_dong']);
 Route::get('/chitietsanpham',[App\Http\Controllers\san_phamController::class,'chi_tiet_san_pham']);
 Route::get('/locsanphamtheogia',[App\Http\Controllers\san_phamController::class,'loc_san_pham_theo_gia']);
-
+Route::post('/danhgiasanpham', [danh_giaController::class,'guiDanhGia']);
 
 //nha cung cap
 Route::get('/nhacungcap',[nha_cung_capController::class, 'danh_sach_NCC' ]);

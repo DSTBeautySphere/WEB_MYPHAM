@@ -9,23 +9,53 @@ use Illuminate\Support\Facades\Auth;
 
 class gio_hangController extends Controller
 {
-    //
+    //Hien chi tiet gio hang
+    public function chiTietGioHang(Request $request){
+        try{
+            $userId= Auth::id();
+            $gioHang= gio_hang::where('ma_user',$userId)->with('user')->first();
+
+            if (!$gioHang) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Giỏ hàng của bạn trống.'
+                ]);
+            }
+
+            $chiTietGH= chi_tiet_gio_hang::where('ma_gio_hang',$gioHang->ma_gio_hang)->with(['bien_the_san_pham'])->get();
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy danh sách chi tiết giỏ hàng thành công.',
+                'gio_hang' => $gioHang,
+                'chi_tiet_gio_hang' => $chiTietGH
+            ]);
+        }
+        catch(\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi khi lấy danh sách chi tiết giỏ hàng: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+
+
     // Thêm sản phẩm vào giỏ hàng
     public function themSP_GH(Request $request)
     {
-        // Validate input
+      
         $request->validate([
             'ma_san_pham' => 'required|integer|exists:san_pham,ma_san_pham',
             'so_luong' => 'required|integer|min:1',
         ]);
 
-        // Lấy thông tin người dùng
+       
         $userId = Auth::id();
 
-        // Kiểm tra xem giỏ hàng của người dùng đã tồn tại hay chưa
+        
         $gioHang = gio_hang::where('ma_user', $userId)->where('trang_thai', 'active')->first();
 
-        // Nếu giỏ hàng chưa tồn tại, tạo mới
+       
         if (!$gioHang) {
             $gioHang = gio_hang::create([
                 'ma_user' => $userId,
@@ -34,7 +64,7 @@ class gio_hangController extends Controller
             ]);
         }
 
-        // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+       
         $chiTietGioHang = chi_tiet_gio_hang::where('ma_gio_hang', $gioHang->ma_gio_hang)
             ->where('ma_san_pham', $request->ma_san_pham)
             ->first();
