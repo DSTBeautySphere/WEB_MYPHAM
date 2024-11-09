@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 include 'admin.php';
+include 'web_admin.php';
 
 Route::get('/test',[App\Http\Controllers\TestController::class,'tat_ca_san_pham']);
 
@@ -70,3 +71,4 @@ Route::get('/laydongsanpham',[App\Http\Controllers\dong_san_phamController::clas
 Route::get('/danhsachloai',[loai_san_phamController::class,'loadLoaiSanPham']);
 Route::get('/laynhomtuychontheoloai',[App\Http\Controllers\loai_san_phamController::class,'layNhomTuyChonTheoLoai']);
 Route::get('/layloaisanpham',[App\Http\Controllers\loai_san_phamController::class,'layLoaiSanPham']);
+Route::get('/laynhomtuychon',[App\Http\Controllers\tuy_chonController::class,'layNhomTuyChon']);
