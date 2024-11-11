@@ -140,7 +140,7 @@
                     <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#addtinhtrang"><i class="fas fa-folder-plus"></i> Thêm tình trạng</a>
                 </div>
             </div>
-            <form class="row" action="/themsanpham" method="POST">
+            <form class="row" action="/themsanpham" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group col-md-4">
                     <label class="control-label">Tên Sản Phẩm</label>
@@ -541,8 +541,8 @@ $('#layMau').click(function() {
             'mau_sac': mauSac || null, // Để trống nếu không có giá trị
             'loai_da': loaiDa || null,  // Để trống nếu không có giá trị
             'dung_tich': dungTich || null, // Cho phép để trống
-            'so_luong_ton_kho': soLuongTonKho || null,  // Để trống nếu không có giá trị
-            'gia_ban': giaBan || null  // Để trống nếu không có giá trị
+            'so_luong_ton_kho': soLuongTonKho || 0,  // Để trống nếu không có giá trị
+            'gia_ban': giaBan || 0  // Để trống nếu không có giá trị
         };
     }
 
@@ -551,44 +551,45 @@ $('#layMau').click(function() {
 
 
 
-    $(document).on('blur', '#sanPhamMauGrid tbody td[contenteditable="true"]', function() {
+    $(document).on('blur', '#sanPhamMauGrid tbody td[contenteditable="true"]', function() 
+    {
    
-    var lastRow = $('#sanPhamMauGrid tbody tr:last');
-    var lastRowCells = lastRow.find('td');
+        var lastRow = $('#sanPhamMauGrid tbody tr:last');
+        var lastRowCells = lastRow.find('td');
 
-    
-    var isRowEmpty = true;
-    lastRowCells.each(function() {
-        if ($(this).text().trim() !== '' && !$(this).hasClass('delete-row')) {
-            isRowEmpty = false;
-            return false; 
+        
+        var isRowEmpty = true;
+        lastRowCells.each(function() {
+            if ($(this).text().trim() !== '' && !$(this).hasClass('delete-row')) {
+                isRowEmpty = false;
+                return false; 
+            }
+        });
+
+        
+        var priceCell = lastRowCells.eq(4);  
+        var quantityCell = lastRowCells.eq(3);  
+        var firstThreeCellsFilled = false;
+        lastRowCells.slice(0, 3).each(function() {
+            if ($(this).text().trim() !== '') {
+                firstThreeCellsFilled = true;
+                return false;
+            }
+        });
+
+        
+        if (isRowEmpty || (priceCell.text().trim() !== '' && quantityCell.text().trim() !== '' && firstThreeCellsFilled)) {
+            var newRow = '<tr>' +
+                '<td contenteditable="true"></td>' + 
+                '<td contenteditable="true"></td>' +  
+                '<td contenteditable="true"></td>' + 
+                '<td contenteditable="true"></td>' + 
+                '<td contenteditable="true"></td>' + 
+                '<td><button class="delete-row">Xóa</button></td>' +  
+            '</tr>';
+            $('#sanPhamMauGrid tbody').append(newRow);
         }
     });
-
-    
-    var priceCell = lastRowCells.eq(4);  
-    var quantityCell = lastRowCells.eq(3);  
-    var firstThreeCellsFilled = false;
-    lastRowCells.slice(0, 3).each(function() {
-        if ($(this).text().trim() !== '') {
-            firstThreeCellsFilled = true;
-            return false;
-        }
-    });
-
-    
-    if (isRowEmpty || (priceCell.text().trim() !== '' && quantityCell.text().trim() !== '' && firstThreeCellsFilled)) {
-        var newRow = '<tr>' +
-            '<td contenteditable="true"></td>' + 
-            '<td contenteditable="true"></td>' +  
-            '<td contenteditable="true"></td>' + 
-            '<td contenteditable="true"></td>' + 
-            '<td contenteditable="true"></td>' + 
-            '<td><button class="delete-row">Xóa</button></td>' +  
-        '</tr>';
-        $('#sanPhamMauGrid tbody').append(newRow);
-    }
-});
 
 
 
@@ -653,39 +654,41 @@ $('#themSP').on('click', function() {
     let tenSanPham = $('input[name="ten_san_pham"]').val();
     let maLoaiSanPham = $('#danhmuc').val();
     let maNhaCungCap = $('#nhacungcap').val();
-
-    // Chuyển đổi tất cả giá trị của `dung_tich` trong `sanPhamMau` thành chuỗi
-    sanPhamMau = sanPhamMau.map(item => ({
-        ...item,
-        dung_tich: String(item.dung_tich)  // Chuyển `dung_tich` thành chuỗi
-    }));
-
-    console.log("SanPhamMau:", sanPhamMau);
+    let imageFiles = $('#uploadfile')[0].files;
 
     if (sanPhamMau.length === 0) {
         alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
         return;
     }
 
+    var formData = new FormData();
+    formData.append('ten_san_pham', tenSanPham);
+    formData.append('ma_loai_san_pham', maLoaiSanPham);
+    formData.append('ma_nha_cung_cap', maNhaCungCap);
+    formData.append('bien_the[]', JSON.stringify(sanPhamMau)); // Chuyển sanPhamMau thành chuỗi JSON
+
+    // Thêm các ảnh vào formData
+    for (var i = 0; i < imageFiles.length; i++) {
+        formData.append('anh_san_pham[]', imageFiles[i]);
+    }
+    formData.append('_token', '{{ csrf_token() }}');
+
     $.ajax({
-        url: '/themsanpham',
+        url: 'themsanpham',
         type: 'POST',
-        data: {
-            ten_san_pham: tenSanPham,
-            ma_loai_san_pham: maLoaiSanPham,
-            ma_nha_cung_cap: maNhaCungCap,
-            bien_the: sanPhamMau,
-            _token: '{{ csrf_token() }}'
-        },
+        data: formData,
+        processData: false, // Không xử lý dữ liệu trước khi gửi
+        contentType: false, // Không gửi content-type
         success: function(response) {
             alert(response.message);
         },
-        error: function(xhr) {
-            alert('Có lỗi xảy ra: ' + xhr.responseText);
+        error: function(xhr, status, error) {
+            var statusCode = xhr.status;
+            var errorMessage = xhr.responseText || "Không có thông báo lỗi";
+            alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
         }
     });
 });
-
 
 
 
