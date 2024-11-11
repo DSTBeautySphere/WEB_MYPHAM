@@ -16,11 +16,13 @@ use Illuminate\Support\Facades\Route;
 
 // Route::prefix('admin')->group(function () {
     //san pham
-   
+    
     Route::post('/xoasanpham',[App\Http\Controllers\san_phamController::class,'xoa_san_pham']);
     Route::post('/capnhatsanpham',[App\Http\Controllers\san_phamController::class,'cap_nhat_san_pham']);
     Route::get('/showthemsanpham',[App\Http\Controllers\san_phamController::class,'showThemSanPham']);
     Route::post('/themsanpham',[App\Http\Controllers\san_phamController::class,'themSanPhamVaBienThe']);
+
+
     //bien the san pham
     Route::get('/danhsachbienthesanpham',[bien_the_san_phamController::class,'loadBienTheSanPham']);
     Route::post('/thembienthesanpham',[bien_the_san_phamController::class,'themBienTheSanPham']);
@@ -51,7 +53,9 @@ use Illuminate\Support\Facades\Route;
     Route::post('themchitietdondat',[App\Http\Controllers\chi_tiet_don_datController::class,'themChiTietDonDat']);
 
 
-
+    // //admincontroller
+    // Route::get('/gdthemsanpham',[App\Http\Controllers\AdminController::class,'showThemSanPham']);
+    // Route::post('/gdthemsanpham',[App\Http\Controllers\AdminController::class,'themSanPhamVaBienThe']);
 
 
 // });

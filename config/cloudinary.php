@@ -7,18 +7,16 @@
  * file that was distributed with this source code.
  */
 
-return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Cloudinary Configuration
-    |--------------------------------------------------------------------------
-    |
-    | An HTTP or HTTPS URL to notify your application (a webhook) when the process of uploads, deletes, and any API
-    | that accepts notification_url has completed.
-    |
-    |
-    */
+ return [
+    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+    'api_key' => env('CLOUDINARY_API_KEY'),
+    'api_secret' => env('CLOUDINARY_API_SECRET'),
+    'secure' => true,  // Thêm dòng này để sử dụng HTTPS
+    'upload_preset' => env('CLOUDINARY_UPLOAD_PRESET'),
+    'url' => env('CLOUDINARY_URL'),
+    'http' => [
+        'verify' => false  // Tắt xác minh SSL
+    ],
     'notification_url' => env('CLOUDINARY_NOTIFICATION_URL'),
 
 
@@ -50,3 +48,4 @@ return [
      */
     'upload_action' => env('CLOUDINARY_UPLOAD_ACTION'),
 ];
+

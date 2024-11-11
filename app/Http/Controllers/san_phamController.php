@@ -10,6 +10,7 @@ use App\Models\loai_san_pham;
 use App\Models\dong_san_pham;
 use App\Models\nha_cung_cap;
 use App\Models\tuy_chon;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 ;
 
