@@ -28,22 +28,36 @@
         display: none;
     }
 
+
     #thumbbox {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; 
+    }
+
+    .thumb-container {
         position: relative;
-        width: 100%;
-        margin-bottom: 20px;
+        display: inline-block;
+    }
+
+    .thumb-container img {
+        height: 100px;
+        width: 100px;
+        object-fit: cover; 
     }
 
     .removeimg {
-        height: 25px;
         position: absolute;
-        background-repeat: no-repeat;
         top: 5px;
-        left: 5px;
-        background-size: 25px;
-        width: 25px;
-        border-radius: 50%;
+        right: 5px;
+        background-color: rgba(255, 0, 0, 0.7);
+        color: white;
+        padding: 2px 5px;
+        font-size: 12px;
+        cursor: pointer;
+        text-decoration: none;
     }
+
 
     .removeimg::before {
         box-sizing: border-box;
@@ -105,6 +119,8 @@
         pointer-events: none;
     }
 
+
+
 </style>
 @endsection
 
@@ -124,7 +140,8 @@
                     <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#addtinhtrang"><i class="fas fa-folder-plus"></i> Thêm tình trạng</a>
                 </div>
             </div>
-            <form class="row">
+            <form class="row" action="/themsanpham" method="POST">
+                @csrf
                 <div class="form-group col-md-4">
                     <label class="control-label">Tên Sản Phẩm</label>
                     <input class="form-control" type="text" placeholder="" name="ten_san_pham">
@@ -133,6 +150,7 @@
                 <div class="form-group col-md-4">
                     <label for="danhmuc" class="control-label">Loại Sản Phẩm</label>
                     <select class="form-control" id="danhmuc" name="ma_loai_san_pham">
+                        <option>--Chọn Loại Sản Phẩm--</option>
                         @foreach ($loaiSanPham as $item)
                         <option value="{{ $item->ma_loai_san_pham }}">{{ $item->ten_loai_san_pham }}</option>
                         @endforeach
@@ -141,6 +159,7 @@
                 <div class="form-group col-md-4">
                     <label for="nhacungcap" class="control-label">Nhà Cung Cấp</label>
                     <select class="form-control" id="nhacungcap" name="ma_nha_cung_cap">
+                        <option>--Chọn Nhà Cung Cấp--</option>
                         @foreach ($nhaCungCap as $item)
                         <option value="{{ $item->ma_nha_cung_cap }}">{{ $item->ten_nha_cung_cap }}</option>
                         @endforeach
@@ -153,7 +172,7 @@
                         @foreach($tuyChon as $item)
                             @if($item->ma_nhom_tuy_chon == 1)
                                 <label class="control-label" style="width: 90px; display: inline-block; text-overflow: ellipsis; overflow: hidden; white-space:nowrap">
-                                    <input type="checkbox" name="mau[]" value="{{ $item->ma_tuy_chon }}" 
+                                    <input type="checkbox" name="mau[]" value="{{ $item->ten_tuy_chon }}" 
                                     style="background-color: {{ $item->ma_tuy_chon }};">
                                     {{ $item->ten_tuy_chon }}
                                 </label>
@@ -168,7 +187,7 @@
                         @foreach($tuyChon as $item)
                             @if($item->ma_nhom_tuy_chon == 2)
                                 <label class="control-label" style="width: 90px; display: inline-block; text-overflow: ellipsis; overflow: hidden; white-space:nowrap">
-                                    <input type="checkbox" name="dungtich[]" value="{{ $item->ma_tuy_chon }}" 
+                                    <input type="checkbox" name="dungtich[]" value="{{ $item->ten_tuy_chon }}" 
                                     style="background-color: {{ $item->ma_tuy_chon }};">
                                     {{ $item->ten_tuy_chon }}
                                 </label>
@@ -183,7 +202,7 @@
                         @foreach($tuyChon as $item)
                             @if($item->ma_nhom_tuy_chon == 3)
                                 <label class="control-label" style="width: 90px; display: inline-block; text-overflow: ellipsis; overflow: hidden; white-space:nowrap">
-                                    <input type="checkbox" name="loaida[]" value="{{ $item->ma_tuy_chon }}" 
+                                    <input type="checkbox" name="loaida[]" value="{{ $item->ten_tuy_chon }}" 
                                     style="background-color: {{ $item->ma_tuy_chon }};">
                                     {{ $item->ten_tuy_chon }}
                                 </label>
@@ -191,14 +210,32 @@
                         @endforeach
                     </div>
                 </div>
-                <div>Sản Phẩm Mẫu</div>
                 <div class="form-group col-md-12" id="sanPhamMau">
-
-                </div>
+                    <!-- HTML -->
+                    <table id="sanPhamMauGrid" class="table">
+                        <thead>
+                            <tr>
+                                <th>Màu Sắc</th>
+                                <th>Loại Da</th>
+                                <th>Dung Tích</th>
+                               
+                                <th>Số Lượng Tồn Kho</th>
+                                <th>Giá Bán</th>
+                                <th>Xóa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Các dòng sản phẩm mẫu sẽ được thêm vào đây -->
+                    
+                        </tbody>
+                    </table>
+    
+                    </div>
+                    <button class="btn btn-save" type="button" id="layMau">Tạo Sản Phẩm</button>
                 <div class="form-group col-md-12">
                     <label class="control-label">Ảnh sản phẩm</label>
                     <div id="myfileupload">
-                        <input type="file" id="uploadfile" name="ImageUpload" onchange="readURL(this);" />
+                        <input type="file" id="uploadfile" name="ImageUpload[]" onchange="readURL(this);" multiple/>
                     </div>
                     <div id="thumbbox">
                         <img height="450" width="400" alt="Thumb image" id="thumbimage" style="display: none" />
@@ -213,7 +250,7 @@
                     <label class="control-label">Mô tả sản phẩm</label>
                     <textarea class="form-control" name="mota" id="mota"></textarea>
                 </div>
-                <button class="btn btn-save" type="button" id="layMau">Lưu lại</button>
+                <button class="btn btn-save" type="button" id="themSP">Thêm</button>
                 <a class="btn btn-cancel" href="table-data-product.html">Hủy bỏ</a>
             </form>
         </div>
@@ -236,14 +273,16 @@
     });
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
+let sanPhamMau = [];
  $('#danhmuc').change(function() {
     $('input[name="mau[]"]').prop("checked", false);
     $('input[name="dungtich[]"]').prop("checked", false);
     $('input[name="loaida[]"]').prop("checked", false);
     var maLoaiSanPham = $(this).val();
 
-    // Gửi yêu cầu AJAX đến controller
+   
     $.ajax({
         url: '/laynhomtuychontheoloai',
         type: 'GET',
@@ -252,21 +291,21 @@
             _token: '{{ csrf_token() }}'
         },
         success: function(response) {
-            // Biến để kiểm tra có nhóm nào có tùy chọn hay không
+          
             var hasMauSac = false;
             var hasDungTich = false;
             var hasLoaiDa = false;
 
-            // Duyệt qua các nhóm tùy chọn trả về từ controller
+          
             response.forEach(function(nhom) {
-                // Kiểm tra nhóm và gán các biến có giá trị nếu nhóm đó có tùy chọn
+               
                 if (nhom.ma_nhom_tuy_chon == 1) hasMauSac = true;
                 if (nhom.ma_nhom_tuy_chon == 2) hasDungTich = true;
                 if (nhom.ma_nhom_tuy_chon == 3) hasLoaiDa = true;
 
-                // Cập nhật nội dung nhóm tùy chọn
-                var groupName = nhom.ten_nhom_tuy_chon;  // Tên nhóm như "Màu", "Dung tích", v.v.
-                var groupHTML = '<h4>' + groupName + '</h4>';  // Hiển thị tên nhóm
+               
+                var groupName = nhom.ten_nhom_tuy_chon;  
+                var groupHTML = '<h4>' + groupName + '</h4>';  
 
                 // Kiểm tra xem nhóm có tùy chọn không
                 if (nhom.tuy_chon.length === 0) {
@@ -320,122 +359,337 @@ $('#layMau').click(function() {
     var dungtich = [];
     var loaida = [];
 
-    // Lấy màu sắc đã chọn
+    sanPhamMau = [];
+
     $('input[name="mau[]"]:checked').each(function() {
         mau.push($(this).val());
     });
 
-    // Lấy dung tích đã chọn
+  
     $('input[name="dungtich[]"]:checked').each(function() {
         dungtich.push($(this).val());
     });
 
-    // Lấy loại da đã chọn
+
     $('input[name="loaida[]"]:checked').each(function() {
         loaida.push($(this).val());
     });
 
-    var sanPhamMau = [];
 
-    // Duyệt qua các tổ hợp của ba trường
     if (mau.length > 0 || dungtich.length > 0 || loaida.length > 0) {
-        // Trường hợp có đầy đủ cả 3 trường
+        
         if (mau.length > 0 && dungtich.length > 0 && loaida.length > 0) {
             $.each(mau, function(i, mauItem) {
                 $.each(dungtich, function(j, dungTichItem) {
                     $.each(loaida, function(k, loaiDaItem) {
                         sanPhamMau.push({
-                            'mau_sac': mauItem,
-                            'dung_tich': dungTichItem,
-                            'loai_da': loaiDaItem
+                            'mau_sac': mauItem || null,
+                            'loai_da': loaiDaItem || null,
+                            'dung_tich': dungTichItem || null,  // Đảm bảo dung_tich là chuỗi hoặc null
+                            'so_luong_ton_kho': 1,
+                            'gia_ban': 10000
                         });
                     });
                 });
             });
         }
-        // Trường hợp chỉ có màu sắc và dung tích
+        
         else if (mau.length > 0 && dungtich.length > 0 && loaida.length === 0) {
             $.each(mau, function(i, mauItem) {
                 $.each(dungtich, function(j, dungTichItem) {
                     sanPhamMau.push({
                         'mau_sac': mauItem,
-                        'dung_tich': dungTichItem
+                        'loai_da': 'null',
+                        'dung_tich': dungTichItem,
+                       
+                        'so_luong_ton_kho': 1,
+                        'gia_ban': 10000
                     });
                 });
             });
         }
-        // Trường hợp chỉ có màu sắc và loại da
+       
         else if (mau.length > 0 && dungtich.length === 0 && loaida.length > 0) {
             $.each(mau, function(i, mauItem) {
                 $.each(loaida, function(j, loaiDaItem) {
                     sanPhamMau.push({
                         'mau_sac': mauItem,
-                        'loai_da': loaiDaItem
+                        'loai_da': loaiDaItem,
+                        'dung_tich': 'null',
+                       
+                        'so_luong_ton_kho': 1,
+                        'gia_ban': 100000
                     });
                 });
             });
         }
-        // Trường hợp chỉ có dung tích và loại da
+        
         else if (mau.length === 0 && dungtich.length > 0 && loaida.length > 0) {
             $.each(dungtich, function(i, dungTichItem) {
                 $.each(loaida, function(j, loaiDaItem) {
                     sanPhamMau.push({
+                        'mau_sac': 'null',
+                        'loai_da': loaiDaItem,
                         'dung_tich': dungTichItem,
-                        'loai_da': loaiDaItem
+                       
+                        'so_luong_ton_kho': 1,
+                        'gia_ban': 100000
                     });
                 });
             });
         }
-        // Trường hợp chỉ có màu sắc
+      
         else if (mau.length > 0 && dungtich.length === 0 && loaida.length === 0) {
             $.each(mau, function(i, mauItem) {
                 sanPhamMau.push({
-                    'mau_sac': mauItem
+                    'mau_sac': mauItem,
+                    'loai_da': 'null',
+                    'dung_tich': 'null',                
+                    'so_luong_ton_kho': 1,
+                    'gia_ban': 10000
                 });
             });
         }
-        // Trường hợp chỉ có dung tích
+   
         else if (mau.length === 0 && dungtich.length > 0 && loaida.length === 0) {
             $.each(dungtich, function(i, dungTichItem) {
                 sanPhamMau.push({
-                    'dung_tich': dungTichItem
+                    'mau_sac': 'null',
+                    'loai_da': 'null',
+                    'dung_tich': dungTichItem,
+                    
+                    'so_luong_ton_kho': 1,
+                    'gia_ban': 10000
                 });
             });
         }
-        // Trường hợp chỉ có loại da
+     
         else if (mau.length === 0 && dungtich.length === 0 && loaida.length > 0) {
             $.each(loaida, function(i, loaiDaItem) {
                 sanPhamMau.push({
-                    'loai_da': loaiDaItem
+                    'mau_sac': 'null',
+                    'loai_da': loaiDaItem,
+                    'dung_tich': 'null',
+                    
+                    'so_luong_ton_kho': 1,
+                    'gia_ban': 10000
                 });
             });
         }
     }
 
     var sanPhamMauHTML = '';
-sanPhamMau.forEach(function(sp) {
-    // Khởi tạo chuỗi hiển thị cho từng sản phẩm
-    var sanPhamHtml = '<div>Sản phẩm: ';
-    
-    // Thêm các thuộc tính vào cùng một dòng nếu chúng tồn tại
-   sanPhamHtml += 'Màu sắc: ' + sp.mau_sac + '; ';
-   sanPhamHtml += 'Dung tích: ' + sp.dung_tich + '; ';
-   sanPhamHtml += 'Loại da: ' + sp.loai_da + '; ';
-    
-    // Kết thúc chuỗi và đóng thẻ div
-    sanPhamHtml += '</div>';
-    
-    // Thêm vào HTML của danh sách sản phẩm mẫu
-    sanPhamMauHTML += sanPhamHtml;
+    sanPhamMau.forEach(function(sp) {
+        sanPhamMauHTML += '<tr>' +
+            '<td contenteditable="true">' + sp.mau_sac + '</td>' +
+            '<td contenteditable="true">' + sp.loai_da + '</td>' +
+            '<td contenteditable="true">' + sp.dung_tich + '</td>' +
+            
+            '<td contenteditable="true">' + sp.so_luong_ton_kho + '</td>' +
+            '<td contenteditable="true">' + sp.gia_ban + '</td>' +
+            '<td><button class="delete-row">Xóa</button></td>' +
+        '</tr>';
+    });
+
+    $('#sanPhamMauGrid tbody').prepend(sanPhamMauHTML);
+
+    var lastRow = $('#sanPhamMauGrid tbody tr:last');
+    var lastRowCells = lastRow.find('td');
+
+    if (lastRowCells.text().trim() === "") {
+        return;
+    }
+
+    var newRow = '<tr>' +
+        '<td contenteditable="true"></td>' +
+        '<td contenteditable="true"></td>' +
+        '<td contenteditable="true"></td>' +
+        '<td contenteditable="true"></td>' +
+        '<td contenteditable="true"></td>' +
+        '<td><button class="delete-row">Xóa</button></td>' +
+    '</tr>';
+    $('#sanPhamMauGrid tbody').append(newRow);
+
+    $(document).on('click', '.delete-row', function() {
+        var rowIndex = $(this).closest('tr').data('index');
+        
+        $(this).closest('tr').remove();
+        
+        sanPhamMau.splice(rowIndex, 1);
+      
+        $('#sanPhamMauGrid tbody tr').each(function(index) {
+            $(this).attr('data-index', index);
+        });
+    });
+
+   
+    $(document).on('blur', '#sanPhamMauGrid tbody td[contenteditable="true"]', function() {
+    var rowIndex = $(this).closest('tr').index();
+    var rowCells = $(this).closest('tr').find('td');
+
+    // Lấy giá trị các ô
+    var mauSac = rowCells.eq(0).text().trim();  
+    var loaiDa = rowCells.eq(1).text().trim(); 
+    var dungTich = rowCells.eq(2).text().trim();  // Cho phép Dung Tích để trống
+
+    var soLuongTonKho = rowCells.eq(3).text().trim(); 
+    var giaBan = rowCells.eq(4).text().trim();
+
+    // Cập nhật mảng sanPhamMau
+    if (sanPhamMau[rowIndex]) {
+        sanPhamMau[rowIndex] = {
+            'mau_sac': mauSac || null, // Để trống nếu không có giá trị
+            'loai_da': loaiDa || null,  // Để trống nếu không có giá trị
+            'dung_tich': dungTich || null, // Cho phép để trống
+            'so_luong_ton_kho': soLuongTonKho || null,  // Để trống nếu không có giá trị
+            'gia_ban': giaBan || null  // Để trống nếu không có giá trị
+        };
+    }
+
+    console.log(sanPhamMau); 
 });
 
-$('#sanPhamMau').html(sanPhamMauHTML);
+
+
+    $(document).on('blur', '#sanPhamMauGrid tbody td[contenteditable="true"]', function() {
+   
+    var lastRow = $('#sanPhamMauGrid tbody tr:last');
+    var lastRowCells = lastRow.find('td');
+
+    
+    var isRowEmpty = true;
+    lastRowCells.each(function() {
+        if ($(this).text().trim() !== '' && !$(this).hasClass('delete-row')) {
+            isRowEmpty = false;
+            return false; 
+        }
+    });
+
+    
+    var priceCell = lastRowCells.eq(4);  
+    var quantityCell = lastRowCells.eq(3);  
+    var firstThreeCellsFilled = false;
+    lastRowCells.slice(0, 3).each(function() {
+        if ($(this).text().trim() !== '') {
+            firstThreeCellsFilled = true;
+            return false;
+        }
+    });
+
+    
+    if (isRowEmpty || (priceCell.text().trim() !== '' && quantityCell.text().trim() !== '' && firstThreeCellsFilled)) {
+        var newRow = '<tr>' +
+            '<td contenteditable="true"></td>' + 
+            '<td contenteditable="true"></td>' +  
+            '<td contenteditable="true"></td>' + 
+            '<td contenteditable="true"></td>' + 
+            '<td contenteditable="true"></td>' + 
+            '<td><button class="delete-row">Xóa</button></td>' +  
+        '</tr>';
+        $('#sanPhamMauGrid tbody').append(newRow);
+    }
 });
+
+
+
+});
+$(document).ready(function() {
+    $('#uploadfile').on('change', function(e) {
+        $('#thumbbox').empty(); // Xóa các ảnh đã hiển thị trước đó
+
+        var files = e.target.files;
+        if (files.length > 0) {
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+
+                if (file.type.startsWith("image/")) {
+                    var reader = new FileReader();
+                    reader.onload = (function(file) {
+                        return function(e) {
+                            var thumbContainer = $('<div class="thumb-container"></div>'); // Tạo container cho từng ảnh
+                            var thumbImage = $('<img>', {
+                                src: e.target.result,
+                                alt: "Thumb image",
+                                class: "thumbimage",
+                                height: 100,
+                                width: 100
+                            });
+                            var removeBtn = $('<a href="javascript:" class="removeimg">Xóa</a>');
+
+                            removeBtn.on('click', function() {
+                                thumbContainer.remove(); // Xóa container của ảnh
+                            });
+
+                            thumbContainer.append(thumbImage).append(removeBtn);
+                            $('#thumbbox').append(thumbContainer); // Thêm container ảnh vào `thumbbox`
+                        };
+                    })(file);
+
+                    reader.readAsDataURL(file); // Đọc và hiển thị ảnh
+                }
+            }
+        }
+    });
+});
+
+
+
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#thumbimage').attr('src', e.target.result).show();
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$(document).on('click', '.Choicefile', function() {
+    $('#uploadfile').click();
+});
+
+$('#themSP').on('click', function() {
+    let tenSanPham = $('input[name="ten_san_pham"]').val();
+    let maLoaiSanPham = $('#danhmuc').val();
+    let maNhaCungCap = $('#nhacungcap').val();
+
+    // Chuyển đổi tất cả giá trị của `dung_tich` trong `sanPhamMau` thành chuỗi
+    sanPhamMau = sanPhamMau.map(item => ({
+        ...item,
+        dung_tich: String(item.dung_tich)  // Chuyển `dung_tich` thành chuỗi
+    }));
+
+    console.log("SanPhamMau:", sanPhamMau);
+
+    if (sanPhamMau.length === 0) {
+        alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
+        return;
+    }
+
+    $.ajax({
+        url: '/themsanpham',
+        type: 'POST',
+        data: {
+            ten_san_pham: tenSanPham,
+            ma_loai_san_pham: maLoaiSanPham,
+            ma_nha_cung_cap: maNhaCungCap,
+            bien_the: sanPhamMau,
+            _token: '{{ csrf_token() }}'
+        },
+        success: function(response) {
+            alert(response.message);
+        },
+        error: function(xhr) {
+            alert('Có lỗi xảy ra: ' + xhr.responseText);
+        }
+    });
+});
+
+
 
 
 
 </script>
-<script>
-    
-</script>
+
 @endsection
