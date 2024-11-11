@@ -250,7 +250,7 @@
                     <label class="control-label">Mô tả sản phẩm</label>
                     <textarea class="form-control" name="mota" id="mota"></textarea>
                 </div>
-                <button class="btn btn-save" type="button" id="themSP">Thêm</button>
+                <button class="btn btn-save" type="button" id="themSP" >Thêm</button>
                 <a class="btn btn-cancel" href="table-data-product.html">Hủy bỏ</a>
             </form>
         </div>
@@ -660,7 +660,13 @@ $('#themSP').on('click', function() {
         dung_tich: String(item.dung_tich)  // Chuyển `dung_tich` thành chuỗi
     }));
 
-    console.log("SanPhamMau:", sanPhamMau);
+    
+    // sanPhamMau = sanPhamMau.map(item => ({
+    //     ...item,
+    //     dung_tich: parseFloat(item.dung_tich)  // Ép kiểu dung_tich thành số
+    // }));
+    
+    //console.log("SanPhamMau:", sanPhamMau);
 
     if (sanPhamMau.length === 0) {
         alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
