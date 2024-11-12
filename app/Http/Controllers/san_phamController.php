@@ -11,8 +11,7 @@ use App\Models\dong_san_pham;
 use App\Models\nha_cung_cap;
 use App\Models\tuy_chon;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-
-;
+use Illuminate\Support\Facades\Log;
 
 class san_phamController extends Controller
 {
@@ -186,6 +185,7 @@ class san_phamController extends Controller
     public function themSanPhamVaBienThe(Request $request)
     {
         try {
+          
             // Kiểm tra dữ liệu đầu vào
             $validated = $request->validate([
                 'ten_san_pham' => 'required|string|max:255',
@@ -197,6 +197,7 @@ class san_phamController extends Controller
                 'bien_the.*.dung_tich' => 'nullable|string|max:100',  // Chỉ yêu cầu là chuỗi
                 'bien_the.*.so_luong_ton_kho' => 'nullable|integer|min:0',
                 'bien_the.*.gia_ban' => 'nullable|numeric|min:0',
+                
             ]);
 
             // Tạo sản phẩm mới bằng phương thức create
@@ -206,22 +207,35 @@ class san_phamController extends Controller
                 'ma_nha_cung_cap' => $request->ma_nha_cung_cap,
             ]);
 
-            // Xử lý ảnh sản phẩm
-            if ($request->has('anh_san_pham')) {
-                $bien = 0;
-                foreach ($request->anh_san_pham as $image) {
-                    // Kiểm tra và tải ảnh lên Cloudinary
-                    $upload = Cloudinary::upload($image->getRealPath(), [
-                        'folder' => 'PJ_MYPHAM/SanPham/'
-                    ]);
+            
+          
 
-                    // Lưu thông tin ảnh vào cơ sở dữ liệu
-                    anh_san_pham::create([
-                        'ma_san_pham' => $sanPham->ma_san_pham,
-                        'url_anh' => $upload->getSecureUrl(),
-                        'la_anh_chinh' => $bien === 0 ? 1 : 0,  // Đặt ảnh đầu tiên là ảnh chính
-                    ]);
-                    $bien++; // Tăng chỉ số để kiểm tra ảnh chính
+            if ($request->hasFile('images')) {
+                $bien = 0;
+               
+        
+                foreach ($request->file('images') as $file) {
+                    try {
+                        // Tải từng hình ảnh lên Cloudinary
+                        $result = Cloudinary::upload($file->getRealPath(), [
+                            'folder' => 'PJ_MYPHAM/SanPham',
+                        ]);
+        
+                        // Lưu thông tin vào bảng anh_san_pham
+                        anh_san_pham::create([
+                            'ma_san_pham' => $sanPham->ma_san_pham,
+                            'url_anh' => $result->getSecurePath(),  
+                            'la_anh_chinh' => $bien === 0 ? 1 : 0,  
+                        ]);
+        
+                        $bien++; // Tăng chỉ số để kiểm tra ảnh chính
+        
+                      
+                    } catch (\Exception $e) {
+                        // Xử lý lỗi nếu có
+                        $error = "Lỗi: " . $e->getMessage();
+                        return response()->json(['error' => 'Tệp không hợp lệ']);
+                    }
                 }
             }
 

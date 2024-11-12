@@ -235,7 +235,8 @@
                 <div class="form-group col-md-12">
                     <label class="control-label">Ảnh sản phẩm</label>
                     <div id="myfileupload">
-                        <input type="file" id="uploadfile" name="ImageUpload[]" onchange="readURL(this);" multiple/>
+                        <input type="file" id="uploadfile" name="images[]"  multiple/>
+                        {{-- onchange="readURL(this);" --}}
                     </div>
                     <div id="thumbbox">
                         <img height="450" width="400" alt="Thumb image" id="thumbimage" style="display: none" />
@@ -250,7 +251,7 @@
                     <label class="control-label">Mô tả sản phẩm</label>
                     <textarea class="form-control" name="mota" id="mota"></textarea>
                 </div>
-                <button class="btn btn-save" type="button" id="themSP" >Thêm</button>
+                <button class="btn btn-save" type="submit" id="themSP" >Thêm</button>
                 <a class="btn btn-cancel" href="table-data-product.html">Hủy bỏ</a>
             </form>
         </div>
@@ -655,47 +656,61 @@ $('#themSP').on('click', function() {
     let maLoaiSanPham = $('#danhmuc').val();
     let maNhaCungCap = $('#nhacungcap').val();
 
-    // Chuyển đổi tất cả giá trị của `dung_tich` trong `sanPhamMau` thành chuỗi
+    // Chuyển đổi tất cả giá trị của dung_tich trong sanPhamMau thành chuỗi
     sanPhamMau = sanPhamMau.map(item => ({
         ...item,
-        dung_tich: String(item.dung_tich)  // Chuyển `dung_tich` thành chuỗi
+        dung_tich: String(item.dung_tich)  // Chuyển dung_tich thành chuỗi
     }));
 
-    
-    
+    console.log("SanPhamMau:", sanPhamMau);
+
     if (sanPhamMau.length === 0) {
         alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
         return;
     }
+    $('#images').on('change', function() {
+    // Lấy các file đã được chọn từ input file
+    var imageFiles = $('#images')[0].files;
+    
+    // In ra console để kiểm tra
+    
+});
+     var imageFiles = $('#images')[0].files;
+    // var formData = new FormData();
 
-    var formData = new FormData();
-    formData.append('ten_san_pham', tenSanPham);
-    formData.append('ma_loai_san_pham', maLoaiSanPham);
-    formData.append('ma_nha_cung_cap', maNhaCungCap);
-    formData.append('bien_the[]', JSON.stringify(sanPhamMau)); // Chuyển sanPhamMau thành chuỗi JSON
-
-    // Thêm các ảnh vào formData
-    for (var i = 0; i < imageFiles.length; i++) {
-        formData.append('anh_san_pham[]', imageFiles[i]);
-    }
-    formData.append('_token', '{{ csrf_token() }}');
+    // // Đưa tất cả tệp ảnh vào FormData
+    // for (var i = 0; i < imageFiles.length; i++) {
+    //     formData.append('image_files[]', imageFiles[i]);
+    // }
 
     $.ajax({
-        url: '/themsanpham',
+        url: 'themsanpham',
         type: 'POST',
-        data: formData,
-        processData: false, // Không xử lý dữ liệu trước khi gửi
-        contentType: false, // Không gửi content-type
+        data: {
+
+            ten_san_pham: tenSanPham,
+            ma_loai_san_pham: maLoaiSanPham,
+            ma_nha_cung_cap: maNhaCungCap,
+            bien_the: sanPhamMau,
+            images:imageFiles,
+            _token: '{{ csrf_token() }}'
+        },
         success: function(response) {
             alert(response.message);
         },
-        error: function(xhr, status, error) {
-            var statusCode = xhr.status;
-            var errorMessage = xhr.responseText || "Không có thông báo lỗi";
-            alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
-        }
+       error: function(xhr, status, error) {
+    // Hiển thị mã trạng thái HTTP
+    var statusCode = xhr.status;
+
+    // Lấy thông báo lỗi từ responseText (nếu có)
+    var errorMessage = xhr.responseText || "Không có thông báo lỗi";
+
+    // Hiển thị lỗi trong alert
+    alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
+    }
+
     });
-});
+}); 
 
 
 

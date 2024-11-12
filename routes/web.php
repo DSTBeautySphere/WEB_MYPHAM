@@ -5,7 +5,6 @@ use App\Http\Controllers\danh_giaController;
 use App\Http\Controllers\gio_hangController;
 use App\Http\Controllers\loai_san_phamController;
 use App\Http\Controllers\nha_cung_capController;
-use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,6 +22,11 @@ include 'admin.php';
 
 Route::get('/test',[App\Http\Controllers\TestController::class,'tat_ca_san_pham']);
 
+// Route để hiển thị form tải lên ảnh
+Route::get('/show', [App\Http\Controllers\TestController::class, 'showForm']);
+
+// Route để xử lý tải lên ảnh
+Route::post('/upload-image', [App\Http\Controllers\TestController::class, 'uploadImage']);
 
 Route::middleware(['user'])->group(function(){
 
@@ -53,11 +57,7 @@ Route::post('/danhgiasanpham', [danh_giaController::class,'guiDanhGia']);
 Route::get('/nhacungcap',[nha_cung_capController::class, 'danh_sach_NCC' ]);
 
 
-//CURD
-// Route::post('/themsanpham',[App\Http\Controllers\san_phamController::class,'them_san_pham']);
-Route::post('/xoasanpham',[App\Http\Controllers\san_phamController::class,'xoa_san_pham']);
-Route::post('/capnhatsanpham',[App\Http\Controllers\san_phamController::class,'cap_nhat_san_pham']);
-//F
+
 Route::get('/laysanpham',[App\Http\Controllers\san_phamController::class,'lay_san_pham']);
 //end_san_pham
 
@@ -73,9 +73,3 @@ Route::get('/danhsachloai',[loai_san_phamController::class,'loadLoaiSanPham']);
 Route::get('/laynhomtuychontheoloai',[App\Http\Controllers\loai_san_phamController::class,'layNhomTuyChonTheoLoai']);
 Route::get('/layloaisanpham',[App\Http\Controllers\loai_san_phamController::class,'layLoaiSanPham']);
 Route::get('/laynhomtuychon',[App\Http\Controllers\tuy_chonController::class,'layNhomTuyChon']);
-
-
-
-//test
-Route::post('/upload-image', [TestController::class, 'uploadImage'])->name('uploadImage');
-Route::get('/upload', [TestController::class, 'showForm']);
