@@ -276,24 +276,35 @@
 
 {{-- Modal 1 mẫu đây có dì coi thamm khảo --}}
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Thêm mới nhà cung cấp</h5>
-                <!-- Nút đóng -->
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    X
-                </button>
+                <h5 class="modal-title" id="exampleModalCenterTitle">Quản lý Nhà Cung Cấp</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">X</button>
             </div>
             <div class="modal-body">
-                <div class="form-group col-md-12">
-                    <label class="control-label">Nhập tên chức vụ mới</label>
-                    <input class="form-control" type="text" required>
-                </div>
-                <br>
-                <button class="btn btn-save" type="button">Lưu lại</button>
-                <a class="btn btn-cancel" data-dismiss="modal" href="#">Hủy bỏ</a>
-                <br><br>
+                <form id="formNhaCungCap" method="POST" action="/themnhacungcap">
+                    <div class="form-group col-md-12">
+                        <label class="control-label">Nhập tên nhà cung cấp mới</label>
+                        <input class="form-control" type="text" id="ten_nha_cung_cap" name="ten_nha_cung_cap" required>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="control-label">Nhập địa chỉ</label>
+                        <input class="form-control" type="text" id="dia_chi" name="dia_chi" required>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="control-label">Nhập số điện thoại</label>
+                        <input class="form-control" type="text" id="so_dien_thoai" name="so_dien_thoai" required>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="control-label">Nhập email</label>
+                        <input class="form-control" type="email" id="email" name="email" required>
+                    </div>
+                    <br>
+                    <button class="btn btn-save" type="button" id="saveNhaCungCap">Lưu lại</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">Hủy bỏ</a>
+                    <br><br>
+                </form>
 
                 <h5>Danh sách nhà cung cấp</h5>
                 <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
@@ -302,25 +313,34 @@
                             <tr>
                                 <th>#</th>
                                 <th>Tên nhà cung cấp</th>
-                                <th>Chức vụ</th>
+                                <th>Địa chỉ</th>
+                                <th>Số điện thoại</th>
+                                <th>Email</th>
+                                <th>Chức năng</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Nhà cung cấp A</td>
-                                <td>Giám đốc</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Nhà cung cấp B</td>
-                                <td>Quản lý</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Nhà cung cấp C</td>
-                                <td>Nhân viên</td>
-                            </tr>
+                            @foreach ($nhaCungCap as $item)
+                                <tr>
+                                    <td>{{ $item->ma_nha_cung_cap }}</td>
+                                    <td>{{ $item->ten_nha_cung_cap }}</td>
+                                    <td>{{ $item->dia_chi }}</td>
+                                    <td>{{ $item->so_dien_thoai }}</td>
+                                    <td>{{ $item->email }}</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" 
+                                                    onclick="openEditModal(this)"
+                                                    data-ma-nha-cung-cap="{{ $item->ma_nha_cung_cap }}"
+                                                    data-ten-nha-cung-cap="{{ $item->ten_nha_cung_cap }}"
+                                                    data-dia-chi="{{ $item->dia_chi }}"
+                                                    data-so-dien-thoai="{{ $item->so_dien_thoai }}"
+                                                    data-email="{{ $item->email }}">
+                                                Sửa
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" onclick="deleteNhaCungCap({{ $item->ma_nha_cung_cap }})">Xóa</button>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -329,6 +349,40 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalEditNCC" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Sửa Nhà Cung Cấp</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditNhaCungCap" method="POST" action="/suanhacungcap">
+                    <input type="hidden" id="edit_ma_nha_cung_cap" name="ma_nha_cung_cap">
+                    <div class="form-group">
+                        <label for="edit_ten_nha_cung_cap">Tên nhà cung cấp</label>
+                        <input class="form-control" type="text" id="edit_ten_nha_cung_cap" name="ten_nha_cung_cap" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_dia_chi">Địa chỉ</label>
+                        <input class="form-control" type="text" id="edit_dia_chi" name="dia_chi" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_so_dien_thoai">Số điện thoại</label>
+                        <input class="form-control" type="text" id="edit_so_dien_thoai" name="so_dien_thoai" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_email">Email</label>
+                        <input class="form-control" type="email" id="edit_email" name="email" required>
+                    </div>
+                    <br>
+                    <button class="btn btn-save" type="submit">Lưu lại</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">Hủy bỏ</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {{-- -- --}}
 @endsection
 
@@ -431,6 +485,7 @@ let sanPhamMau = [];
         }
     });
 });
+
 $('#layMau').click(function() {
     var mau = [];
     var dungtich = [];
@@ -671,6 +726,7 @@ $('#layMau').click(function() {
 
 
 });
+
 $(document).ready(function() {
     $('#uploadfile').on('change', function(e) {
         $('#thumbbox').empty(); // Xóa các ảnh đã hiển thị trước đó
@@ -709,8 +765,6 @@ $(document).ready(function() {
         }
     });
 });
-
-
 
 
 function readURL(input) {
@@ -803,4 +857,123 @@ $('#themSP').on('click', function(event) {
 
 </script>
 
+
+<script>
+    // Thêm nhà cung cấp mới
+ $('#saveNhaCungCap').click(function() {
+     const ten_nha_cung_cap = $('#ten_nha_cung_cap').val();
+     const dia_chi = $('#dia_chi').val();
+     const so_dien_thoai = $('#so_dien_thoai').val();
+     const email = $('#email').val();
+ 
+     // Kiểm tra xem tên nhà cung cấp và email có được nhập không
+     if (!ten_nha_cung_cap || !email) {
+         alert('Vui lòng nhập tên nhà cung cấp và email');
+         return;
+     }
+ 
+     $.ajax({
+         url: 'themnhacungcap',
+         type: 'POST',
+         data: {
+             "_token": "{{ csrf_token() }}",
+             ten_nha_cung_cap,
+             dia_chi,
+             so_dien_thoai,
+             email
+         },
+         success: function(response) {
+             alert(response.message);
+             location.reload(); // Tải lại trang để cập nhật danh sách nhà cung cấp
+         },
+         error: function(xhr) {
+             // Hiển thị thông báo lỗi chi tiết từ phía máy chủ
+             if (xhr.status === 422) {
+                 const errors = xhr.responseJSON.errors;
+                 let errorMessage = 'Lỗi khi thêm nhà cung cấp:\n';
+                 for (const field in errors) {
+                     errorMessage += `${errors[field][0]}\n`;
+                 }
+                 alert(errorMessage);
+             } else {
+                 alert('Thêm nhà cung cấp thất bại');
+             }
+         }
+     });
+ });
+ 
+ 
+     // Xóa nhà cung cấp
+     // function deleteNhaCungCap(id) {
+     //     if (confirm('Bạn có chắc muốn xóa nhà cung cấp này?')) {
+     //         $.ajax({
+     //             url: `/xoa-nha-cung-cap/${id}`,
+     //             type: 'DELETE',
+     //             data: {
+     //                 "_token": "{{ csrf_token() }}",
+     //             },
+     //             success: function(response) {
+     //                 alert(response.message);
+     //                 $(`#ncc_${id}`).remove(); // Xóa dòng tương ứng trong bảng
+     //             },
+     //             error: function(xhr) {
+     //                 alert('Xóa nhà cung cấp thất bại');
+     //             }
+     //         });
+     //     }
+     // }
+ 
+     // // Sửa nhà cung cấp
+    // Mở modal và điền dữ liệu nhà cung cấp vào form sửa
+    function openEditModal(button) {
+        // Lấy dữ liệu từ các data-* attributes
+        var ma_nha_cung_cap = $(button).data('ma-nha-cung-cap');
+        var ten_nha_cung_cap = $(button).data('ten-nha-cung-cap');
+        var dia_chi = $(button).data('dia-chi');
+        var so_dien_thoai = $(button).data('so-dien-thoai');
+        var email = $(button).data('email');
+        
+        // Gán giá trị vào các input trong form sửa
+        $('#edit_ma_nha_cung_cap').val(ma_nha_cung_cap);
+        $('#edit_ten_nha_cung_cap').val(ten_nha_cung_cap);
+        $('#edit_dia_chi').val(dia_chi);
+        $('#edit_so_dien_thoai').val(so_dien_thoai);
+        $('#edit_email').val(email);
+        
+        // Mở modal sửa
+        $('#modalEditNCC').modal('show');
+    }
+
+// Lưu thay đổi thông tin nhà cung cấp
+$('#saveEditNhaCungCap').click(function() {
+    const ma_nha_cung_cap = $('#edit_ma_nha_cung_cap').val();
+    const ten_nha_cung_cap = $('#edit_ten_nha_cung_cap').val();
+    const dia_chi = $('#edit_dia_chi').val();
+    const so_dien_thoai = $('#edit_so_dien_thoai').val();
+    const email = $('#edit_email').val();
+
+    $.ajax({
+        url: '/suanhacungcap', // Đường dẫn route sửa nhà cung cấp
+        type: 'POST',
+        data: {
+            "_token": "{{ csrf_token() }}",
+            ma_nha_cung_cap,
+            ten_nha_cung_cap,
+            dia_chi,
+            so_dien_thoai,
+            email
+        },
+        success: function(response) {
+            alert(response.message);
+            $('#modalEditNCC').modal('hide'); // Đóng modal
+            location.reload(); // Tải lại trang
+            //window.location.href = '/showthemsanpham'; 
+        },
+        error: function(xhr) {
+            alert('Có lỗi xảy ra khi sửa nhà cung cấp');
+        }
+    });
+});
+
+ </script>
 @endsection

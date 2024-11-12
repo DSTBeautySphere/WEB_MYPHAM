@@ -10,9 +10,9 @@ class nha_cung_capController extends Controller
 {
     //
 
-    public function danh_sach_NCC(){
-        $ncc= nha_cung_cap::paginate(2);
-        return response()->json($ncc);
+    public function danh_sach_NCC() {
+        $nhacungcap = nha_cung_cap::all();
+        return view('sanpham.nha-cung-cap', ['nhacungcap' => $nhacungcap]);
     }
 
     public function themNCC(Request $request){
@@ -53,9 +53,9 @@ class nha_cung_capController extends Controller
         return response()->json(['message' => 'Nhà cung cấp đã được xóa thành công'], 200);
     }
     
-    public function suaNCC(Request $request, $id) {
+    public function suaNCC(Request $request) {
         // Tìm nhà cung cấp theo ID
-        $ncc = nha_cung_cap::find($id);
+        $ncc = nha_cung_cap::find($request->ma_nha_cung_cap);
     
         // Kiểm tra nếu nhà cung cấp không tồn tại
         if (!$ncc) {
@@ -71,7 +71,7 @@ class nha_cung_capController extends Controller
         // Lưu thay đổi
         $ncc->save();
     
-        return response()->json(['message' => 'Nhà cung cấp đã được cập nhật thành công'], 200);
+        return redirect()->back();
     }
         
 }

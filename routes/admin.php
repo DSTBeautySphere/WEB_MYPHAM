@@ -44,7 +44,8 @@ use Illuminate\Support\Facades\Route;
     //nha cung cap
     Route::post('/themnhacungcap', [nha_cung_capController::class, 'themNCC']);
     Route::delete('/xoanhacungcap/{id}',[nha_cung_capController::class,'xoaNCC']);
-    Route::post('/suanhacungcap/{id}',[nha_cung_capController::class,'suaNCC']);
+    Route::post('/suanhacungcap',[nha_cung_capController::class,'suaNCC']);
+    Route::get("/danhsachnhacungcap",[nha_cung_capController::class,'danh_sach_NCC']);
 
     //don hang
     Route::post('themdondat',[App\Http\Controllers\don_datController::class,'themDonDat']);
