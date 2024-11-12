@@ -651,69 +651,69 @@ $(document).on('click', '.Choicefile', function() {
     $('#uploadfile').click();
 });
 
-$('#themSP').on('click', function() {
+$('#themSP').on('click', function(event) {
+    // Ngừng sự kiện mặc định để tránh reload trang
+    event.preventDefault();
+
     let tenSanPham = $('input[name="ten_san_pham"]').val();
     let maLoaiSanPham = $('#danhmuc').val();
     let maNhaCungCap = $('#nhacungcap').val();
 
-    // Chuyển đổi tất cả giá trị của dung_tich trong sanPhamMau thành chuỗi
+    // Chuyển đổi dung_tich thành chuỗi
     sanPhamMau = sanPhamMau.map(item => ({
         ...item,
-        dung_tich: String(item.dung_tich)  // Chuyển dung_tich thành chuỗi
+        dung_tich: String(item.dung_tich)
     }));
-
-    console.log("SanPhamMau:", sanPhamMau);
 
     if (sanPhamMau.length === 0) {
         alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
         return;
     }
-    $('#images').on('change', function() {
-    // Lấy các file đã được chọn từ input file
-    var imageFiles = $('#images')[0].files;
-    
-    // In ra console để kiểm tra
-    
-});
-     var imageFiles = $('#images')[0].files;
-    // var formData = new FormData();
 
-    // // Đưa tất cả tệp ảnh vào FormData
-    // for (var i = 0; i < imageFiles.length; i++) {
-    //     formData.append('image_files[]', imageFiles[i]);
-    // }
+    var imageFiles = $('#images')[0].files;
+
+    var formData = new FormData();
+    formData.append('ten_san_pham', tenSanPham);
+    formData.append('ma_loai_san_pham', maLoaiSanPham);
+    formData.append('ma_nha_cung_cap', maNhaCungCap);
+    formData.append('_token', '{{ csrf_token() }}');
+
+    // Thêm các biến thể vào formData
+    formData.append('bien_the', JSON.stringify(sanPhamMau));
+
+    // Thêm các tệp ảnh vào formData
+    for (let i = 0; i < imageFiles.length; i++) {
+        formData.append('images[]', imageFiles[i]);
+    }
+    console.log("Danh sách tệp:", imageFiles);
 
     $.ajax({
         url: 'themsanpham',
         type: 'POST',
-        data: {
-
-            ten_san_pham: tenSanPham,
-            ma_loai_san_pham: maLoaiSanPham,
-            ma_nha_cung_cap: maNhaCungCap,
-            bien_the: sanPhamMau,
-            images:imageFiles,
-            _token: '{{ csrf_token() }}'
-        },
+        data: formData,
+        contentType: false,
+        processData: false,
         success: function(response) {
             alert(response.message);
         },
-       error: function(xhr, status, error) {
-    // Hiển thị mã trạng thái HTTP
-    var statusCode = xhr.status;
-
-    // Lấy thông báo lỗi từ responseText (nếu có)
-    var errorMessage = xhr.responseText || "Không có thông báo lỗi";
-
-    // Hiển thị lỗi trong alert
-    alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
-    }
-
+        error: function(xhr, status, error) {
+            var statusCode = xhr.status;
+            var errorMessage = "Không có thông báo lỗi";
+            try {
+                var responseJson = JSON.parse(xhr.responseText);
+                errorMessage = responseJson.message || errorMessage;
+                if (responseJson.details) {
+                    errorMessage += "\nChi tiết lỗi: " + responseJson.details;
+                }
+            } catch (e) {
+                errorMessage = xhr.responseText || errorMessage;
+            }
+            console.error('Có lỗi xảy ra:');
+            console.error('Mã trạng thái: ' + statusCode);
+            console.error('Thông báo lỗi: ' + errorMessage);
+        }
     });
-}); 
-
-
-
+});
 
 </script>
 
