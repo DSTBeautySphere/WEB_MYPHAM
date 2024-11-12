@@ -185,91 +185,85 @@ class san_phamController extends Controller
     public function themSanPhamVaBienThe(Request $request)
     {
         try {
-          
             // Kiểm tra dữ liệu đầu vào
             $validated = $request->validate([
                 'ten_san_pham' => 'required|string|max:255',
                 'ma_loai_san_pham' => 'required|string|exists:loai_san_pham,ma_loai_san_pham',
                 'ma_nha_cung_cap' => 'required|string|exists:nha_cung_cap,ma_nha_cung_cap',
                 'bien_the' => 'array',
-                'bien_the.*.mau_sac' => 'nullable|string|max:100', 
-                'bien_the.*.loai_da' => 'nullable|string|max:100',  
-                'bien_the.*.dung_tich' => 'nullable|string|max:100',  // Chỉ yêu cầu là chuỗi
+                'bien_the.*.mau_sac' => 'nullable|string|max:100',
+                'bien_the.*.loai_da' => 'nullable|string|max:100',
+                'bien_the.*.dung_tich' => 'nullable|string|max:100',
                 'bien_the.*.so_luong_ton_kho' => 'nullable|integer|min:0',
                 'bien_the.*.gia_ban' => 'nullable|numeric|min:0',
-                
             ]);
-
+    
             // Tạo sản phẩm mới bằng phương thức create
             $sanPham = san_pham::create([
                 'ten_san_pham' => $request->ten_san_pham,
                 'ma_loai_san_pham' => $request->ma_loai_san_pham,
                 'ma_nha_cung_cap' => $request->ma_nha_cung_cap,
             ]);
-
-            
-          
-
+    
+            // Tải và lưu ảnh
             if ($request->hasFile('images')) {
                 $bien = 0;
-               
-        
-                foreach ($request->file('images') as $file) {
+                foreach ($request->file('images') as $index => $file) {
                     try {
+                        // Kiểm tra xem file có hợp lệ hay không
+                        if (!$file->isValid()) {
+                            throw new \Exception("Tệp ảnh không hợp lệ tại vị trí: " . ($index + 1));
+                        }
+    
                         // Tải từng hình ảnh lên Cloudinary
                         $result = Cloudinary::upload($file->getRealPath(), [
                             'folder' => 'PJ_MYPHAM/SanPham',
                         ]);
-        
+    
                         // Lưu thông tin vào bảng anh_san_pham
                         anh_san_pham::create([
                             'ma_san_pham' => $sanPham->ma_san_pham,
-                            'url_anh' => $result->getSecurePath(),  
-                            'la_anh_chinh' => $bien === 0 ? 1 : 0,  
+                            'url_anh' => $result->getSecurePath(),
+                            'la_anh_chinh' => $bien === 0 ? 1 : 0,
                         ]);
-        
-                        $bien++; // Tăng chỉ số để kiểm tra ảnh chính
-        
-                      
+    
+                        $bien++;
                     } catch (\Exception $e) {
-                        // Xử lý lỗi nếu có
-                        $error = "Lỗi: " . $e->getMessage();
-                        return response()->json(['error' => 'Tệp không hợp lệ']);
+                        // Trả về lỗi chi tiết khi xảy ra lỗi với ảnh
+                        return response()->json([
+                            'error' => 'Tệp không hợp lệ',
+                            'message' => 'Lỗi khi tải ảnh tại vị trí ' . ($index + 1),
+                            'details' => $e->getMessage(),
+                        ], 422);
                     }
                 }
             }
-
+    
             // Thêm các biến thể sản phẩm
             if ($request->has('bien_the')) {
                 foreach ($request->bien_the as $bienThe) {
-                    // Lưu các biến thể sản phẩm vào cơ sở dữ liệu
                     bien_the_san_pham::create([
                         'ma_san_pham' => $sanPham->ma_san_pham,
                         'mau_sac' => $bienThe['mau_sac'] ?? null,
                         'loai_da' => $bienThe['loai_da'] ?? null,
-                        'dung_tich' => $bienThe['dung_tich'] ?? null,  // giữ chuỗi dung_tich
+                        'dung_tich' => $bienThe['dung_tich'] ?? null,
                         'so_luong_ton_kho' => $bienThe['so_luong_ton_kho'] ?? null,
                         'gia_ban' => $bienThe['gia_ban'] ?? null,
                     ]);
                 }
             }
-
-            // Trả về thông báo thành công
-            
+    
             return response()->json(['message' => 'Thêm thành công']);
         } catch (\Exception $e) {
-            // Xử lý lỗi nếu có và trả về thông báo lỗi chi tiết
+            // Trả về lỗi chung nếu có lỗi ngoài phần tải ảnh
             return response()->json([
                 'message' => 'Có lỗi xảy ra',
                 'error' => $e->getMessage(),
-                
             ], 500);
-         
         }
     }
-
-
-   
+    
+    
 
     public function xoa_san_pham(Request $request)
     {
