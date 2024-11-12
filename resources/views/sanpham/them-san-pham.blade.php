@@ -118,7 +118,23 @@
         opacity: 0.5;
         pointer-events: none;
     }
+    /* css modal */
 
+    .modal-header .close {
+        color: #000;  /* Màu đen cho dấu X */
+        opacity: 1;   /* Đảm bảo không bị mờ */
+        font-size: 1.5rem; /* Điều chỉnh kích thước dấu X */
+        z-index: 1050; /* Đảm bảo nút thoát hiển thị trên cùng */
+    }
+
+    .modal-header .close:hover {
+        color: #dc3545;  /* Màu đỏ khi hover */
+        opacity: 0.8;    /* Đổi độ mờ khi hover */
+    }
+
+    .modal-header {
+        position: relative;  /* Đảm bảo modal header có thể chứa nút đóng */
+    }
 
 
 </style>
@@ -257,10 +273,70 @@
         </div>
     </div>
 </div>
+
+{{-- Modal 1 mẫu đây có dì coi thamm khảo --}}
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Thêm mới nhà cung cấp</h5>
+                <!-- Nút đóng -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    X
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group col-md-12">
+                    <label class="control-label">Nhập tên chức vụ mới</label>
+                    <input class="form-control" type="text" required>
+                </div>
+                <br>
+                <button class="btn btn-save" type="button">Lưu lại</button>
+                <a class="btn btn-cancel" data-dismiss="modal" href="#">Hủy bỏ</a>
+                <br><br>
+
+                <h5>Danh sách nhà cung cấp</h5>
+                <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tên nhà cung cấp</th>
+                                <th>Chức vụ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Nhà cung cấp A</td>
+                                <td>Giám đốc</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Nhà cung cấp B</td>
+                                <td>Quản lý</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Nhà cung cấp C</td>
+                                <td>Nhân viên</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- -- --}}
 @endsection
 
 @section('js')
 <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
 <script>
     CKEDITOR.replace('mota', {
         toolbar: [
@@ -273,7 +349,7 @@
         height: 300
     });
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
 
 <script>
 let sanPhamMau = [];
@@ -653,7 +729,7 @@ $(document).on('click', '.Choicefile', function() {
 
 $('#themSP').on('click', function(event) {
     // Ngừng sự kiện mặc định để tránh reload trang
-    event.preventDefault();
+   
 
     let tenSanPham = $('input[name="ten_san_pham"]').val();
     let maLoaiSanPham = $('#danhmuc').val();
@@ -714,6 +790,16 @@ $('#themSP').on('click', function(event) {
         }
     });
 });
+// Modal
+
+
+
+
+</script>
+<script>
+    $('#btnAddNhaCungCap').click(function() {
+        $('#exampleModalCenter').modal('show');
+    });
 
 </script>
 
