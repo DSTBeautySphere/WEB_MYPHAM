@@ -16,6 +16,16 @@ use Illuminate\Support\Facades\Route;
 // Route::post('/themnhacungcap',[nha_cung_capController::class,'themNCC']);
 
 // Route::prefix('admin')->group(function () {
+
+
+Route::prefix('admin')->group(function () {
+    Route::get('/showlogin', [AdminController::class, 'showLoginForm']);
+    Route::post('/login', [AdminController::class, 'login']);
+
+    Route::middleware(['admin'])->group(function () {
+       
+    });
+});
     //san pham
     
     Route::post('/xoasanpham',[App\Http\Controllers\san_phamController::class,'xoa_san_pham']);

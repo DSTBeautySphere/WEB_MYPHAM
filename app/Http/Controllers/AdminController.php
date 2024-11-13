@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\anh_san_pham;
 use App\Models\bien_the_san_pham;
 use Illuminate\Http\Request;
@@ -11,12 +12,50 @@ use App\Models\dong_san_pham;
 use App\Models\nha_cung_cap;
 use App\Models\tuy_chon;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 
 class AdminController extends Controller
 {
     //
+
+    public function showLoginForm()
+    {
+        return view('dangnhap');
+        
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'mat_khau' => 'required',
+        ]);
+
+        $admin = Admin::where('email', $request->email)->first();
+
+        if ($admin && $request->mat_khau === $admin->mat_khau) {
+            Auth::guard('admin')->login($admin);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Đăng nhập thành công',
+                'data' => [
+                    'admin' => $admin,
+                ],
+            ]);
+        }
+
+        return back()->withErrors(['loginError' => 'Email hoặc mật khẩu không đúng']);
+    }
+
+    // public function logout()
+    // {
+    //     Auth::guard('admin')->logout();
+    //     return redirect()->route('admin.login');
+    // }
+
     public function view_san_pham()
     {
         return view('sanpham');

@@ -5,13 +5,14 @@
     <title>Đăng nhập quản trị | Website quản trị v2.0</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-    <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="css/util.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/animate/animate.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/css-hamburgers/hamburgers.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/select2/select2.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/util.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}">
+    
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
@@ -35,16 +36,14 @@
                     </span>
                     <!--=====FORM INPUT TÀI KHOẢN VÀ PASSWORD======-->
                     <div class="wrap-input100 validate-input">
-                        <input class="input100" type="text" placeholder="Tài khoản quản trị" name="username"
-                            id="username">
+                        <input class="input100" type="text" placeholder="Tài khoản quản trị" name="email" id="email">
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class='bx bx-user'></i>
                         </span>
                     </div>
                     <div class="wrap-input100 validate-input">
-                        <input autocomplete="off" class="input100" type="password" placeholder="Mật khẩu"
-                               name="current-password" id="password-field">
+                        <input autocomplete="off" class="input100" type="password" placeholder="Mật khẩu" name="mat_khau" id="mat_khau">
                         <span class="bx fa-fw bx-hide field-icon click-eye" id="toggle-password"></span>
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
@@ -111,7 +110,44 @@
         });
     </script>
     
-    
+<script>
+    $(document).ready(function() {
+    $('#submit').click(function(e) {
+        e.preventDefault(); // Ngăn form reload trang
+
+        // Lấy giá trị từ input
+        var email = $('#email').val();
+        var mat_khau = $('#mat_khau').val();
+
+        // Gửi yêu cầu AJAX
+        $.ajax({
+            url: '/admin/login',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                email: email,
+                mat_khau: mat_khau,
+                _token: '{{ csrf_token() }}' // CSRF token cho Laravel
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    // Đăng nhập thành công
+                    swal("Thành công!", response.message, "success")
+                        // .then(() => {
+                        //     window.location.href = "/admin/dashboard"; // Điều hướng đến trang dashboard
+                        // });
+                }
+            },
+            error: function(xhr) {
+                // Xử lý lỗi
+                swal("Lỗi!", "Email hoặc mật khẩu không đúng", "error");
+            }
+        });
+    });
+});
+
+
+</script>
 </body>
 
 </html>
