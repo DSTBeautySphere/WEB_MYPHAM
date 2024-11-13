@@ -13,7 +13,8 @@ use App\Models\tuy_chon;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\Log;
 
-class san_phamController extends Controller
+
+class AdminController extends Controller
 {
     //
     public function view_san_pham()
@@ -206,9 +207,9 @@ class san_phamController extends Controller
             ]);
     
             // Tải và lưu ảnh
-            if ($request->hasFile('images')) {
+            if ($request->hasFile('anh_san_pham')) {
                 $bien = 0;
-                foreach ($request->file('images') as $index => $file) {
+                foreach ($request->file('anh_san_pham') as $index => $file) {
                     try {
                         // Kiểm tra xem file có hợp lệ hay không
                         if (!$file->isValid()) {
@@ -255,6 +256,7 @@ class san_phamController extends Controller
     
             return response()->json(['message' => 'Thêm thành công']);
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             // Trả về lỗi chung nếu có lỗi ngoài phần tải ảnh
             return response()->json([
                 'message' => 'Có lỗi xảy ra',
@@ -315,6 +317,16 @@ class san_phamController extends Controller
                     ->paginate($sosanpham);
         return response()->json($sanpham);
     }
+    
 
+    public function showQuanLySanPham(Request $request)
+    {
+        $sanPham = san_pham::paginate(4); 
+
+    
+        return view('sanpham.quan-ly-san-pham', compact('sanPham')); 
+    }
+
+    
 
 }

@@ -15,6 +15,14 @@ class nha_cung_capController extends Controller
         return view('sanpham.nha-cung-cap', ['nhacungcap' => $nhacungcap]);
     }
 
+    public function layNhaCungCap()
+    {
+        $ncc=nha_cung_cap::all();
+        return response()->json($ncc);
+    }
+
+
+
     public function themNCC(Request $request){
         $request->validate([
             'ten_nha_cung_cap' => 'required|string|max:255',

@@ -5,6 +5,7 @@ use App\Http\Controllers\dong_san_phamController;
 use App\Http\Controllers\loai_san_phamController;
 use App\Http\Controllers\nha_cung_capController;
 use App\Http\Controllers\san_phamController;
+use App\Http\Controllers\AdminController;
 use App\Models\loai_san_pham;
 use Illuminate\Support\Facades\Route;
 
@@ -19,8 +20,10 @@ use Illuminate\Support\Facades\Route;
     
     Route::post('/xoasanpham',[App\Http\Controllers\san_phamController::class,'xoa_san_pham']);
     Route::post('/capnhatsanpham',[App\Http\Controllers\san_phamController::class,'cap_nhat_san_pham']);
-    Route::get('/showthemsanpham',[App\Http\Controllers\san_phamController::class,'showThemSanPham']);
+    Route::get('/showthemsanpham',[App\Http\Controllers\AdminController::class,'showThemSanPham']);
     Route::post('/themsanpham',[App\Http\Controllers\san_phamController::class,'themSanPhamVaBienThe']);
+    Route::get('/showquanlysanpham',[App\Http\Controllers\AdminController::class,'showQuanLySanPham']);
+
 
 
     //bien the san pham
@@ -46,6 +49,8 @@ use Illuminate\Support\Facades\Route;
     Route::delete('/xoanhacungcap/{id}',[nha_cung_capController::class,'xoaNCC']);
     Route::post('/suanhacungcap',[nha_cung_capController::class,'suaNCC']);
     Route::get("/danhsachnhacungcap",[nha_cung_capController::class,'danh_sach_NCC']);
+    //winform
+    Route::get("/laynhacungcap",[nha_cung_capController::class,'layNhaCungCap']);
 
     //don hang
     Route::post('themdondat',[App\Http\Controllers\don_datController::class,'themDonDat']);
@@ -54,9 +59,8 @@ use Illuminate\Support\Facades\Route;
     Route::post('themchitietdondat',[App\Http\Controllers\chi_tiet_don_datController::class,'themChiTietDonDat']);
 
 
-    // //admincontroller
-    // Route::get('/gdthemsanpham',[App\Http\Controllers\AdminController::class,'showThemSanPham']);
-    // Route::post('/gdthemsanpham',[App\Http\Controllers\AdminController::class,'themSanPhamVaBienThe']);
+  
+
 
 
 // });

@@ -22,7 +22,7 @@ class TestController extends Controller
 
     public function showForm()
     {
-        return view('test');
+        return view('sanpham.quan-ly-san-pham');
     }
 
     public function uploadImage(Request $request)

@@ -813,7 +813,7 @@ $('#themSP').on('click', function(event) {
 
     // Thêm các tệp ảnh vào formData
     for (let i = 0; i < imageFiles.length; i++) {
-        formData.append('images[]', imageFiles[i]);
+        formData.append('anh_san_pham[]', imageFiles[i]);
     }
     console.log("Danh sách tệp:", imageFiles);
 

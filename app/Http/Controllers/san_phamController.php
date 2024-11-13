@@ -174,13 +174,6 @@ class san_phamController extends Controller
 
     }
 
-    public function showThemSanPham()
-    {
-        $loaiSanPham=loai_san_pham::all();
-        $nhaCungCap=nha_cung_cap::all();
-        $tuyChon=tuy_chon::all();
-        return view('sanpham.them-san-pham',['loaiSanPham'=>$loaiSanPham,'nhaCungCap'=>$nhaCungCap,'tuyChon'=>$tuyChon]);
-    }
 
     public function themSanPhamVaBienThe(Request $request)
     {
