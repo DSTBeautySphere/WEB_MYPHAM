@@ -45,7 +45,7 @@ class gio_hangController extends Controller
     {
       
         $request->validate([
-            'ma_san_pham' => 'required|integer|exists:san_pham,ma_san_pham',
+            'ma_bien_the' => 'required|integer|exists:san_pham,ma_san_pham',
             'so_luong' => 'required|integer|min:1',
         ]);
 
@@ -66,7 +66,7 @@ class gio_hangController extends Controller
 
        
         $chiTietGioHang = chi_tiet_gio_hang::where('ma_gio_hang', $gioHang->ma_gio_hang)
-            ->where('ma_san_pham', $request->ma_san_pham)
+            ->where('ma_bien_the', $request->ma_bien_the)
             ->first();
 
         if ($chiTietGioHang) {
@@ -78,7 +78,7 @@ class gio_hangController extends Controller
             // Nếu sản phẩm chưa có trong giỏ hàng, thêm mới
             chi_tiet_gio_hang::create([
                 'ma_gio_hang' => $gioHang->ma_gio_hang,
-                'ma_san_pham' => $request->ma_san_pham,
+                'ma_bien_the' => $request->ma_bien_the,
                 'so_luong' => $request->so_luong,
                 'gia_ban' => $request->gia_ban, // Giả sử giá bán được truyền trong request
             ]);
