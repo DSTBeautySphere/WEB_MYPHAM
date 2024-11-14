@@ -37,6 +37,7 @@ Route::post('/dangXuat', [AuthController::class, 'dangXuat']);
 
 
 Route::post('/themgioHang', [gio_hangController::class,"themSP_GH"]);
+Route::get('/chitietgiohang', [gio_hangController::class,"chiTietGioHang"]);
 
 
 //san_pham
