@@ -178,7 +178,7 @@ class san_phamController extends Controller
     public function themSanPhamVaBienThe(Request $request)
     {
         try {
-          
+            
             // Kiểm tra dữ liệu đầu vào
             $validated = $request->validate([
                 'ten_san_pham' => 'required|string|max:255',
@@ -249,7 +249,7 @@ class san_phamController extends Controller
 
             // Trả về thông báo thành công
             
-            return response()->json(['message' => 'Thêm thành công']);
+            return redirect('showquanlysanpham')->with('success', 'Sản phẩm đã được thêm thành công!');
         } catch (\Exception $e) {
             // Xử lý lỗi nếu có và trả về thông báo lỗi chi tiết
             return response()->json([

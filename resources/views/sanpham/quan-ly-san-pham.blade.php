@@ -19,7 +19,7 @@
             <div class="row element-button">
                 <div class="col-sm-2">
   
-                  <a class="btn btn-add btn-sm" href="form-add-san-pham.html" title="Thêm"><i class="fas fa-plus"></i>
+                  <a class="btn btn-add btn-sm" href="{{ url('/showthemsanpham') }}" title="Thêm"><i class="fas fa-plus"></i>
                     Tạo mới sản phẩm</a>
                 </div>
                 <div class="col-sm-2">
@@ -68,7 +68,13 @@
                         <td width="10"><input type="checkbox" name="check1" value="1"></td>
                         <td>{{ $item->ma_san_pham }}</td>
                         <td>{{ $item->ten_san_pham }}</td>
-                        <td><img src="/img-sanpham/tu.jpg" alt="" width="50px;"></td>
+                        <td>
+                            @if ($item->anh_san_pham->isNotEmpty())
+                            <img src="{{$item->anh_san_pham->first()->url_anh }}" alt="Ảnh sản phẩm" width="50px;">
+                        @else
+                            <img src="#" alt="Không có ảnh" width="50px;">
+                        @endif
+                        </td>
                         <td>0</td>
                         <td><span class="badge bg-danger">Hét hàng</span></td>
                         <td>2.450.000 đ</td>
