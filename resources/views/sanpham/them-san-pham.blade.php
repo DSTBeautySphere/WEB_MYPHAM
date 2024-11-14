@@ -1009,7 +1009,7 @@ $('#themSP').on('click', function(event) {
         processData: false, // Không chuyển dữ liệu thành một chuỗi query
         success: function(response) {
             alert(response.message);
-            
+            window.location.href = response.redirect_url;
         },
         error: function(xhr, status, error) {
             var statusCode = xhr.status;

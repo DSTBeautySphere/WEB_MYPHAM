@@ -59,7 +59,7 @@
                         <th>Số lượng</th>
                         <th>Tình trạng</th>
                         <th>Giá tiền</th>
-                        <th>Danh mục</th>
+                        <th>Loại sản phẩm</th>
                         <th>Chức năng</th>
                     </tr>
                 </thead>
@@ -76,10 +76,21 @@
                             <img src="#" alt="Không có ảnh" width="50px;">
                         @endif
                         </td>
-                        <td>0</td>
-                        <td><span class="badge bg-danger">Hét hàng</span></td>
-                        <td>2.450.000 đ</td>
-                        <td>Tủ</td>
+                        <td>  {{ $item->bien_the_san_pham->sum('so_luong_ton_kho') }}</td>
+
+                        <td>
+                            @php
+                                // Tính tổng số lượng tồn kho của tất cả biến thể sản phẩm
+                                $totalQuantity = $item->bien_the_san_pham->sum('so_luong_ton_kho');
+                            @endphp
+                            @if ($totalQuantity > 0)
+                                <span class="badge bg-success">Còn hàng </span>
+                            @else
+                                <span class="badge bg-danger">Hết hàng</span>
+                            @endif
+                        </td>
+                        <td>  {{ number_format($item->bien_the_san_pham->first()->gia_ban, 0, ',', '.') }} đ</td>
+                        <td>{{ $item->loai_san_pham->ten_loai_san_pham }}</td>
                         <td><button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
                                 onclick="myFunction(this)"><i class="fas fa-trash-alt"></i>
                             </button>

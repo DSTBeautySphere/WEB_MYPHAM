@@ -241,7 +241,10 @@ class san_phamController extends Controller
             }
 
             // Trả về thông báo thành công
-            return response()->json(['message' => 'Sản phẩm đã được thêm vào giỏ hàng thành công!'], 200);
+            return response()->json([
+                'message' => 'Sản phẩm đã được thêm thành công!',
+                'redirect_url' => route('showquanlysanpham'), // Gọi đúng tên route đã được gán
+            ], 200);
 
 
         } catch (\Exception $e) {

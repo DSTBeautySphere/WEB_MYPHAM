@@ -27,7 +27,7 @@
         <div class="container-login100">
             <div class="wrap-login100">
                 <div class="login100-pic js-tilt" data-tilt>
-                    <img src="images/team.jpg" alt="IMG">
+                    <img src="{{ asset('images/team.jpg') }}" alt="IMG">
                 </div>
                 <!--=====TIÊU ĐỀ======-->
                 <form class="login100-form validate-form">
@@ -133,9 +133,9 @@
                 if (response.status === 'success') {
                     // Đăng nhập thành công
                     swal("Thành công!", response.message, "success")
-                        // .then(() => {
-                        //     window.location.href = "/admin/dashboard"; // Điều hướng đến trang dashboard
-                        // });
+                            .then(() => {
+                                        window.location.href = response.redirect_url; // Điều hướng đến trang được trả về từ server
+                                    });
                 }
             },
             error: function(xhr) {

@@ -50,7 +50,7 @@ class gio_hangController extends Controller
         ]);
 
        
-        $userId = Auth::id();
+        $userId = 1;
 
         
         $gioHang = gio_hang::where('ma_user', $userId)->where('trang_thai', 'active')->first();
@@ -58,7 +58,11 @@ class gio_hangController extends Controller
        
         if (!$gioHang) {
             $gioHang = gio_hang::create([
+
                 'ma_user' => $userId,
+                'ma_bien_the'=> $request->ma_bien_the,
+                'so_luong'=> $request->so_luong,
+                'gia_ban'=> $request->gia_ban,
                 'ngay_tao' => now(),
                 'trang_thai' => 'active',
             ]);

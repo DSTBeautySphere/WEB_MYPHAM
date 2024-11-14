@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::prefix('admin')->group(function () {
-    Route::get('/showlogin', [AdminController::class, 'showLoginForm']);
+    Route::get('/', [AdminController::class, 'showLoginForm']);
     Route::post('/login', [AdminController::class, 'login']);
 
     Route::middleware(['admin'])->group(function () {

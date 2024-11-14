@@ -44,6 +44,7 @@ class AdminController extends Controller
                 'data' => [
                     'admin' => $admin,
                 ],
+                'redirect_url' => url('showquanlysanpham')
             ]);
         }
 
