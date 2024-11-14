@@ -178,19 +178,17 @@ class san_phamController extends Controller
     public function themSanPhamVaBienThe(Request $request)
     {
         try {
-            
             // Kiểm tra dữ liệu đầu vào
             $validated = $request->validate([
                 'ten_san_pham' => 'required|string|max:255',
                 'ma_loai_san_pham' => 'required|string|exists:loai_san_pham,ma_loai_san_pham',
                 'ma_nha_cung_cap' => 'required|string|exists:nha_cung_cap,ma_nha_cung_cap',
-                'bien_the' => 'array',
                 'bien_the.*.mau_sac' => 'nullable|string|max:100', 
                 'bien_the.*.loai_da' => 'nullable|string|max:100',  
-                'bien_the.*.dung_tich' => 'nullable|string|max:100',  // Chỉ yêu cầu là chuỗi
+                'bien_the.*.dung_tich' => 'nullable|string|max:100',  
                 'bien_the.*.so_luong_ton_kho' => 'nullable|integer|min:0',
                 'bien_the.*.gia_ban' => 'nullable|numeric|min:0',
-                
+            
             ]);
 
             // Tạo sản phẩm mới bằng phương thức create
@@ -200,30 +198,24 @@ class san_phamController extends Controller
                 'ma_nha_cung_cap' => $request->ma_nha_cung_cap,
             ]);
 
-            
-          
-
+            // Xử lý hình ảnh
             if ($request->hasFile('images')) {
                 $bien = 0;
-               
-        
                 foreach ($request->file('images') as $file) {
                     try {
                         // Tải từng hình ảnh lên Cloudinary
                         $result = Cloudinary::upload($file->getRealPath(), [
                             'folder' => 'PJ_MYPHAM/SanPham',
                         ]);
-        
+
                         // Lưu thông tin vào bảng anh_san_pham
                         anh_san_pham::create([
-                            'ma_san_pham' => $sanPham->ma_san_pham,
+                            'ma_san_pham' => $sanPham->ma_san_pham,  // Đảm bảo rằng chỉ có một ma_san_pham duy nhất
                             'url_anh' => $result->getSecurePath(),  
                             'la_anh_chinh' => $bien === 0 ? 1 : 0,  
                         ]);
-        
                         $bien++; // Tăng chỉ số để kiểm tra ảnh chính
-        
-                      
+
                     } catch (\Exception $e) {
                         // Xử lý lỗi nếu có
                         $error = "Lỗi: " . $e->getMessage();
@@ -234,13 +226,14 @@ class san_phamController extends Controller
 
             // Thêm các biến thể sản phẩm
             if ($request->has('bien_the')) {
-                foreach ($request->bien_the as $bienThe) {
+                $bienTheData = json_decode($request->bien_the, true);
+                foreach ($bienTheData as $bienThe) {
                     // Lưu các biến thể sản phẩm vào cơ sở dữ liệu
                     bien_the_san_pham::create([
-                        'ma_san_pham' => $sanPham->ma_san_pham,
+                        'ma_san_pham' => $sanPham->ma_san_pham,  // Đảm bảo rằng biến thể được liên kết với sản phẩm đúng cách
                         'mau_sac' => $bienThe['mau_sac'] ?? null,
                         'loai_da' => $bienThe['loai_da'] ?? null,
-                        'dung_tich' => $bienThe['dung_tich'] ?? null,  // giữ chuỗi dung_tich
+                        'dung_tich' => $bienThe['dung_tich'] ?? null,  
                         'so_luong_ton_kho' => $bienThe['so_luong_ton_kho'] ?? null,
                         'gia_ban' => $bienThe['gia_ban'] ?? null,
                     ]);
@@ -248,18 +241,18 @@ class san_phamController extends Controller
             }
 
             // Trả về thông báo thành công
-            
-            return redirect('showquanlysanpham')->with('success', 'Sản phẩm đã được thêm thành công!');
+            return response()->json(['message' => 'Sản phẩm đã được thêm vào giỏ hàng thành công!'], 200);
+
+
         } catch (\Exception $e) {
             // Xử lý lỗi nếu có và trả về thông báo lỗi chi tiết
             return response()->json([
                 'message' => 'Có lỗi xảy ra',
                 'error' => $e->getMessage(),
-                
             ], 500);
-         
         }
     }
+
 
 
    

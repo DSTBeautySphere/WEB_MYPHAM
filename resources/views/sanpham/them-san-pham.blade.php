@@ -845,7 +845,132 @@ $(document).on('click', '.Choicefile', function() {
 //     });
 // });
 // Modal
-$('#themSP').on('click', function() {
+
+
+
+
+
+
+
+// $('#themSP').on('click', function() {
+//     let tenSanPham = $('input[name="ten_san_pham"]').val();
+//     let maLoaiSanPham = $('#danhmuc').val();
+//     let maNhaCungCap = $('#nhacungcap').val();
+
+//     // Chuyển đổi tất cả giá trị của dung_tich trong sanPhamMau thành chuỗi
+//     sanPhamMau = sanPhamMau.map(item => ({
+//         ...item,
+//         dung_tich: String(item.dung_tich)  // Chuyển dung_tich thành chuỗi
+//     }));
+
+//     console.log("SanPhamMau:", sanPhamMau);
+
+//     if (sanPhamMau.length === 0) {
+//         alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
+//         return;
+//     }
+   
+//     // Lấy các file đã được chọn từ input file
+//     var imageFiles = $('#images')[0].files;
+    
+//     // In ra console để kiểm tra
+
+//     // var formData = new FormData();
+
+//     // // Đưa tất cả tệp ảnh vào FormData
+//     // for (var i = 0; i < imageFiles.length; i++) {
+//     //     formData.append('image_files[]', imageFiles[i]);
+//     // }
+
+//     $.ajax({
+//         url: 'themsanpham',
+//         type: 'POST',
+//         data: {
+
+//             ten_san_pham: tenSanPham,
+//             ma_loai_san_pham: maLoaiSanPham,
+//             ma_nha_cung_cap: maNhaCungCap,
+//             bien_the: sanPhamMau,
+//             //images:imageFiles,
+//             _token: '{{ csrf_token() }}'
+//         },
+//         success: function(response) {
+//             alert(response.message);
+//         },
+//        error: function(xhr, status, error) {
+//     // Hiển thị mã trạng thái HTTP
+//     var statusCode = xhr.status;
+
+//     // Lấy thông báo lỗi từ responseText (nếu có)
+//     var errorMessage = xhr.responseText || "Không có thông báo lỗi";
+
+//     // Hiển thị lỗi trong alert
+//     alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
+//     }
+
+//     });
+// }); 
+
+// $('#themSP').on('click', function() {
+//     event.preventDefault();
+//     let tenSanPham = $('input[name="ten_san_pham"]').val();
+//     let maLoaiSanPham = $('#danhmuc').val();
+//     let maNhaCungCap = $('#nhacungcap').val();
+
+//     // Chuyển đổi tất cả giá trị của dung_tich trong sanPhamMau thành chuỗi
+//     sanPhamMau = sanPhamMau.map(item => ({
+//         ...item,
+//         dung_tich: String(item.dung_tich)  // Chuyển dung_tich thành chuỗi
+//     }));
+
+//     console.log("SanPhamMau:", sanPhamMau);
+
+//     if (sanPhamMau.length === 0) {
+//         alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
+//         return;
+//     }
+
+//     //var imageFiles = $('#images')[0].files;
+//     // var formData = new FormData();
+
+//     // // Đưa tất cả tệp ảnh vào FormData
+//     // for (var i = 0; i < imageFiles.length; i++) {
+//     //     formData.append('image_files[]', imageFiles[i]);
+//     // }
+
+//     $.ajax({
+//         url: 'themsanpham',
+//         type: 'POST',
+//         data: {
+
+//             ten_san_pham: tenSanPham,
+//             ma_loai_san_pham: maLoaiSanPham,
+//             ma_nha_cung_cap: maNhaCungCap,
+//             bien_the: JSON.stringify(sanPhamMau),
+//             //anh_san_pham:imageFiles,
+//             _token: '{{ csrf_token() }}'
+//         },
+//         success: function(response) {
+//             alert(response.message);
+//         },
+//        error: function(xhr, status, error) {
+//     // Hiển thị mã trạng thái HTTP
+//     var statusCode = xhr.status;
+
+//     // Lấy thông báo lỗi từ responseText (nếu có)
+//     var errorMessage = xhr.responseText || "Không có thông báo lỗi";
+
+//     // Hiển thị lỗi trong alert
+//     alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
+//     }
+
+//     });
+// }); 
+
+$('#themSP').on('click', function(event) {
+    // Ngừng hành động submit mặc định
+    event.preventDefault();
+
     let tenSanPham = $('input[name="ten_san_pham"]').val();
     let maLoaiSanPham = $('#danhmuc').val();
     let maNhaCungCap = $('#nhacungcap').val();
@@ -862,49 +987,39 @@ $('#themSP').on('click', function() {
         alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
         return;
     }
-    $('#images').on('change', function() {
-    // Lấy các file đã được chọn từ input file
-    var imageFiles = $('#images')[0].files;
-    
-    // In ra console để kiểm tra
-    
-});
-     var imageFiles = $('#images')[0].files;
-    // var formData = new FormData();
 
-    // // Đưa tất cả tệp ảnh vào FormData
-    // for (var i = 0; i < imageFiles.length; i++) {
-    //     formData.append('image_files[]', imageFiles[i]);
-    // }
+    var files = $('#uploadfile')[0].files;
+    var formData = new FormData();
 
-    $.ajax({
-        url: 'themsanpham',
-        type: 'POST',
-        data: {
-
-            ten_san_pham: tenSanPham,
-            ma_loai_san_pham: maLoaiSanPham,
-            ma_nha_cung_cap: maNhaCungCap,
-            bien_the: sanPhamMau,
-            //images:imageFiles,
-            _token: '{{ csrf_token() }}'
-        },
-        success: function(response) {
-            alert(response.message);
-        },
-       error: function(xhr, status, error) {
-    // Hiển thị mã trạng thái HTTP
-    var statusCode = xhr.status;
-
-    // Lấy thông báo lỗi từ responseText (nếu có)
-    var errorMessage = xhr.responseText || "Không có thông báo lỗi";
-
-    // Hiển thị lỗi trong alert
-    alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
+    for (var i = 0; i < files.length; i++) {
+        formData.append('images[]', files[i]);
     }
 
+    formData.append('ten_san_pham', tenSanPham);
+    formData.append('ma_loai_san_pham', maLoaiSanPham);
+    formData.append('ma_nha_cung_cap', maNhaCungCap);
+    formData.append('bien_the', JSON.stringify(sanPhamMau));
+    formData.append('_token', '{{ csrf_token() }}');
+
+    $.ajax({
+        url: 'themsanpham', // Đảm bảo URL này trỏ đúng đến controller xử lý
+        type: 'POST',
+        data: formData,
+        contentType: false, // Không set content-type vì FormData sẽ tự động set
+        processData: false, // Không chuyển dữ liệu thành một chuỗi query
+        success: function(response) {
+            alert(response.message);
+            
+        },
+        error: function(xhr, status, error) {
+            var statusCode = xhr.status;
+            var errorMessage = xhr.responseText || "Không có thông báo lỗi";
+            alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
+        }
     });
-}); 
+});
+
+
 
 // $('#themSP').on('click', function() {
 //     let tenSanPham = $('input[name="ten_san_pham"]').val();
@@ -924,42 +1039,91 @@ $('#themSP').on('click', function() {
 //         return;
 //     }
 
-//     var imageFiles = $('#images')[0].files;
+//     // Lấy tệp ảnh từ input
+//     var files = $('#uploadfile')[0].files;
 //     var formData = new FormData();
 
-//     // Đưa tất cả tệp ảnh vào FormData
-//     for (var i = 0; i < imageFiles.length; i++) {
-//         formData.append('image_files[]', imageFiles[i]);
+//     // Thêm hình ảnh vào FormData
+//     for (var i = 0; i < files.length; i++) {
+//         formData.append('images[]', files[i]);
 //     }
 
+//     // Thêm các thông tin khác vào FormData
+//     formData.append('ten_san_pham', tenSanPham);
+//     formData.append('ma_loai_san_pham', maLoaiSanPham);
+//     formData.append('ma_nha_cung_cap', maNhaCungCap);
+//     formData.append('bien_the', JSON.stringify(sanPhamMau));
+//     formData.append('_token', '{{ csrf_token() }}');  // Đảm bảo token csrf cho bảo mật
+
+//     // Gửi dữ liệu qua Ajax
 //     $.ajax({
 //         url: 'themsanpham',
 //         type: 'POST',
-//         data: {
-
-//             ten_san_pham: tenSanPham,
-//             ma_loai_san_pham: maLoaiSanPham,
-//             ma_nha_cung_cap: maNhaCungCap,
-//             bien_the: sanPhamMau,
-//             anh_san_pham:imageFiles
-//             _token: '{{ csrf_token() }}'
-//         },
+//         data: formData,
+//         contentType: false, // Không set content-type vì FormData sẽ tự động set
+//         processData: false, // Không chuyển dữ liệu thành chuỗi query
 //         success: function(response) {
 //             alert(response.message);
 //         },
-//        error: function(xhr, status, error) {
-//     // Hiển thị mã trạng thái HTTP
-//     var statusCode = xhr.status;
+//         error: function(xhr, status, error) {
+//             var statusCode = xhr.status;
+//             var errorMessage = xhr.responseText || "Không có thông báo lỗi";
+//             alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
+//         }
+//     });
+// });
 
-//     // Lấy thông báo lỗi từ responseText (nếu có)
-//     var errorMessage = xhr.responseText || "Không có thông báo lỗi";
 
-//     // Hiển thị lỗi trong alert
-//     alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
+
+// $('#themSP').on('click', function() {
+//     let tenSanPham = $('input[name="ten_san_pham"]').val();
+//     let maLoaiSanPham = $('#danhmuc').val();
+//     let maNhaCungCap = $('#nhacungcap').val();
+
+//     // Chuyển đổi tất cả giá trị của dung_tich trong sanPhamMau thành chuỗi
+//     sanPhamMau = sanPhamMau.map(item => ({
+//         ...item,
+//         dung_tich: String(item.dung_tich)  // Chuyển dung_tich thành chuỗi
+//     }));
+
+//     console.log("SanPhamMau:", sanPhamMau);
+
+//     if (sanPhamMau.length === 0) {
+//         alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
+//         return;
 //     }
 
+//     var formData = new FormData();
+
+//     // Thêm dữ liệu vào FormData
+//     formData.append('ten_san_pham', tenSanPham);
+//     formData.append('ma_loai_san_pham', maLoaiSanPham);
+//     formData.append('ma_nha_cung_cap', maNhaCungCap);
+//     formData.append('bien_the', JSON.stringify(sanPhamMau));  // Gửi biến thể dưới dạng JSON
+
+//     // Thêm tệp hình ảnh vào FormData
+//     var imageFiles = $('#images')[0].files;
+//     for (var i = 0; i < imageFiles.length; i++) {
+//         formData.append('images[]', imageFiles[i]);
+//     }
+
+//     // Gửi yêu cầu Ajax
+//     $.ajax({
+//         url: 'themsanpham',
+//         type: 'POST',
+//         data: formData,
+//         processData: false,  // Không tự động chuyển đổi dữ liệu
+//         contentType: false,  // Không thiết lập kiểu nội dung (do đang gửi FormData)
+//         success: function(response) {
+//             alert(response.message);
+//         },
+//         error: function(xhr, status, error) {
+//             var statusCode = xhr.status;
+//             var errorMessage = xhr.responseText || "Không có thông báo lỗi";
+//             alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
+//         }
 //     });
-// }); 
+// });
 
 
 </script>

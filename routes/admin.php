@@ -32,7 +32,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/capnhatsanpham',[App\Http\Controllers\san_phamController::class,'cap_nhat_san_pham']);
     Route::get('/showthemsanpham',[App\Http\Controllers\AdminController::class,'showThemSanPham']);
     Route::post('/themsanpham',[App\Http\Controllers\san_phamController::class,'themSanPhamVaBienThe']);
-    Route::get('/showquanlysanpham',[App\Http\Controllers\AdminController::class,'showQuanLySanPham']);
+    Route::get('/showquanlysanpham',[App\Http\Controllers\AdminController::class,'showQuanLySanPham'])->name('showquanlysanpham');;
 
 
 
