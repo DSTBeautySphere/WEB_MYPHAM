@@ -150,7 +150,7 @@
                     <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-folder-plus"></i> Thêm nhà cung cấp</a>
                 </div>
                 <div class="col-sm-2">
-                    <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#adddanhmuc"><i class="fas fa-folder-plus"></i> Thêm danh mục</a>
+                    <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#modalLoaiSanPham"><i class="fas fa-folder-plus"></i> Thêm loại sản phẩm</a>
                 </div>
                 <div class="col-sm-2">
                     <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#addTuyChon"><i class="fas fa-folder-plus"></i> Thêm tùy chọn</a>
@@ -440,6 +440,87 @@
 </div>
 
 {{-- loai san pham --}}
+<div class="modal fade" id="modalLoaiSanPham" tabindex="-1" role="dialog" aria-labelledby="modalLoaiSanPhamLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLoaiSanPhamLabel">Quản Lý Loại Sản Phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Danh sách loại sản phẩm dưới dạng bảng -->
+                <table class="table table-bordered" id="tableLoaiSanPham">
+                    <thead>
+                        <tr>
+                            <th>Mã Loại Sản Phẩm</th>
+                            <th>Tên Loại Sản Phẩm</th>
+                            <th>Mô Tả</th>
+                          
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($loaiSanPham as $loai)
+                            <tr>
+                                <td>{{ $loai->ma_loai_san_pham }}</td>
+                                <td>{{ $loai->ten_loai_san_pham }}</td>
+                                <td>{{ $loai->mo_ta }}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm btn-edit" 
+                                            data-id="{{ $loai->ma_loai_san_pham }}" 
+                                            data-ten="{{ $loai->ten_loai_san_pham }}" 
+                                            data-mo-ta="{{ $loai->mo_ta }}" 
+                                            data-dong-san-pham="{{ $loai->ma_dong_san_pham }}"
+                                            data-nhom-tuy-chon="{{ json_encode($loai->nhom_tuy_chon->map(fn($nhom) => $nhom->ma_nhom_tuy_chon)) }}">
+                                        Sửa
+                                    </button>
+                                    <button class="btn btn-danger btn-sm btn-delete" data-id="{{ $loai->ma_loai_san_pham }}">Xóa</button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <!-- Form Thêm/Sửa Loại Sản Phẩm -->
+                <form id="formLoaiSanPham" method="POST" action="/themloaisanpham">
+                    @csrf
+                    <input type="hidden" id="ma_loai_san_pham" name="ma_loai_san_pham">
+                    <div class="form-group">
+                        <label for="ten_loai_san_pham">Tên Loại Sản Phẩm</label>
+                        <input type="text" class="form-control" id="ten_loai_san_pham" name="ten_loai_san_pham" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mo_ta">Mô Tả</label>
+                        <textarea class="form-control" id="mo_ta" name="mo_ta" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="ma_dong_san_pham">Dòng Sản Phẩm</label>
+                        <select class="form-control" id="ma_dong_san_pham" name="ma_dong_san_pham" required>
+                            <option value="">Chọn Dòng Sản Phẩm</option>
+                            @foreach ($dongSanPham as $dong)
+                                <option value="{{ $dong->ma_dong_san_pham }}">{{ $dong->ten_dong_san_pham }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Chọn Nhóm Tùy Chọn</label>
+                        <div class="checkbox-group">
+                            @foreach ($nhomTuyChon as $nhom)
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="nhom_tuy_chon[]" value="{{ $nhom->ma_nhom_tuy_chon }}" id="nhomTuyChon{{ $nhom->ma_nhom_tuy_chon }}">
+                                    <label class="form-check-label" for="nhomTuyChon{{ $nhom->ma_nhom_tuy_chon }}">{{ $nhom->ten_nhom_tuy_chon }}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="saveLoaiSanPham">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -1272,6 +1353,39 @@ $('#saveEditNhaCungCap').click(function() {
         });
         });
     });
+
+
+//sửa loại sản phẩm
+    $(document).on('click', '.btn-edit', function () {
+    const id = $(this).data('id');
+    const ten = $(this).data('ten');
+    const moTa = $(this).data('mo-ta');
+    const dongSanPham = $(this).data('dong-san-pham');
+    const nhomTuyChon = $(this).data('nhom-tuy-chon');
+
+    // Gán giá trị vào form
+    $('#ma_loai_san_pham').val(id); // Ẩn input hidden
+    $('#ten_loai_san_pham').val(ten);
+    $('#mo_ta').val(moTa);
+    $('#ma_dong_san_pham').val(dongSanPham);
+
+    // Bỏ chọn checkbox trước
+    $('input[name="nhom_tuy_chon[]"]').prop('checked', false);
+
+    // Chọn lại checkbox theo nhóm tùy chọn của sản phẩm
+    if (Array.isArray(nhomTuyChon)) {
+        nhomTuyChon.forEach(function (nhomId) {
+            $(`#nhomTuyChon${nhomId}`).prop('checked', true);
+        });
+    }
+    $('#formLoaiSanPham').attr('action', '/sualoaisanpham');
+    $('#formLoaiSanPham').append('<input type="hidden" name="ma_loai_san_pham" value="' + id + '">');
+    $('#modalLoaiSanPhamLabel').text('Chỉnh sửa Loại Sản Phẩm');
+    $('#saveLoaiSanPham').text('Cập nhật');
+    // Hiển thị modal
+    $('#modalLoaiSanPham').modal('show');
+});
+
 </script>
 
 @endsection

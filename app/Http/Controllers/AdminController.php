@@ -222,7 +222,8 @@ class AdminController extends Controller
         $nhaCungCap=nha_cung_cap::all();
         $tuyChon=tuy_chon::all();
         $nhomTuyChon = nhom_tuy_chon::all();
-        return view('sanpham.them-san-pham',['loaiSanPham'=>$loaiSanPham,'nhaCungCap'=>$nhaCungCap,'tuyChon'=>$tuyChon,'nhomTuyChon'=> $nhomTuyChon]);
+        $dongSanPham= dong_san_pham::all();
+        return view('sanpham.them-san-pham',['loaiSanPham'=>$loaiSanPham,'nhaCungCap'=>$nhaCungCap,'tuyChon'=>$tuyChon,'nhomTuyChon'=> $nhomTuyChon,'dongSanPham'=>$dongSanPham]);
     }
 
 

@@ -69,11 +69,12 @@ class loai_san_phamController extends Controller
             }
 
             // Trả về phản hồi thành công
-            return response()->json([
-                'success' => true,
-                'message' => 'Loại sản phẩm và loại nhóm tùy chọn đã được thêm thành công.',
-                'data' => $loaiSanPham
-            ]);
+            // return response()->json([
+            //     'success' => true,
+            //     'message' => 'Loại sản phẩm và loại nhóm tùy chọn đã được thêm thành công.',
+            //     'data' => $loaiSanPham
+            // ]);
+            return redirect()->back();
         } catch (\Exception $e) {
             // Trả về phản hồi lỗi nếu có vấn đề
             return response()->json([
@@ -137,7 +138,8 @@ class loai_san_phamController extends Controller
                 }
             }
     
-            return response()->json(['success' => true, 'message' => 'Đã cập nhật loại sản phẩm thành công.']);
+            // return response()->json(['success' => true, 'message' => 'Đã cập nhật loại sản phẩm thành công.']);
+            return redirect()->back();
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Lỗi khi cập nhật loại sản phẩm: ' . $e->getMessage()]);
         }
