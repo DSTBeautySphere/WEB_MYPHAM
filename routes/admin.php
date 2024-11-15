@@ -6,6 +6,7 @@ use App\Http\Controllers\loai_san_phamController;
 use App\Http\Controllers\nha_cung_capController;
 use App\Http\Controllers\san_phamController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\tuy_chonController;
 use App\Models\loai_san_pham;
 use Illuminate\Support\Facades\Route;
 
@@ -68,9 +69,10 @@ Route::prefix('admin')->group(function () {
     //chi tiet don dat
     Route::post('themchitietdondat',[App\Http\Controllers\chi_tiet_don_datController::class,'themChiTietDonDat']);
 
-
-  
-
+    //tuy chon
+    Route::post("/themtuychon",[tuy_chonController::class,'themTuyChon']);
+    Route::post('/laytuychon', [tuy_chonController::class, 'getTuyChonByNhom']);
+    Route::post("/suatuychon",[tuy_chonController::class,'suaTuyChon']);
 
 
 // });

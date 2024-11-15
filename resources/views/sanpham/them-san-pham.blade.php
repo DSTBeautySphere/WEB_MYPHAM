@@ -153,8 +153,9 @@
                     <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#adddanhmuc"><i class="fas fa-folder-plus"></i> Thêm danh mục</a>
                 </div>
                 <div class="col-sm-2">
-                    <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#addtinhtrang"><i class="fas fa-folder-plus"></i> Thêm tình trạng</a>
+                    <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#addTuyChon"><i class="fas fa-folder-plus"></i> Thêm tùy chọn</a>
                 </div>
+                
             </div>
             <form class="row" action="/themsanpham" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -275,6 +276,7 @@
 </div>
 
 {{-- Modal 1 mẫu đây có dì coi thamm khảo --}}
+{{-- nha cung cap --}}
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -383,6 +385,64 @@
         </div>
     </div>
 </div>
+
+{{-- tuy chon --}}
+
+<div class="modal fade" id="addTuyChon" tabindex="-1" role="dialog" aria-labelledby="addTuyChonLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTuyChonLabel">Thêm Tùy Chọn</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formTuyChon" method="POST" action="/themtuychon">
+                    @csrf 
+                    <div class="form-group">
+                        <label for="ten_tuy_chon">Tên Tùy Chọn</label>
+                        <input type="text" class="form-control" id="ten_tuy_chon" name="ten_tuy_chon" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ma_nhom_tuy_chon">Mã Nhóm Tùy Chọn</label>
+                        <select class="form-control" id="ma_nhom_tuy_chon" name="ma_nhom_tuy_chon" required>
+                            <option value="">Chọn Nhóm Tùy Chọn</option>
+                            @foreach ($nhomTuyChon as $nhom)
+                                <option value="{{ $nhom->ma_nhom_tuy_chon }}">{{ $nhom->ten_nhom_tuy_chon }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Hiển thị danh sách tùy chọn dưới dạng bảng -->
+                    <div class="form-group">
+                        <label for="danh_sach_tuy_chon">Danh Sách Tùy Chọn</label>
+                        <table class="table table-bordered" id="tableTuyChon">
+                            <thead>
+                                <tr>
+                                   
+                                    <th>Mã nhóm tùy chọn</th>
+                                    <th>Tên Tùy Chọn</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Các tùy chọn sẽ được thêm vào đây qua AJAX -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="saveTuyChon">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- loai san pham --}}
+
+
+
 {{-- -- --}}
 @endsection
 
@@ -406,85 +466,157 @@
 {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
 
 <script>
-let sanPhamMau = [];
- $('#danhmuc').change(function() {
-    $('input[name="mau[]"]').prop("checked", false);
-    $('input[name="dungtich[]"]').prop("checked", false);
-    $('input[name="loaida[]"]').prop("checked", false);
-    var maLoaiSanPham = $(this).val();
+
+// let sanPhamMau = [];
+//  $('#danhmuc').change(function() {
+//     $('input[name="mau[]"]').prop("checked", false);
+//     $('input[name="dungtich[]"]').prop("checked", false);
+//     $('input[name="loaida[]"]').prop("checked", false);
+//     var maLoaiSanPham = $(this).val();
 
    
-    $.ajax({
-        url: '/laynhomtuychontheoloai',
-        type: 'GET',
-        data: {
-            ma_loai_san_pham: maLoaiSanPham,
-            _token: '{{ csrf_token() }}'
-        },
-        success: function(response) {
+//     $.ajax({
+//         url: '/laynhomtuychontheoloai',
+//         type: 'GET',
+//         data: {
+//             ma_loai_san_pham: maLoaiSanPham,
+//             _token: '{{ csrf_token() }}'
+//         },
+//         success: function(response) {
           
-            var hasMauSac = false;
-            var hasDungTich = false;
-            var hasLoaiDa = false;
+//             var hasMauSac = false;
+//             var hasDungTich = false;
+//             var hasLoaiDa = false;
 
           
-            response.forEach(function(nhom) {
+//             response.forEach(function(nhom) {
                
-                if (nhom.ma_nhom_tuy_chon == 1) hasMauSac = true;
-                if (nhom.ma_nhom_tuy_chon == 2) hasDungTich = true;
-                if (nhom.ma_nhom_tuy_chon == 3) hasLoaiDa = true;
+//                 if (nhom.ma_nhom_tuy_chon == 1) hasMauSac = true;
+//                 if (nhom.ma_nhom_tuy_chon == 2) hasDungTich = true;
+//                 if (nhom.ma_nhom_tuy_chon == 3) hasLoaiDa = true;
 
                
-                var groupName = nhom.ten_nhom_tuy_chon;  
-                var groupHTML = '<h4>' + groupName + '</h4>';  
+//                 var groupName = nhom.ten_nhom_tuy_chon;  
+//                 var groupHTML = '<h4>' + groupName + '</h4>';  
 
-                // Kiểm tra xem nhóm có tùy chọn không
-                if (nhom.tuy_chon.length === 0) {
-                    // Nếu không có tùy chọn, thêm lớp CSS để làm mờ và vô hiệu hóa
-                    groupHTML = ` 
-                        <div class="group-readonly" style="opacity: 0.5; pointer-events: none;">
-                            <h4>${groupName}</h4>
-                            <p>Không có tùy chọn nào.</p>
-                        </div>`;
+//                 // Kiểm tra xem nhóm có tùy chọn không
+//                 if (nhom.tuy_chon.length === 0) {
+//                     // Nếu không có tùy chọn, thêm lớp CSS để làm mờ và vô hiệu hóa
+//                     groupHTML = ` 
+//                         <div class="group-readonly" style="opacity: 0.5; pointer-events: none;">
+//                             <h4>${groupName}</h4>
+//                             <p>Không có tùy chọn nào.</p>
+//                         </div>`;
+//                 } else {
+//                     // Nếu có tùy chọn, hiển thị bình thường
+//                     nhom.tuy_chon.forEach(function(tuyChon) {
+//                         groupHTML += ` 
+//                             <label>
+//                                 <input type="checkbox" name="tuy_chon[]" value="${tuyChon.ma_tuy_chon}" 
+//                                     class="tuy-chon" data-nhom="${groupName}" 
+//                                     ${tuyChon.is_choosen ? '' : 'disabled'}> 
+//                                 ${tuyChon.ten_tuy_chon}
+//                             </label><br>
+//                         `;
+//                     });
+//                 }
+
+//                 // Thêm nhóm vào đúng vị trí
+//                 $('#group-' + groupName.toLowerCase().replace(" ", "-")).html(groupHTML);
+//             });
+
+//             // Kiểm tra và áp dụng hiệu ứng làm mờ cho các nhóm không có tùy chọn
+//             if (!hasMauSac) {
+//                 $('#group-mau').css({'opacity': '0.5', 'pointer-events': 'none'}); // Làm mờ nhóm màu sắc
+//             } else {
+//                 $('#group-mau').css({'opacity': '1', 'pointer-events': 'auto'}); // Hiển thị nhóm màu sắc
+//             }
+
+//             if (!hasDungTich) {
+//                 $('#group-dungtich').css({'opacity': '0.5', 'pointer-events': 'none'}); // Làm mờ nhóm dung tích
+//             } else {
+//                 $('#group-dungtich').css({'opacity': '1', 'pointer-events': 'auto'}); // Hiển thị nhóm dung tích
+//             }
+
+//             if (!hasLoaiDa) {
+//                 $('#group-loaida').css({'opacity': '0.5', 'pointer-events': 'none'}); // Làm mờ nhóm loại da
+//             } else {
+//                 $('#group-loaida').css({'opacity': '1', 'pointer-events': 'auto'}); // Hiển thị nhóm loại da
+//             }
+//         }
+//     });
+// });
+let sanPhamMau = [];
+    $('#danhmuc').change(function() {
+        $('input[name="mau[]"]').prop("checked", false);
+        $('input[name="dungtich[]"]').prop("checked", false);
+        $('input[name="loaida[]"]').prop("checked", false);
+        var maLoaiSanPham = $(this).val();
+
+        $.ajax({
+            url: '/laynhomtuychontheoloai',
+            type: 'GET',
+            data: {
+                ma_loai_san_pham: maLoaiSanPham,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                var hasMauSac = false;
+                var hasDungTich = false;
+                var hasLoaiDa = false;
+
+                response.forEach(function(nhom) {
+                    if (nhom.ma_nhom_tuy_chon == 1) hasMauSac = true;
+                    if (nhom.ma_nhom_tuy_chon == 2) hasDungTich = true;
+                    if (nhom.ma_nhom_tuy_chon == 3) hasLoaiDa = true;
+
+                    var groupName = nhom.ten_nhom_tuy_chon;
+                    var groupHTML = '<h4>' + groupName + '</h4>';
+
+                    if (nhom.tuy_chon.length === 0) {
+                        // Ẩn nhóm khỏi DOM nếu không có tùy chọn nào
+                        $('#group-' + groupName.toLowerCase().replace(" ", "-")).hide();
+                    } else {
+                        // Nếu có tùy chọn, hiển thị bình thường
+                        $('#group-' + groupName.toLowerCase().replace(" ", "-")).show();
+                        nhom.tuy_chon.forEach(function(tuyChon) {
+                            groupHTML += `
+                                <label>
+                                    <input type="checkbox" name="tuy_chon[]" value="${tuyChon.ma_tuy_chon}" 
+                                        class="tuy-chon" data-nhom="${groupName}" 
+                                        ${tuyChon.is_choosen ? '' : 'disabled'}> 
+                                    ${tuyChon.ten_tuy_chon}
+                                </label><br>
+                            `;
+                        });
+                    }
+
+                    $('#group-' + groupName.toLowerCase().replace(" ", "-")).html(groupHTML);
+                });
+                if (!hasMauSac) {
+                    $('#group-mau').css({'opacity': '0.5', 'pointer-events': 'none'}); // Làm mờ nhóm màu sắc
                 } else {
-                    // Nếu có tùy chọn, hiển thị bình thường
-                    nhom.tuy_chon.forEach(function(tuyChon) {
-                        groupHTML += ` 
-                            <label>
-                                <input type="checkbox" name="tuy_chon[]" value="${tuyChon.ma_tuy_chon}" 
-                                    class="tuy-chon" data-nhom="${groupName}" 
-                                    ${tuyChon.is_choosen ? '' : 'disabled'}> 
-                                ${tuyChon.ten_tuy_chon}
-                            </label><br>
-                        `;
-                    });
+                    $('#group-mau').css({'opacity': '1', 'pointer-events': 'auto'}); // Hiển thị nhóm màu sắc
                 }
 
-                // Thêm nhóm vào đúng vị trí
-                $('#group-' + groupName.toLowerCase().replace(" ", "-")).html(groupHTML);
-            });
+                if (!hasDungTich) {
+                    $('#group-dungtich').css({'opacity': '0.5', 'pointer-events': 'none'}); // Làm mờ nhóm dung tích
+                } else {
+                    $('#group-dungtich').css({'opacity': '1', 'pointer-events': 'auto'}); // Hiển thị nhóm dung tích
+                }
 
-            // Kiểm tra và áp dụng hiệu ứng làm mờ cho các nhóm không có tùy chọn
-            if (!hasMauSac) {
-                $('#group-mau').css({'opacity': '0.5', 'pointer-events': 'none'}); // Làm mờ nhóm màu sắc
-            } else {
-                $('#group-mau').css({'opacity': '1', 'pointer-events': 'auto'}); // Hiển thị nhóm màu sắc
+                if (!hasLoaiDa) {
+                    $('#group-loaida').css({'opacity': '0.5', 'pointer-events': 'none'}); // Làm mờ nhóm loại da
+                } else {
+                    $('#group-loaida').css({'opacity': '1', 'pointer-events': 'auto'}); // Hiển thị nhóm loại da
+                }
+                // Ẩn hoặc hiển thị các nhóm dựa trên biến kiểm tra
+                $('#group-mau').toggle(hasMauSac);
+                $('#group-dungtich').toggle(hasDungTich);
+                $('#group-loaida').toggle(hasLoaiDa);
             }
-
-            if (!hasDungTich) {
-                $('#group-dungtich').css({'opacity': '0.5', 'pointer-events': 'none'}); // Làm mờ nhóm dung tích
-            } else {
-                $('#group-dungtich').css({'opacity': '1', 'pointer-events': 'auto'}); // Hiển thị nhóm dung tích
-            }
-
-            if (!hasLoaiDa) {
-                $('#group-loaida').css({'opacity': '0.5', 'pointer-events': 'none'}); // Làm mờ nhóm loại da
-            } else {
-                $('#group-loaida').css({'opacity': '1', 'pointer-events': 'auto'}); // Hiển thị nhóm loại da
-            }
-        }
+        });
     });
-});
 
 $('#layMau').click(function() {
     var mau = [];
@@ -682,47 +814,45 @@ $('#layMau').click(function() {
 });
 
 
+$(document).on('blur', '#sanPhamMauGrid tbody td[contenteditable="true"]', function() 
+{
 
-    $(document).on('blur', '#sanPhamMauGrid tbody td[contenteditable="true"]', function() 
-    {
-   
-        var lastRow = $('#sanPhamMauGrid tbody tr:last');
-        var lastRowCells = lastRow.find('td');
+    var lastRow = $('#sanPhamMauGrid tbody tr:last');
+    var lastRowCells = lastRow.find('td');
 
-        
-        var isRowEmpty = true;
-        lastRowCells.each(function() {
-            if ($(this).text().trim() !== '' && !$(this).hasClass('delete-row')) {
-                isRowEmpty = false;
-                return false; 
-            }
-        });
-
-        
-        var priceCell = lastRowCells.eq(4);  
-        var quantityCell = lastRowCells.eq(3);  
-        var firstThreeCellsFilled = false;
-        lastRowCells.slice(0, 3).each(function() {
-            if ($(this).text().trim() !== '') {
-                firstThreeCellsFilled = true;
-                return false;
-            }
-        });
-
-        
-        if (isRowEmpty || (priceCell.text().trim() !== '' && quantityCell.text().trim() !== '' && firstThreeCellsFilled)) {
-            var newRow = '<tr>' +
-                '<td contenteditable="true"></td>' + 
-                '<td contenteditable="true"></td>' +  
-                '<td contenteditable="true"></td>' + 
-                '<td contenteditable="true"></td>' + 
-                '<td contenteditable="true"></td>' + 
-                '<td><button class="delete-row">Xóa</button></td>' +  
-            '</tr>';
-            $('#sanPhamMauGrid tbody').append(newRow);
+    
+    var isRowEmpty = true;
+    lastRowCells.each(function() {
+        if ($(this).text().trim() !== '' && !$(this).hasClass('delete-row')) {
+            isRowEmpty = false;
+            return false; 
         }
     });
 
+    
+    var priceCell = lastRowCells.eq(4);  
+    var quantityCell = lastRowCells.eq(3);  
+    var firstThreeCellsFilled = false;
+    lastRowCells.slice(0, 3).each(function() {
+        if ($(this).text().trim() !== '') {
+            firstThreeCellsFilled = true;
+            return false;
+        }
+    });
+
+    
+    if (isRowEmpty || (priceCell.text().trim() !== '' && quantityCell.text().trim() !== '' && firstThreeCellsFilled)) {
+        var newRow = '<tr>' +
+            '<td contenteditable="true"></td>' + 
+            '<td contenteditable="true"></td>' +  
+            '<td contenteditable="true"></td>' + 
+            '<td contenteditable="true"></td>' + 
+            '<td contenteditable="true"></td>' + 
+            '<td><button class="delete-row">Xóa</button></td>' +  
+        '</tr>';
+        $('#sanPhamMauGrid tbody').append(newRow);
+    }
+});
 
 
 });
@@ -780,76 +910,6 @@ function readURL(input) {
 $(document).on('click', '.Choicefile', function() {
     $('#uploadfile').click();
 });
-
-// $('#themSP').on('click', function(event) {
-//     // Ngừng sự kiện mặc định để tránh reload trang
-   
-
-//     let tenSanPham = $('input[name="ten_san_pham"]').val();
-//     let maLoaiSanPham = $('#danhmuc').val();
-//     let maNhaCungCap = $('#nhacungcap').val();
-
-//     // Chuyển đổi dung_tich thành chuỗi
-//     sanPhamMau = sanPhamMau.map(item => ({
-//         ...item,
-//         dung_tich: String(item.dung_tich)
-//     }));
-
-//     if (sanPhamMau.length === 0) {
-//         alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
-//         return;
-//     }
-
-//     var imageFiles = $('#images')[0].files;
-
-//     var formData = new FormData();
-//     formData.append('ten_san_pham', tenSanPham);
-//     formData.append('ma_loai_san_pham', maLoaiSanPham);
-//     formData.append('ma_nha_cung_cap', maNhaCungCap);
-//     formData.append('_token', '{{ csrf_token() }}');
-
-//     // Thêm các biến thể vào formData
-//     formData.append('bien_the', JSON.stringify(sanPhamMau));
-
-//     // Thêm các tệp ảnh vào formData
-//     for (let i = 0; i < imageFiles.length; i++) {
-//         formData.append('anh_san_pham[]', imageFiles[i]);
-//     }
-//     console.log("Danh sách tệp:", imageFiles);
-
-//     $.ajax({
-//         url: 'themsanpham',
-//         type: 'POST',
-//         data: formData,
-//         contentType: false,
-//         processData: false,
-//         success: function(response) {
-//             alert(response.message);
-//         },
-//         error: function(xhr, status, error) {
-//             var statusCode = xhr.status;
-//             var errorMessage = "Không có thông báo lỗi";
-//             try {
-//                 var responseJson = JSON.parse(xhr.responseText);
-//                 errorMessage = responseJson.message || errorMessage;
-//                 if (responseJson.details) {
-//                     errorMessage += "\nChi tiết lỗi: " + responseJson.details;
-//                 }
-//             } catch (e) {
-//                 errorMessage = xhr.responseText || errorMessage;
-//             }
-//             console.error('Có lỗi xảy ra:');
-//             console.error('Mã trạng thái: ' + statusCode);
-//             console.error('Thông báo lỗi: ' + errorMessage);
-//         }
-//     });
-// });
-// Modal
-
-
-
-
-
 
 
 // $('#themSP').on('click', function() {
@@ -1021,117 +1081,14 @@ $('#themSP').on('click', function(event) {
 
 
 
-// $('#themSP').on('click', function() {
-//     let tenSanPham = $('input[name="ten_san_pham"]').val();
-//     let maLoaiSanPham = $('#danhmuc').val();
-//     let maNhaCungCap = $('#nhacungcap').val();
-
-//     // Chuyển đổi tất cả giá trị của dung_tich trong sanPhamMau thành chuỗi
-//     sanPhamMau = sanPhamMau.map(item => ({
-//         ...item,
-//         dung_tich: String(item.dung_tich)  // Chuyển dung_tich thành chuỗi
-//     }));
-
-//     console.log("SanPhamMau:", sanPhamMau);
-
-//     if (sanPhamMau.length === 0) {
-//         alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
-//         return;
-//     }
-
-//     // Lấy tệp ảnh từ input
-//     var files = $('#uploadfile')[0].files;
-//     var formData = new FormData();
-
-//     // Thêm hình ảnh vào FormData
-//     for (var i = 0; i < files.length; i++) {
-//         formData.append('images[]', files[i]);
-//     }
-
-//     // Thêm các thông tin khác vào FormData
-//     formData.append('ten_san_pham', tenSanPham);
-//     formData.append('ma_loai_san_pham', maLoaiSanPham);
-//     formData.append('ma_nha_cung_cap', maNhaCungCap);
-//     formData.append('bien_the', JSON.stringify(sanPhamMau));
-//     formData.append('_token', '{{ csrf_token() }}');  // Đảm bảo token csrf cho bảo mật
-
-//     // Gửi dữ liệu qua Ajax
-//     $.ajax({
-//         url: 'themsanpham',
-//         type: 'POST',
-//         data: formData,
-//         contentType: false, // Không set content-type vì FormData sẽ tự động set
-//         processData: false, // Không chuyển dữ liệu thành chuỗi query
-//         success: function(response) {
-//             alert(response.message);
-//         },
-//         error: function(xhr, status, error) {
-//             var statusCode = xhr.status;
-//             var errorMessage = xhr.responseText || "Không có thông báo lỗi";
-//             alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
-//         }
-//     });
-// });
-
-
-
-// $('#themSP').on('click', function() {
-//     let tenSanPham = $('input[name="ten_san_pham"]').val();
-//     let maLoaiSanPham = $('#danhmuc').val();
-//     let maNhaCungCap = $('#nhacungcap').val();
-
-//     // Chuyển đổi tất cả giá trị của dung_tich trong sanPhamMau thành chuỗi
-//     sanPhamMau = sanPhamMau.map(item => ({
-//         ...item,
-//         dung_tich: String(item.dung_tich)  // Chuyển dung_tich thành chuỗi
-//     }));
-
-//     console.log("SanPhamMau:", sanPhamMau);
-
-//     if (sanPhamMau.length === 0) {
-//         alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
-//         return;
-//     }
-
-//     var formData = new FormData();
-
-//     // Thêm dữ liệu vào FormData
-//     formData.append('ten_san_pham', tenSanPham);
-//     formData.append('ma_loai_san_pham', maLoaiSanPham);
-//     formData.append('ma_nha_cung_cap', maNhaCungCap);
-//     formData.append('bien_the', JSON.stringify(sanPhamMau));  // Gửi biến thể dưới dạng JSON
-
-//     // Thêm tệp hình ảnh vào FormData
-//     var imageFiles = $('#images')[0].files;
-//     for (var i = 0; i < imageFiles.length; i++) {
-//         formData.append('images[]', imageFiles[i]);
-//     }
-
-//     // Gửi yêu cầu Ajax
-//     $.ajax({
-//         url: 'themsanpham',
-//         type: 'POST',
-//         data: formData,
-//         processData: false,  // Không tự động chuyển đổi dữ liệu
-//         contentType: false,  // Không thiết lập kiểu nội dung (do đang gửi FormData)
-//         success: function(response) {
-//             alert(response.message);
-//         },
-//         error: function(xhr, status, error) {
-//             var statusCode = xhr.status;
-//             var errorMessage = xhr.responseText || "Không có thông báo lỗi";
-//             alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
-//         }
-//     });
-// });
-
-
 </script>
+
 <script>
     $('#btnAddNhaCungCap').click(function() {
         $('#exampleModalCenter').modal('show');
     });
 
+ 
 </script>
 
 
@@ -1253,4 +1210,68 @@ $('#saveEditNhaCungCap').click(function() {
 });
 
  </script>
+
+
+
+<script>
+    $(document).ready(function() {
+        // Khi chọn nhóm tùy chọn
+        $('#ma_nhom_tuy_chon').on('change', function() {
+            var maNhomTuyChon = $(this).val();
+            
+            // Kiểm tra nếu có giá trị nhóm tùy chọn
+            if(maNhomTuyChon) {
+                // Gửi yêu cầu AJAX để lấy các tùy chọn tương ứng
+                $.ajax({
+                    url: '/laytuychon',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        ma_nhom_tuy_chon: maNhomTuyChon
+                    },
+                    success: function(response) {
+                        // Xóa tất cả các dòng cũ trong bảng
+                        $('#tableTuyChon tbody').empty();
+                        
+                        // Duyệt qua các tùy chọn và thêm vào bảng
+                        response.forEach(function(item) {
+                            var row = `<tr>
+                                          
+                                            <td>${item.ma_nhom_tuy_chon}</td>
+                                            <td>${item.ten_tuy_chon}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-warning btn-sm btn-edit" data-id="${item.ma_tuy_chon}" data-name="${item.ten_tuy_chon}" data-ma-nhom="${item.ma_nhom_tuy_chon}">
+                                                    Sửa
+                                                </button>
+                                            </td>
+                                        </tr>`;
+                            $('#tableTuyChon tbody').append(row);
+                        });
+                    },
+                    error: function() {
+                        alert('Không thể tải các tùy chọn');
+                    }
+                });
+            } else {
+                // Nếu không có nhóm, xóa các tùy chọn cũ
+                $('#tableTuyChon tbody').empty();
+            }
+            $(document).on('click', '.btn-edit', function() {
+            var id = $(this).data('id');
+            var name = $(this).data('name');
+            var maNhom = $(this).data('ma-nhom');
+            
+            // Chỉnh sửa thông tin trong form (ví dụ: điền tên và mã nhóm vào input)
+            $('#ten_tuy_chon').val(name);
+            $('#ma_nhom_tuy_chon').val(maNhom);
+            
+            // Cập nhật hành động của form để thực hiện cập nhật thay vì thêm mới
+            $('#formTuyChon').attr('action', '/suatuychon');
+            $('#formTuyChon').append('<input type="hidden" name="ma_tuy_chon" value="' + id + '">');
+            $('#saveTuyChon').text('Cập nhật');
+        });
+        });
+    });
+</script>
+
 @endsection

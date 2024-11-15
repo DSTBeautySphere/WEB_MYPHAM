@@ -13,7 +13,7 @@ class Admin extends Authenticatable
     protected $primaryKey = 'ma_admin';
 
     protected $fillable = [
-        'email', 'mat_khau', 'ho_ten', 'so_dien_thoai', 'anh_dai_dien', 'trang_thai'
+        'email', 'ho_ten', 'so_dien_thoai', 'anh_dai_dien', 'trang_thai'
     ];
 
     protected $hidden = [
