@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\anh_san_pham;
 use App\Models\bien_the_san_pham;
+use App\Models\chi_tiet_mo_ta;
 use Illuminate\Http\Request;
 use App\Models\san_pham;
 use App\Models\loai_san_pham;
 use App\Models\dong_san_pham;
+use App\Models\mo_ta;
 use App\Models\nha_cung_cap;
 use App\Models\tuy_chon;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
@@ -237,6 +239,33 @@ class san_phamController extends Controller
                         'so_luong_ton_kho' => $bienThe['so_luong_ton_kho'] ?? null,
                         'gia_ban' => $bienThe['gia_ban'] ?? null,
                     ]);
+                }
+            }
+
+            if($request->has('mo_ta'))
+            {
+                $motaData=json_decode($request->mo_ta,true);
+                foreach($motaData as $mota)
+                {
+                    $mo_ta=mo_ta::create([
+                        'ma_san_pham'=>$sanPham->ma_san_pham,
+                        'ten_mo_ta'=>$mota['ten_mo_ta']??null
+                    ]);
+                    if($request->has('chi_tiet_mo_ta'))
+                    {
+                        $ct_motaData=json_decode($request->chi_tiet_mo_ta,true);
+                        foreach($ct_motaData as $ct_mota)
+                        {
+                            if(!empty($ct_mota['ma_mo_ta']) &&$mota['ma_mo_ta']==$ct_mota['ma_mo_ta'])
+                            {
+                                chi_tiet_mo_ta::create([
+                                    'ma_mo_ta'=>$mo_ta->ma_mo_ta,
+                                    'tieu_de'=>$ct_mota['tieu_de'],
+                                    'noi_dung'=>$ct_mota['noi_dung']
+                                ]);
+                            }
+                        }
+                    }
                 }
             }
 
