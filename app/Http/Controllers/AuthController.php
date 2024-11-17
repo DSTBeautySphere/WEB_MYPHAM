@@ -49,7 +49,7 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
-
+        Auth::guard('user')->login($user);
         return response()->json([
             'message' => 'Login successful',
             'token' => $token,

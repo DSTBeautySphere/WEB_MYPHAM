@@ -111,41 +111,51 @@
     </script>
     
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
+    // Gắn sự kiện click cho nút submit
     $('#submit').click(function(e) {
-        e.preventDefault(); // Ngăn form reload trang
+        e.preventDefault(); // Ngừng hành động mặc định nếu có
+        console.log("Nút đã được nhấn"); // Kiểm tra khi bấm nút
 
-        // Lấy giá trị từ input
-        var email = $('#email').val();
-        var mat_khau = $('#mat_khau').val();
+        var email = $('#email').val(); // Lấy giá trị email
+        var mat_khau = $('#mat_khau').val(); // Lấy giá trị mật khẩu
+
+        console.log("Thông tin đăng nhập:");
+        console.log("Email: " + email);  // In email ra console
+        console.log("Mật khẩu: " + mat_khau); // In mật khẩu ra console
 
         // Gửi yêu cầu AJAX
         $.ajax({
-            url: '/admin/login',
-            type: 'POST',
-            dataType: 'json',
+            url: '/admin/login', // URL của API
+            type: 'POST', // Phương thức POST
+            dataType: 'json', // Dữ liệu trả về dạng JSON
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}' // CSRF token
+            },
             data: {
-                email: email,
-                mat_khau: mat_khau,
-                _token: '{{ csrf_token() }}' // CSRF token cho Laravel
+                email: email, // Dữ liệu email
+                mat_khau: mat_khau, // Dữ liệu mật khẩu
             },
             success: function(response) {
-                if (response.status === 'success') {
-                    // Đăng nhập thành công
+                console.log("Phản hồi từ server:"); // In thông tin phản hồi từ server
+                console.log(response);
+
+                if (response.message) {
+                    console.log("Thông báo thành công: " + response.message); // In thông báo thành công
                     swal("Thành công!", response.message, "success")
-                            .then(() => {
-                                        window.location.href = response.redirect_url; // Điều hướng đến trang được trả về từ server
-                                    });
+                        .then(() => {
+                            window.location.href = response.redirect_url; // Chuyển hướng sau khi thành công
+                        });
                 }
             },
-            error: function(xhr) {
-                // Xử lý lỗi
+            error: function(xhr, status, error) {
+                console.log("Lỗi yêu cầu AJAX:");
+                console.log(xhr.responseText); // In lỗi trả về từ server
                 swal("Lỗi!", "Email hoặc mật khẩu không đúng", "error");
             }
         });
     });
 });
-
 
 </script>
 </body>

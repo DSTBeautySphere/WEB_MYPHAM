@@ -18,10 +18,11 @@ use Illuminate\Support\Facades\Route;
 
 // Route::prefix('admin')->group(function () {
 
-
+Route::post('/admin/register', [AdminController::class, 'register']);
+Route::post('/admin/login', [AdminController::class, 'login']);
 Route::prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'showLoginForm']);
-    Route::post('/login', [AdminController::class, 'login']);
+    // Route::post('/login', [AdminController::class, 'login']);
 
     Route::middleware(['admin'])->group(function () {
        
@@ -65,7 +66,7 @@ Route::prefix('admin')->group(function () {
 
     //don hang
     Route::post('themdondat',[App\Http\Controllers\don_datController::class,'themDonDat']);
-
+    Route::get('showquanlydonhang',[App\Http\Controllers\AdminController::class,'showQuanLyDonHang']);
     //chi tiet don dat
     Route::post('themchitietdondat',[App\Http\Controllers\chi_tiet_don_datController::class,'themChiTietDonDat']);
 
