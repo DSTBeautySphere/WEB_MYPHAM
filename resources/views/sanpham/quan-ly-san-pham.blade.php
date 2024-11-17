@@ -91,12 +91,18 @@
                         </td>
                         <td>  {{ number_format($item->bien_the_san_pham->first()->gia_ban, 0, ',', '.') }} đ</td>
                         <td>{{ $item->loai_san_pham->ten_loai_san_pham }}</td>
-                        <td><button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
+                        <td>
+
+                            <button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
                                 onclick="myFunction(this)"><i class="fas fa-trash-alt"></i>
                             </button>
                             <button class="btn btn-primary btn-sm edit" type="button" title="Sửa" id="show-emp" data-toggle="modal"
-                                data-target="#ModalUP"><i class="fas fa-edit"></i></button>
-                          
+                                data-target="#ModalUP"><i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-info btn-sm variant" type="button" title="Biến thể"
+                                onclick="window.location.href='{{ url('/danhsachbienthesanpham') }}?ma_san_pham={{ $item->ma_san_pham }}'">
+                                <i class="fas fa-th"></i> Biến thể
+                            </button>
                         </td>
                     </tr>
                     @endforeach            

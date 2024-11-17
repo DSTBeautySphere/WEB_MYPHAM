@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\bien_the_san_pham;
 use App\Models\san_pham;
+use App\Models\tuy_chon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class bien_the_san_phamController extends Controller
 {
@@ -19,8 +21,14 @@ class bien_the_san_phamController extends Controller
         try {
            
             $bienTheList = bien_the_san_pham::where('ma_san_pham', $request->ma_san_pham)->get();
-
-            
+          
+            $sanPham = san_pham::find($request->ma_san_pham);
+            $nhomTuyChon = $sanPham->loai_san_pham->nhom_tuy_chon;
+            $tuyChonList = [];
+            foreach ($nhomTuyChon as $nhom) {
+                // Lấy các tùy chọn cho từng nhóm tùy chọn
+                $tuyChonList[$nhom->ma_nhom_tuy_chon] = $nhom->tuy_chon;
+            }
             if ($bienTheList->isEmpty()) {
                 return response()->json([
                     'success' => false,
@@ -28,11 +36,15 @@ class bien_the_san_phamController extends Controller
                 ]);
             }
 
-          
-            return response()->json([
-                'success' => true,
-                'data' => $bienTheList
+            return view('bienthe.quan-ly-bien-the', [
+                'bienTheList' => $bienTheList,
+                'tuyChonList' => $tuyChonList,
+                'message' => null,
             ]);
+            // return response()->json([
+            //     'success' => true,
+            //     'data' => $bienTheList
+            // ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -44,12 +56,12 @@ class bien_the_san_phamController extends Controller
 
     public function themBienTheSanPham(Request $request)
     {
-        
+      
         $request->validate([
-            'ma_san_pham' => 'required|integer|exists:san_pham,ma_san_pham',
-            'mau_sac' => 'required|string|max:50',
-            'loai_da' => 'required|string|max:50',
-            'dung_tich' => 'required|numeric|min:0',
+            // 'ma_san_pham' => 'required|integer|exists:san_pham,ma_san_pham',
+            // 'mau_sac' => 'required|string|max:50',
+            // 'loai_da' => 'required|string|max:50',
+            // 'dung_tich' => 'required|numeric|min:0',
             'so_luong_ton_kho' => 'required|integer|min:0',
             'gia_ban' => 'required|numeric|min:0',
         ]);
@@ -81,6 +93,7 @@ class bien_the_san_phamController extends Controller
                 'message' => 'Biến thể đã được thêm thành công.',
                 'data' => $bienThe
             ]);
+          
         } catch (\Exception $e) {
             // Xử lý lỗi và trả về thông báo lỗi
             return response()->json([
@@ -94,9 +107,9 @@ class bien_the_san_phamController extends Controller
     {
         
         $request->validate([
-            'mau_sac' => 'required|string|max:50',
-            'loai_da' => 'required|string|max:50',
-            'dung_tich' => 'required|numeric|min:0',
+            // 'mau_sac' => 'required|string|max:50',
+            // 'loai_da' => 'required|string|max:50',
+            // 'dung_tich' => 'required|numeric|min:0',
             'so_luong_ton_kho' => 'required|integer|min:0',
             'gia_ban' => 'required|numeric|min:0',
         ]);
@@ -123,11 +136,13 @@ class bien_the_san_phamController extends Controller
             ]);
 
             // Trả về phản hồi JSON
-            return response()->json([
-                'success' => true,
-                'message' => 'Biến thể đã được cập nhật thành công.',
-                'data' => $bienThe
-            ]);
+            // return response()->json([
+            //     'success' => true,
+            //     'message' => 'Biến thể đã được cập nhật thành công.',
+            //     'data' => $bienThe
+            // ]);
+            return redirect()->back()->with('success', true);
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
