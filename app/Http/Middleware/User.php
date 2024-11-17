@@ -17,9 +17,9 @@ class User
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check()) {
+        if (Auth::guard('user')->check()) {
            
-            if (Auth::user()) {
+            if (!Auth::guard('user')->check()) {
               return $next($request);
             } else {
                return redirect('/')->with('error', 'Bạn không có quyền truy cập.');

@@ -28,35 +28,71 @@ class AdminController extends Controller
         
     }
 
-    public function login(Request $request)
+
+
+    public function register(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'mat_khau' => 'required',
+        // Validate dữ liệu đầu vào
+        $validatedData = $request->validate([
+            'email' => 'required|email|unique:admin,email',
+            'ho_ten' => 'required|string|max:255',
+            'so_dien_thoai' => 'required|string|max:15',
+            'anh_dai_dien' => 'nullable|string',
+            'mat_khau' => 'required|string|min:1', // Yêu cầu nhập lại mật khẩu để xác nhận
         ]);
-
-        $admin = Admin::where('email', $request->email)->first();
-
-        if ($admin && $request->mat_khau === $admin->mat_khau) {
-            Auth::guard('admin')->login($admin);
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Đăng nhập thành công',
-                'data' => [
-                    'admin' => $admin,
-                ],
-                'redirect_url' => url('showquanlysanpham')
-            ]);
-        }
-
-        return back()->withErrors(['loginError' => 'Email hoặc mật khẩu không đúng']);
+    
+        // Tạo tài khoản admin mới
+        $admin = Admin::create([
+            'email' => $validatedData['email'],
+            'ho_ten' => $validatedData['ho_ten'],
+            'so_dien_thoai' => $validatedData['so_dien_thoai'],
+            'anh_dai_dien' => $validatedData['anh_dai_dien'] ?? null,
+            'trang_thai' => 1, // Mặc định kích hoạt
+            'mat_khau' => Hash::make($validatedData['mat_khau']), // Mã hóa mật khẩu bằng Hash::make
+        ]);
+    
+        return response()->json([
+            'message' => 'Đăng ký thành công!',
+            'admin' => $admin
+        ], 201);
     }
 
-    // public function logout()
-    // {
-    //     Auth::guard('admin')->logout();
-    //     return redirect()->route('admin.login');
-    // }
+    public function login(Request $request)
+    {
+        // Validate dữ liệu đầu vào
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'mat_khau' => 'required|string',
+        ]);
+    
+        // Tìm admin dựa trên email
+        $admin = Admin::where('email', $credentials['email'])->first();
+    
+        // Kiểm tra mật khẩu
+        if (!$admin || !Hash::check($credentials['mat_khau'], $admin->mat_khau)) {
+            return response()->json(['message' => 'Thông tin đăng nhập không đúng'], 401);
+        }
+    
+        // Tạo token đăng nhập
+        $token = $admin->createToken('auth_token')->plainTextToken;
+        
+        // Đăng nhập và trả về dữ liệu
+        Auth::guard('admin')->login($admin);
+        return response()->json([
+            'message' => 'Đăng nhập thành công!',
+            'token' => $token,
+            'redirect_url' => url('/showquanlysanpham'), // Chuyển hướng
+            'admin' => $admin
+        ]);
+    }
+    
+
+    public function logout()
+    {
+        Auth::guard('admin')->logout();
+        return redirect()->route('/admin/login');
+    }
+    
 
     public function view_san_pham()
     {
@@ -287,6 +323,10 @@ class AdminController extends Controller
         return view('sanpham.quan-ly-san-pham', compact('sanPham')); 
     }
 
+    public function showQuanLyDonHang()
+    {
+        return view('donhang.quan-ly-don-hang');
+    }
     
 
 }

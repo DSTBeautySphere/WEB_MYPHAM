@@ -17,9 +17,13 @@ class Admin
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::guard('admin')->check()) {
-            return redirect()->route('dangnhap')->withErrors(['loginError' => 'Bạn cần đăng nhập để truy cập trang này.']);
+           
+            return redirect()->route('/admin/login')->withErrors([
+                'loginError' => 'Bạn cần đăng nhập để truy cập trang này.',
+            ]);
         }
 
+       
         return $next($request);
     }
 }

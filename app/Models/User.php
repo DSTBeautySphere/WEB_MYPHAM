@@ -25,6 +25,7 @@ class User extends Authenticatable
         'anh_dai_dien', 
         'xac_thuc', 
         'kich_hoat', 
+        'mat_khau',
         'trang_thai'
         ];
 
