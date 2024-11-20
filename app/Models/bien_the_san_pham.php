@@ -26,5 +26,10 @@ class bien_the_san_pham extends Model
     {
         return $this->belongsTo(san_pham::class, 'ma_san_pham');
     }
+
+    public function chi_tiet_don_dat()
+    {
+        return $this->hasMany(chi_tiet_don_dat::class, 'ma_bien_the', 'ma_bien_the');
+    }
 }
 

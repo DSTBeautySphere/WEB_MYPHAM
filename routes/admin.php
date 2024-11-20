@@ -79,4 +79,9 @@ Route::prefix('admin')->group(function () {
     Route::post("/suatuychon",[tuy_chonController::class,'suaTuyChon']);
 
 
+    // bao cao thong ke
+
+    Route::get('/thongke', [AdminController::class, 'Statistics']);
+    Route::post('/thongke/revenue', [App\Http\Controllers\AdminController::class, 'getRevenueData'])->name('thongke.revenue');
+
 // });
