@@ -11,7 +11,14 @@ class chi_tiet_don_dat extends Model
 
     protected $table = 'chi_tiet_don_dat';
     protected $primaryKey = 'ma_chi_tiet_don_dat';
-    protected $fillable = ['ma_don_dat', 'ma_bien_the', 'so_luong', 'gia_ban'];
+    protected $fillable = [
+        'ma_don_dat', 
+        'ma_bien_the', 
+        'so_luong', 
+        'gia_ban',
+        'ten_san_pham',
+        'chi_tiet_tuy_chon'
+    ];
     public $timestamps = false;
 
 

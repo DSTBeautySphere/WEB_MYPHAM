@@ -14,8 +14,11 @@ class don_dat extends Model
     protected $fillable = [
         'ma_user', 
         'ngay_dat', 
-        'tong_tien', 
-        'trang_thai'
+        'so_dien_thoai',
+        'dia_chi_giao_hang',
+        'ngay_du_kien_giao',
+        'trang_thai_giao_hang',
+        'ghi_chu'
     ];
     public $timestamps = false;
 
@@ -28,5 +31,9 @@ class don_dat extends Model
     public function chi_tiet_don_dat()
     {
         return $this->hasMany(chi_tiet_don_dat::class, 'ma_don_dat');
+    }
+    public function hoa_don()
+    {
+        return $this->hasOne(hoa_don::class, 'ma_don_dat');
     }
 }

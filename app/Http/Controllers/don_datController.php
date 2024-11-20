@@ -22,4 +22,24 @@ class don_datController extends Controller
         return response()->json($donDat);
     }
 
+
+     // Hàm để hiển thị danh sách đơn hàng
+    public function danhSach()
+    {
+        // Lấy tất cả các đơn hàng cùng thông tin liên quan
+        $donDat = don_dat::with(['chi_tiet_don_dat', 'hoa_don'])->get();
+
+        return view('donhang.quan-ly-don-hang', compact('donDat'));
+    }
+
+    // Hàm để xem chi tiết đơn hàng
+    public function show($id)
+    {
+        // Tìm đơn hàng theo ma_don_dat
+        $donDat = don_dat::with(['chi_tiet_don_dat', 'hoa_don'])->findOrFail($id);
+
+        // Trả về view với chi tiết đơn hàng
+        return response()->json($donDat);
+    }
+
 }

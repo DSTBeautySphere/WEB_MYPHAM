@@ -16,7 +16,11 @@ class hoa_don extends Model
         'ma_don_dat', 
         'ngay_thanh_toan', 
         'phuong_thuc_thanh_toan', 
-        'tong_tien'
+        'ma_voucher',
+        'giam_gia',
+        'phi_van_chuyen',
+        'so_tien_giam', 
+        'tong_tien' 
     ];
     public $timestamps = false;
 

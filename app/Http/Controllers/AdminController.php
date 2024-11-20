@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use App\Models\anh_san_pham;
 use App\Models\bien_the_san_pham;
+use App\Models\don_dat;
 use Illuminate\Http\Request;
 use App\Models\san_pham;
 use App\Models\loai_san_pham;
@@ -74,13 +75,13 @@ class AdminController extends Controller
         }
     
         // Tạo token đăng nhập
-        $token = $admin->createToken('auth_token')->plainTextToken;
+        //$token = $admin->createToken('auth_token')->plainTextToken;
         
         // Đăng nhập và trả về dữ liệu
         Auth::guard('admin')->login($admin);
         return response()->json([
             'message' => 'Đăng nhập thành công!',
-            'token' => $token,
+            //'token' => $token,
             'redirect_url' => url('/showquanlysanpham'), // Chuyển hướng
             'admin' => $admin
         ]);
@@ -325,7 +326,9 @@ class AdminController extends Controller
 
     public function showQuanLyDonHang()
     {
-        return view('donhang.quan-ly-don-hang');
+        $donDat = don_dat::with(['chi_tiet_don_dat', 'hoa_don'])->get();
+
+        return view('donhang.quan-ly-don-hang', compact('donDat'));
     }
     
 

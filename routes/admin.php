@@ -6,6 +6,7 @@ use App\Http\Controllers\loai_san_phamController;
 use App\Http\Controllers\nha_cung_capController;
 use App\Http\Controllers\san_phamController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\don_datController;
 use App\Http\Controllers\tuy_chonController;
 use App\Models\loai_san_pham;
 use Illuminate\Support\Facades\Route;
@@ -67,6 +68,8 @@ Route::prefix('admin')->group(function () {
     //don hang
     Route::post('themdondat',[App\Http\Controllers\don_datController::class,'themDonDat']);
     Route::get('showquanlydonhang',[App\Http\Controllers\AdminController::class,'showQuanLyDonHang']);
+    Route::get('/don-dat/{id}', [don_datController::class, 'show'])->name('don-dat.show');
+
     //chi tiet don dat
     Route::post('themchitietdondat',[App\Http\Controllers\chi_tiet_don_datController::class,'themChiTietDonDat']);
 
