@@ -24,4 +24,9 @@ class gio_hang extends Model
     {
         return $this->belongsTo(bien_the_san_pham::class, 'ma_bien_the');
     }
+
+    public function bien_the_san_pham()
+    {
+        return $this->belongsTo(bien_the_san_pham::class, 'ma_bien_the');
+    }
 }

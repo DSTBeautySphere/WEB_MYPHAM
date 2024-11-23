@@ -248,7 +248,8 @@
                     </table>
     
                     </div>
-                    <button class="btn btn-save" type="button" id="layMau">Tạo Mẫu</button>
+                    <div style="margin-top: -20px" class="form-group col-md-12"><button class="btn btn-info" type="button" id="layMau">Tạo Mẫu</button></div>
+                    
                 <div class="form-group col-md-12">
                     <label class="control-label">Ảnh sản phẩm</label>
                     <div id="myfileupload">
@@ -270,7 +271,7 @@
                     <table class="table" id="dgv_mota">
                         <thead>
                             <tr>
-                                <th>Code</th>
+                                {{-- <th>Code</th> --}}
                                 <th>Tên Mô Tả</th>
                                 <th>Thao Tác</th>
                             </tr>
@@ -279,7 +280,7 @@
                         </tbody>
                     </table>
                     <input class="form-control" type="text" name="txt_tenmota" id="txt_tenmota" placeholder="Nhập Mô Tả">
-                    <button class="btn btn-save" id="btn_themmota">Thêm Mô Tả</button>
+                    <button style="margin-top: 10px" class="btn btn-success" id="btn_themmota">Thêm Mô Tả</button>
                 </div>
                 
                 <div class="form-group col-md-12">
@@ -297,12 +298,16 @@
                             </tbody>
                         </thead>
                     </table>
-                    <textarea class="form-control" name="txt_tieude" id="txt_tieude" placeholder="Nhập Tiêu Đề"></textarea>
+                    <input class="form-control" name="txt_tieude" id="txt_tieude" placeholder="Nhập Tiêu Đề"></input>
                     <textarea class="form-control" name="txt_noidung" id="txt_noidung" placeholder="Nhập Nội Dung"></textarea>
-                    <button class="btn btn-save" id="btn_themctmota" >Thêm Chi Tiết Mô Tả</button>
+                    <button style="margin-top: 10px" class="btn btn-success" id="btn_themctmota" >Thêm Chi Tiết Mô Tả</button>
                 </div>
-                <button class="btn btn-save" type="submit" id="themSP" >Thêm</button>
-                <a class="btn btn-cancel" href="table-data-product.html">Hủy bỏ</a>
+                <div class="form-group col-md-12 d-flex justify-content-center" style="align-items: center;">
+                    <button style="width: 200px;" class="btn btn-save mx-2 px-4 py-2" type="submit" id="themSP">Thêm</button>
+                    <a style="width: 200px;" class="btn btn-cancel mx-2 px-4 py-2" href="table-data-product.html">Hủy bỏ</a>
+                </div>
+                
+                
             </form>
         </div>
     </div>
@@ -566,26 +571,26 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    CKEDITOR.replace('txt_tenmota', {
-        toolbar: [
-            { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
-            { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
-            { name: 'styles', items: ['Format', 'Font', 'FontSize'] },
-            { name: 'colors', items: ['TextColor', 'BGColor'] },
-            { name: 'insert', items: ['Image', 'Table'] }
-        ],
-        height: 70
-    });
-    CKEDITOR.replace('txt_tieude', {
-        toolbar: [
-            { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
-            { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
-            { name: 'styles', items: ['Format', 'Font', 'FontSize'] },
-            { name: 'colors', items: ['TextColor', 'BGColor'] },
-            { name: 'insert', items: ['Image', 'Table'] }
-        ],
-        height: 70
-    });
+    // CKEDITOR.replace('txt_tenmota', {
+    //     toolbar: [
+    //         { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
+    //         { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
+    //         { name: 'styles', items: ['Format', 'Font', 'FontSize'] },
+    //         { name: 'colors', items: ['TextColor', 'BGColor'] },
+    //         { name: 'insert', items: ['Image', 'Table'] }
+    //     ],
+    //     height: 70
+    // });
+    // CKEDITOR.replace('txt_tieude', {
+    //     toolbar: [
+    //         { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
+    //         { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
+    //         { name: 'styles', items: ['Format', 'Font', 'FontSize'] },
+    //         { name: 'colors', items: ['TextColor', 'BGColor'] },
+    //         { name: 'insert', items: ['Image', 'Table'] }
+    //     ],
+    //     height: 70
+    // });
     CKEDITOR.replace('txt_noidung', {
         toolbar: [
             { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
@@ -601,7 +606,85 @@
 
 <script>
 
+// let sanPhamMau = [];
+//  $('#danhmuc').change(function() {
+//     $('input[name="mau[]"]').prop("checked", false);
+//     $('input[name="dungtich[]"]').prop("checked", false);
+//     $('input[name="loaida[]"]').prop("checked", false);
+//     var maLoaiSanPham = $(this).val();
 
+   
+//     $.ajax({
+//         url: '/laynhomtuychontheoloai',
+//         type: 'GET',
+//         data: {
+//             ma_loai_san_pham: maLoaiSanPham,
+//             _token: '{{ csrf_token() }}'
+//         },
+//         success: function(response) {
+          
+//             var hasMauSac = false;
+//             var hasDungTich = false;
+//             var hasLoaiDa = false;
+
+          
+//             response.forEach(function(nhom) {
+               
+//                 if (nhom.ma_nhom_tuy_chon == 1) hasMauSac = true;
+//                 if (nhom.ma_nhom_tuy_chon == 2) hasDungTich = true;
+//                 if (nhom.ma_nhom_tuy_chon == 3) hasLoaiDa = true;
+
+               
+//                 var groupName = nhom.ten_nhom_tuy_chon;  
+//                 var groupHTML = '<h4>' + groupName + '</h4>';  
+
+//                 // Kiểm tra xem nhóm có tùy chọn không
+//                 if (nhom.tuy_chon.length === 0) {
+//                     // Nếu không có tùy chọn, thêm lớp CSS để làm mờ và vô hiệu hóa
+//                     groupHTML = ` 
+//                         <div class="group-readonly" style="opacity: 0.5; pointer-events: none;">
+//                             <h4>${groupName}</h4>
+//                             <p>Không có tùy chọn nào.</p>
+//                         </div>`;
+//                 } else {
+//                     // Nếu có tùy chọn, hiển thị bình thường
+//                     nhom.tuy_chon.forEach(function(tuyChon) {
+//                         groupHTML += ` 
+//                             <label>
+//                                 <input type="checkbox" name="tuy_chon[]" value="${tuyChon.ma_tuy_chon}" 
+//                                     class="tuy-chon" data-nhom="${groupName}" 
+//                                     ${tuyChon.is_choosen ? '' : 'disabled'}> 
+//                                 ${tuyChon.ten_tuy_chon}
+//                             </label><br>
+//                         `;
+//                     });
+//                 }
+
+//                 // Thêm nhóm vào đúng vị trí
+//                 $('#group-' + groupName.toLowerCase().replace(" ", "-")).html(groupHTML);
+//             });
+
+//             // Kiểm tra và áp dụng hiệu ứng làm mờ cho các nhóm không có tùy chọn
+//             if (!hasMauSac) {
+//                 $('#group-mau').css({'opacity': '0.5', 'pointer-events': 'none'}); // Làm mờ nhóm màu sắc
+//             } else {
+//                 $('#group-mau').css({'opacity': '1', 'pointer-events': 'auto'}); // Hiển thị nhóm màu sắc
+//             }
+
+//             if (!hasDungTich) {
+//                 $('#group-dungtich').css({'opacity': '0.5', 'pointer-events': 'none'}); // Làm mờ nhóm dung tích
+//             } else {
+//                 $('#group-dungtich').css({'opacity': '1', 'pointer-events': 'auto'}); // Hiển thị nhóm dung tích
+//             }
+
+//             if (!hasLoaiDa) {
+//                 $('#group-loaida').css({'opacity': '0.5', 'pointer-events': 'none'}); // Làm mờ nhóm loại da
+//             } else {
+//                 $('#group-loaida').css({'opacity': '1', 'pointer-events': 'auto'}); // Hiển thị nhóm loại da
+//             }
+//         }
+//     });
+// });
 let sanPhamMau = [];
     $('#danhmuc').change(function() {
         $('input[name="mau[]"]').prop("checked", false);
@@ -703,9 +786,9 @@ $('#layMau').click(function() {
                 $.each(dungtich, function(j, dungTichItem) {
                     $.each(loaida, function(k, loaiDaItem) {
                         sanPhamMau.push({
-                            'mau_sac': mauItem || null,
-                            'loai_da': loaiDaItem || null,
-                            'dung_tich': dungTichItem || null,  // Đảm bảo dung_tich là chuỗi hoặc null
+                            'mau_sac': mauItem || "",
+                            'loai_da': loaiDaItem ||"",
+                            'dung_tich': dungTichItem || "",  // Đảm bảo dung_tich là chuỗi hoặc null
                             'so_luong_ton_kho': 1,
                             'gia_ban': 10000
                         });
@@ -719,7 +802,7 @@ $('#layMau').click(function() {
                 $.each(dungtich, function(j, dungTichItem) {
                     sanPhamMau.push({
                         'mau_sac': mauItem,
-                        'loai_da': 'null',
+                        'loai_da': "",
                         'dung_tich': dungTichItem,
                        
                         'so_luong_ton_kho': 1,
@@ -735,7 +818,7 @@ $('#layMau').click(function() {
                     sanPhamMau.push({
                         'mau_sac': mauItem,
                         'loai_da': loaiDaItem,
-                        'dung_tich': 'null',
+                        'dung_tich': "",
                        
                         'so_luong_ton_kho': 1,
                         'gia_ban': 100000
@@ -748,7 +831,7 @@ $('#layMau').click(function() {
             $.each(dungtich, function(i, dungTichItem) {
                 $.each(loaida, function(j, loaiDaItem) {
                     sanPhamMau.push({
-                        'mau_sac': 'null',
+                        'mau_sac': "",
                         'loai_da': loaiDaItem,
                         'dung_tich': dungTichItem,
                        
@@ -763,8 +846,8 @@ $('#layMau').click(function() {
             $.each(mau, function(i, mauItem) {
                 sanPhamMau.push({
                     'mau_sac': mauItem,
-                    'loai_da': 'null',
-                    'dung_tich': 'null',                
+                    'loai_da': "",
+                    'dung_tich': "",                
                     'so_luong_ton_kho': 1,
                     'gia_ban': 10000
                 });
@@ -774,8 +857,8 @@ $('#layMau').click(function() {
         else if (mau.length === 0 && dungtich.length > 0 && loaida.length === 0) {
             $.each(dungtich, function(i, dungTichItem) {
                 sanPhamMau.push({
-                    'mau_sac': 'null',
-                    'loai_da': 'null',
+                    'mau_sac': "",
+                    'loai_da': "",
                     'dung_tich': dungTichItem,
                     
                     'so_luong_ton_kho': 1,
@@ -787,9 +870,9 @@ $('#layMau').click(function() {
         else if (mau.length === 0 && dungtich.length === 0 && loaida.length > 0) {
             $.each(loaida, function(i, loaiDaItem) {
                 sanPhamMau.push({
-                    'mau_sac': 'null',
+                    'mau_sac': "",
                     'loai_da': loaiDaItem,
-                    'dung_tich': 'null',
+                    'dung_tich': "",
                     
                     'so_luong_ton_kho': 1,
                     'gia_ban': 10000
@@ -807,7 +890,7 @@ $('#layMau').click(function() {
             
             '<td contenteditable="true">' + sp.so_luong_ton_kho + '</td>' +
             '<td contenteditable="true">' + sp.gia_ban + '</td>' +
-            '<td><button class="delete-row">Xóa</button></td>' +
+            '<td><button class="delete-row btn btn-danger">Xóa</button></td>' +
         '</tr>';
     });
 
@@ -826,7 +909,7 @@ $('#layMau').click(function() {
         '<td contenteditable="true"></td>' +
         '<td contenteditable="true"></td>' +
         '<td contenteditable="true"></td>' +
-        '<td><button class="delete-row">Xóa</button></td>' +
+        '<td><button class="delete-row btn btn-danger">Xóa</button></td>' +
     '</tr>';
     $('#sanPhamMauGrid tbody').append(newRow);
 
@@ -904,7 +987,7 @@ $(document).on('blur', '#sanPhamMauGrid tbody td[contenteditable="true"]', funct
             '<td contenteditable="true"></td>' + 
             '<td contenteditable="true"></td>' + 
             '<td contenteditable="true"></td>' + 
-            '<td><button class="delete-row">Xóa</button></td>' +  
+            '<td><button class="delete-row btn btn-danger">Xóa</button></td>' +  
         '</tr>';
         $('#sanPhamMauGrid tbody').append(newRow);
     }
@@ -968,17 +1051,273 @@ $(document).on('click', '.Choicefile', function() {
 });
 
 
+// $('#themSP').on('click', function() {
+//     let tenSanPham = $('input[name="ten_san_pham"]').val();
+//     let maLoaiSanPham = $('#danhmuc').val();
+//     let maNhaCungCap = $('#nhacungcap').val();
 
+//     // Chuyển đổi tất cả giá trị của dung_tich trong sanPhamMau thành chuỗi
+//     sanPhamMau = sanPhamMau.map(item => ({
+//         ...item,
+//         dung_tich: String(item.dung_tich)  // Chuyển dung_tich thành chuỗi
+//     }));
+
+//     console.log("SanPhamMau:", sanPhamMau);
+
+//     if (sanPhamMau.length === 0) {
+//         alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
+//         return;
+//     }
+   
+//     // Lấy các file đã được chọn từ input file
+//     var imageFiles = $('#images')[0].files;
+    
+//     // In ra console để kiểm tra
+
+//     // var formData = new FormData();
+
+//     // // Đưa tất cả tệp ảnh vào FormData
+//     // for (var i = 0; i < imageFiles.length; i++) {
+//     //     formData.append('image_files[]', imageFiles[i]);
+//     // }
+
+//     $.ajax({
+//         url: 'themsanpham',
+//         type: 'POST',
+//         data: {
+
+//             ten_san_pham: tenSanPham,
+//             ma_loai_san_pham: maLoaiSanPham,
+//             ma_nha_cung_cap: maNhaCungCap,
+//             bien_the: sanPhamMau,
+//             //images:imageFiles,
+//             _token: '{{ csrf_token() }}'
+//         },
+//         success: function(response) {
+//             alert(response.message);
+//         },
+//        error: function(xhr, status, error) {
+//     // Hiển thị mã trạng thái HTTP
+//     var statusCode = xhr.status;
+
+//     // Lấy thông báo lỗi từ responseText (nếu có)
+//     var errorMessage = xhr.responseText || "Không có thông báo lỗi";
+
+//     // Hiển thị lỗi trong alert
+//     alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
+//     }
+
+//     });
+// }); 
+
+// $('#themSP').on('click', function() {
+//     event.preventDefault();
+//     let tenSanPham = $('input[name="ten_san_pham"]').val();
+//     let maLoaiSanPham = $('#danhmuc').val();
+//     let maNhaCungCap = $('#nhacungcap').val();
+
+//     // Chuyển đổi tất cả giá trị của dung_tich trong sanPhamMau thành chuỗi
+//     sanPhamMau = sanPhamMau.map(item => ({
+//         ...item,
+//         dung_tich: String(item.dung_tich)  // Chuyển dung_tich thành chuỗi
+//     }));
+
+//     console.log("SanPhamMau:", sanPhamMau);
+
+//     if (sanPhamMau.length === 0) {
+//         alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
+//         return;
+//     }
+
+//     //var imageFiles = $('#images')[0].files;
+//     // var formData = new FormData();
+
+//     // // Đưa tất cả tệp ảnh vào FormData
+//     // for (var i = 0; i < imageFiles.length; i++) {
+//     //     formData.append('image_files[]', imageFiles[i]);
+//     // }
+
+//     $.ajax({
+//         url: 'themsanpham',
+//         type: 'POST',
+//         data: {
+
+//             ten_san_pham: tenSanPham,
+//             ma_loai_san_pham: maLoaiSanPham,
+//             ma_nha_cung_cap: maNhaCungCap,
+//             bien_the: JSON.stringify(sanPhamMau),
+//             //anh_san_pham:imageFiles,
+//             _token: '{{ csrf_token() }}'
+//         },
+//         success: function(response) {
+//             alert(response.message);
+//         },
+//        error: function(xhr, status, error) {
+//     // Hiển thị mã trạng thái HTTP
+//     var statusCode = xhr.status;
+
+//     // Lấy thông báo lỗi từ responseText (nếu có)
+//     var errorMessage = xhr.responseText || "Không có thông báo lỗi";
+
+//     // Hiển thị lỗi trong alert
+//     alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
+//     }
+
+//     });
+// }); 
+let ds_mota = [];
+// Mảng lưu chi tiết mô tả
+let ds_ctmota = [];
+let temp_mota = null;
+
+// Hàm thêm mô tả
+document.getElementById("btn_themmota").addEventListener("click", function(event) {
+    event.preventDefault();  // Đảm bảo không bị reload trang
+    console.log("Bắt đầu lấy giá trị...");
+    
+    const tenMoTa = document.getElementById('txt_tenmota').value;
+    console.log("Giá trị tenMoTa:", tenMoTa);
+
+    if (tenMoTa) {
+        const maMoTa = Math.floor(Math.random() * 100000);  // Tạo mã mô tả ngẫu nhiên
+        const mota = { ma_mo_ta: maMoTa, ten_mo_ta: tenMoTa };
+        ds_mota.push(mota);
+        Load_TableMoTa();
+        document.getElementById("txt_tenmota").value = '';  // Clear input
+    } else {
+        alert("Vui lòng nhập tên mô tả!");
+    }
+});
+
+
+// Hàm thêm chi tiết mô tả
+document.getElementById("btn_themctmota").addEventListener("click", function() {
+    event.preventDefault(); 
+    if (temp_mota !== null) {
+        
+        const tieuDe = document.getElementById('txt_tieude').value;
+
+       
+        const noiDung = CKEDITOR.instances['txt_noidung'].getData();
+        if (tieuDe && noiDung) {
+            const chiTiet = { ma_mo_ta: temp_mota, tieu_de: tieuDe, noi_dung: noiDung };
+            ds_ctmota.push(chiTiet);
+            Load_TableMoTaChiTiet(temp_mota);
+            document.getElementById("txt_tieude").value = ''; // Clear input
+            document.getElementById("txt_noidung").value = ''; // Clear textarea
+        } else {
+            alert("Vui lòng nhập tiêu đề và nội dung chi tiết!");
+        }
+    } else {
+        alert("Vui lòng chọn mô tả trước khi thêm chi tiết!");
+    }
+});
+
+// Load bảng mô tả
+function Load_TableMoTa() {
+    const tbody = document.getElementById("dgv_mota").getElementsByTagName("tbody")[0];
+    tbody.innerHTML = ''; // Clear previous data
+    
+    ds_mota.forEach(function(moTa) {
+        const row = tbody.insertRow();
+        // row.insertCell(0).innerText = moTa.ma_mo_ta;
+        row.insertCell(0).innerText = moTa.ten_mo_ta;
+        
+        const btnSelect = document.createElement("button");
+        btnSelect.innerText = "Chọn";
+        btnSelect.className = "btn btn-success btn-sm";
+
+        btnSelect.addEventListener("click", function(event) {
+            event.preventDefault();
+            temp_mota = moTa.ma_mo_ta;
+            
+            document.getElementById("lb_not").innerText = `Nhập Thông Tin Chi Tiết Cho [${moTa.ten_mo_ta}]`;
+            Load_TableMoTaChiTiet(temp_mota);
+        });
+
+        const btnEdit = document.createElement("button");
+        btnEdit.innerText = "Sửa";
+        btnEdit.className = "btn btn-warning btn-sm";
+
+        btnEdit.addEventListener("click", function(event) {
+            event.preventDefault();
+            const newName = prompt("Nhập tên mới cho mô tả:", moTa.ten_mo_ta);
+            if (newName) {
+                moTa.ten_mo_ta = newName;
+                Load_TableMoTa();
+            }
+        });
+
+        const btnDelete = document.createElement("button");
+        btnDelete.innerText = "Xóa";
+        btnDelete.classList.add("delete");
+        btnDelete.className = "btn btn-danger btn-sm";
+        btnDelete.addEventListener("click", function(event) {
+            event.preventDefault();
+            const index = ds_mota.indexOf(moTa);
+            if (index > -1) {
+                ds_mota.splice(index, 1);
+                Load_TableMoTa();
+            }
+        });
+
+        const cellBtn = row.insertCell(1);
+        cellBtn.appendChild(btnSelect);
+        cellBtn.appendChild(btnEdit);
+        cellBtn.appendChild(btnDelete);
+    });
+}
+
+// Load bảng chi tiết mô tả
+function Load_TableMoTaChiTiet(ma_mo_ta) {
+    const tbody = document.getElementById("dgv_chitietmota").getElementsByTagName("tbody")[0];
+    tbody.innerHTML = ''; // Clear previous data
+    
+    const chiTietList = ds_ctmota.filter(ct => ct.ma_mo_ta === ma_mo_ta);
+    chiTietList.forEach(function(ct) {
+        const row = tbody.insertRow();
+        row.insertCell(0).innerText = ct.tieu_de;
+        row.insertCell(1).innerText = ct.noi_dung;
+        
+        const btnEdit = document.createElement("button");
+        btnEdit.innerText = "Sửa";
+        btnEdit.className = "btn btn-warning btn-sm";
+        btnEdit.addEventListener("click", function(event) {
+            event.preventDefault();
+            const newTieuDe = prompt("Nhập tiêu đề mới:", ct.tieu_de);
+            const newNoiDung = prompt("Nhập nội dung mới:", ct.noi_dung);
+            if (newTieuDe && newNoiDung) {
+                ct.tieu_de = newTieuDe;
+                ct.noi_dung = newNoiDung;
+                Load_TableMoTaChiTiet(ma_mo_ta);
+            }
+        });
+
+        const btnDelete = document.createElement("button");
+        btnDelete.innerText = "Xóa";
+        btnDelete.classList.add("delete");
+        btnDelete.className = "btn btn-danger btn-sm";
+        btnDelete.addEventListener("click", function(event) {
+            event.preventDefault();
+            const index = ds_ctmota.indexOf(ct);
+            if (index > -1) {
+                ds_ctmota.splice(index, 1);
+                Load_TableMoTaChiTiet(ma_mo_ta);
+            }
+        });
+
+        const cellBtn = row.insertCell(2);
+        cellBtn.appendChild(btnEdit);
+        cellBtn.appendChild(btnDelete);
+    });
+}
 
 $('#themSP').on('click', function(event) {
-    // Ngừng hành động submit mặc định
     event.preventDefault();
 
     let tenSanPham = $('input[name="ten_san_pham"]').val();
     let maLoaiSanPham = $('#danhmuc').val();
     let maNhaCungCap = $('#nhacungcap').val();
-
-    // Chuyển đổi tất cả giá trị của dung_tich trong sanPhamMau thành chuỗi
     sanPhamMau = sanPhamMau.map(item => ({
         ...item,
         dung_tich: String(item.dung_tich)  // Chuyển dung_tich thành chuỗi
@@ -1002,6 +1341,8 @@ $('#themSP').on('click', function(event) {
     formData.append('ma_loai_san_pham', maLoaiSanPham);
     formData.append('ma_nha_cung_cap', maNhaCungCap);
     formData.append('bien_the', JSON.stringify(sanPhamMau));
+    formData.append('mo_ta', JSON.stringify(ds_mota));
+    formData.append('chi_tiet_mo_ta', JSON.stringify(ds_ctmota));
     formData.append('_token', '{{ csrf_token() }}');
 
     $.ajax({
@@ -1251,143 +1592,7 @@ $('#saveEditNhaCungCap').click(function() {
 </script>
 {{-- Mô tả --}}
 <script>
-let ds_mota = [];
-// Mảng lưu chi tiết mô tả
-let ds_ctmota = [];
-let temp_mota = null;
 
-// Hàm thêm mô tả
-document.getElementById("btn_themmota").addEventListener("click", function(event) {
-    event.preventDefault();  // Đảm bảo không bị reload trang
-    console.log("Bắt đầu lấy giá trị...");
-    
-    const tenMoTa = CKEDITOR.instances['txt_tenmota'].getData();
-    console.log("Giá trị tenMoTa:", tenMoTa);
-
-    if (tenMoTa) {
-        const maMoTa = Math.floor(Math.random() * 100000);  // Tạo mã mô tả ngẫu nhiên
-        const mota = { ma_mo_ta: maMoTa, ten_mo_ta: tenMoTa };
-        ds_mota.push(mota);
-        Load_TableMoTa();
-        document.getElementById("txt_tenmota").value = '';  // Clear input
-    } else {
-        alert("Vui lòng nhập tên mô tả!");
-    }
-});
-
-
-// Hàm thêm chi tiết mô tả
-document.getElementById("btn_themctmota").addEventListener("click", function() {
-    event.preventDefault(); 
-    if (temp_mota !== null) {
-        
-        const tieuDe = CKEDITOR.instances['txt_tieude'].getData();
-       
-        const noiDung = CKEDITOR.instances['txt_noidung'].getData();
-        if (tieuDe && noiDung) {
-            const chiTiet = { ma_mo_ta: temp_mota, tieu_de: tieuDe, noi_dung: noiDung };
-            ds_ctmota.push(chiTiet);
-            Load_TableMoTaChiTiet(temp_mota);
-            document.getElementById("txt_tieude").value = ''; // Clear input
-            document.getElementById("txt_noidung").value = ''; // Clear textarea
-        } else {
-            alert("Vui lòng nhập tiêu đề và nội dung chi tiết!");
-        }
-    } else {
-        alert("Vui lòng chọn mô tả trước khi thêm chi tiết!");
-    }
-});
-
-// Load bảng mô tả
-function Load_TableMoTa() {
-    const tbody = document.getElementById("dgv_mota").getElementsByTagName("tbody")[0];
-    tbody.innerHTML = ''; // Clear previous data
-    
-    ds_mota.forEach(function(moTa) {
-        const row = tbody.insertRow();
-        row.insertCell(0).innerText = moTa.ma_mo_ta;
-        row.insertCell(1).innerText = moTa.ten_mo_ta;
-        
-        const btnSelect = document.createElement("button");
-        btnSelect.innerText = "Chọn";
-        btnSelect.addEventListener("click", function(event) {
-            event.preventDefault();
-            temp_mota = moTa.ma_mo_ta;
-            document.getElementById("lb_not").innerText = `Nhập Thông Tin Chi Tiết Cho [${temp_mota}]`;
-            Load_TableMoTaChiTiet(temp_mota);
-        });
-
-        const btnEdit = document.createElement("button");
-        btnEdit.innerText = "Sửa";
-        btnEdit.addEventListener("click", function(event) {
-            event.preventDefault();
-            const newName = prompt("Nhập tên mới cho mô tả:", moTa.ten_mo_ta);
-            if (newName) {
-                moTa.ten_mo_ta = newName;
-                Load_TableMoTa();
-            }
-        });
-
-        const btnDelete = document.createElement("button");
-        btnDelete.innerText = "Xóa";
-        btnDelete.classList.add("delete");
-        btnDelete.addEventListener("click", function(event) {
-            event.preventDefault();
-            const index = ds_mota.indexOf(moTa);
-            if (index > -1) {
-                ds_mota.splice(index, 1);
-                Load_TableMoTa();
-            }
-        });
-
-        const cellBtn = row.insertCell(2);
-        cellBtn.appendChild(btnSelect);
-        cellBtn.appendChild(btnEdit);
-        cellBtn.appendChild(btnDelete);
-    });
-}
-
-// Load bảng chi tiết mô tả
-function Load_TableMoTaChiTiet(ma_mo_ta) {
-    const tbody = document.getElementById("dgv_chitietmota").getElementsByTagName("tbody")[0];
-    tbody.innerHTML = ''; // Clear previous data
-    
-    const chiTietList = ds_ctmota.filter(ct => ct.ma_mo_ta === ma_mo_ta);
-    chiTietList.forEach(function(ct) {
-        const row = tbody.insertRow();
-        row.insertCell(0).innerText = ct.tieu_de;
-        row.insertCell(1).innerText = ct.noi_dung;
-        
-        const btnEdit = document.createElement("button");
-        btnEdit.innerText = "Sửa";
-        btnEdit.addEventListener("click", function(event) {
-            event.preventDefault();
-            const newTieuDe = prompt("Nhập tiêu đề mới:", ct.tieu_de);
-            const newNoiDung = prompt("Nhập nội dung mới:", ct.noi_dung);
-            if (newTieuDe && newNoiDung) {
-                ct.tieu_de = newTieuDe;
-                ct.noi_dung = newNoiDung;
-                Load_TableMoTaChiTiet(ma_mo_ta);
-            }
-        });
-
-        const btnDelete = document.createElement("button");
-        btnDelete.innerText = "Xóa";
-        btnDelete.classList.add("delete");
-        btnDelete.addEventListener("click", function(event) {
-            event.preventDefault();
-            const index = ds_ctmota.indexOf(ct);
-            if (index > -1) {
-                ds_ctmota.splice(index, 1);
-                Load_TableMoTaChiTiet(ma_mo_ta);
-            }
-        });
-
-        const cellBtn = row.insertCell(2);
-        cellBtn.appendChild(btnEdit);
-        cellBtn.appendChild(btnDelete);
-    });
-}
 </script>
 
 @endsection
