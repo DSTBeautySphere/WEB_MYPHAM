@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\danh_giaController;
+use App\Http\Controllers\don_datController;
 use App\Http\Controllers\gio_hangController;
 use App\Http\Controllers\loai_san_phamController;
 use App\Http\Controllers\nha_cung_capController;
@@ -38,7 +39,10 @@ Route::post('/dangXuat', [AuthController::class, 'dangXuat']);
 
 Route::post('/themgioHang', [gio_hangController::class,"themSP_GH"]);
 Route::get('/chitietgiohang', [gio_hangController::class,"chiTietGioHang"]);
+Route::post('/capnhatsoluong', [gio_hangController::class,"updateQuantity"]);
+Route::post('/xoagiohang', [gio_hangController::class,"deleteCart"]);
 
+Route::post('/dathang', [don_datController::class,"themDonDat"]);
 
 //san_pham
 //Route::get('/view_sanpham',[App\Http\Controllers\san_phamController::class,'lay_san_pham']);
