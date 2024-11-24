@@ -67,8 +67,8 @@
       <li><a class="app-menu__item" href="table-data-oder.html"><i class='app-menu__icon bx bx-task'></i><span
             class="app-menu__label">Quản lý đơn hàng</span></a></li>
 
-      <li><a class="app-menu__item" href="table-data-banned.html"><i class='app-menu__icon bx bx-run'></i><span
-            class="app-menu__label">Quản lý nội bộ
+      <li><a class="app-menu__item" href="/showkhuyenmai"><i class='app-menu__icon bx bx-run'></i><span
+            class="app-menu__label">Quản lý giảm giá
           </span></a></li>
       <li><a class="app-menu__item" href="table-data-money.html"><i class='app-menu__icon bx bx-dollar'></i><span
             class="app-menu__label">Bảng kê lương</span></a></li>

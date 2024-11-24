@@ -7,6 +7,7 @@ use App\Http\Controllers\nha_cung_capController;
 use App\Http\Controllers\san_phamController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\don_datController;
+use App\Http\Controllers\khuyen_mai_san_phamController;
 use App\Http\Controllers\tuy_chonController;
 use App\Models\loai_san_pham;
 use Illuminate\Support\Facades\Route;
@@ -84,4 +85,28 @@ Route::prefix('admin')->group(function () {
     Route::get('/thongke', [AdminController::class, 'Statistics']);
     Route::post('/thongke/revenue', [App\Http\Controllers\AdminController::class, 'getRevenueData'])->name('thongke.revenue');
 
+
+    //Khuyen mai 
+    Route::get('/showkhuyenmai', [App\Http\Controllers\AdminController::class, 'showPromotion']);
+    // Lấy danh sách khuyến mãi
+    Route::get('/getsanpham', [AdminController::class, 'getSanPham']);
+
+   
+    Route::get('/by-loai', [AdminController::class, 'getLoai']);
+    Route::get('/by-dong', [AdminController::class, 'getDong']);
+
+    Route::get('/getsanpham-by-dong', [AdminController::class, 'getSanPhamByDong']);
+    Route::get('/getsanpham-by-loai', [AdminController::class, 'getSanPhamByLoai']);
+
+    // Lấy danh sách sản phẩm có khuyến mãi
+    Route::get('/with-discount', [AdminController::class, 'getSanPhamWithDiscount']);
+
+    // Thêm khuyến mãi cho sản phẩm
+    Route::post('/add-discount', [AdminController::class, 'addDiscountToSanPham']);
+
+    // Xóa khuyến mãi từ sản phẩm
+    Route::post('/delete-discount', [AdminController::class, 'deleteDiscountFromSanPham']);
+
+    
+   
 // });

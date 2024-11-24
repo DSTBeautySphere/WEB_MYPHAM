@@ -11,6 +11,7 @@ use App\Models\san_pham;
 use App\Models\loai_san_pham;
 use App\Models\dong_san_pham;
 use App\Models\hoa_don;
+use App\Models\khuyen_mai_san_pham;
 use App\Models\nha_cung_cap;
 use App\Models\nhom_tuy_chon;
 use App\Models\tuy_chon;
@@ -521,4 +522,160 @@ class AdminController extends Controller
     }
 
 
+
+    //Khuyến mãi
+
+    public function showPromotion()
+    {
+        return view('KhuyenMai.quan-ly-khuyen-mai');
+    }
+
+    public function getSanPham()
+    {
+        $sp= san_pham::all();
+        return response()->json($sp);
+    }
+
+    public function getLoai()
+    {
+        $loai = loai_san_pham::all();
+
+        return response()->json($loai);
+    }
+
+    public function getDong()
+    {
+        $dong = dong_san_pham::all();
+        return response()->json($dong);
+    }
+
+    public function getSanPhamByDong(Request $request)
+    {
+        $dongSanPhamId = $request->input('ma_dong_san_pham');
+
+        // Kiểm tra xem dòng sản phẩm có tồn tại hay không
+        $dongSanPham = dong_san_pham::find($dongSanPhamId);
+        
+        if (!$dongSanPham) {
+            return response()->json(['error' => 'Dòng sản phẩm không tồn tại'], 404);
+        }
+    
+        // Lấy các sản phẩm thuộc dòng sản phẩm qua các loại sản phẩm, eager load ảnh sản phẩm và lọc sản phẩm không có khuyến mãi
+        $sanPhams = $dongSanPham->loai_san_pham->flatMap(function ($loaiSanPham) {
+            return $loaiSanPham->san_pham()->doesntHave('khuyen_mai_san_pham')  // Lọc sản phẩm không có khuyến mãi
+                ->with('anh_san_pham')  // Eager load ảnh sản phẩm
+                ->get();
+        });
+    
+        // Trả về dữ liệu sản phẩm
+        return response()->json($sanPhams);
+    }
+
+    public function getSanPhamByLoai(Request $request)
+    {
+        $loaiSanPhamId = $request->input('ma_loai_san_pham');
+
+    // Lấy sản phẩm theo loại và không có khuyến mãi
+        $sanPhams = san_pham::with('anh_san_pham') // Nạp quan hệ anh_san_pham
+        ->where('ma_loai_san_pham', $loaiSanPhamId)
+        ->whereDoesntHave('khuyen_mai_san_pham') // Điều kiện: không có khuyến mãi
+        ->get();
+
+        return response()->json($sanPhams);
+    }
+
+
+    public function getSanPhamWithDiscount(Request $request)
+    {
+        $sanPhams = san_pham::with(['khuyen_mai_san_pham', 'anh_san_pham'])
+        ->whereHas('khuyen_mai_san_pham') // Kiểm tra sản phẩm có khuyến mãi
+        ->get();
+
+        $sanPhams->each(function ($product) {
+            $product->deleteExpiredDiscounts(); // Xóa khuyến mãi hết hạn cho sản phẩm
+        });
+        // Định dạng dữ liệu trả về
+        $response = $sanPhams->map(function ($product) {
+            return [
+                'ma_san_pham'=> $product->ma_san_pham,
+                'ten_san_pham' => $product->ten_san_pham,
+                'discount' => $product->khuyen_mai_san_pham->first()?->muc_giam_gia ?? 0,
+                'image_url' => $product->anh_san_pham->first()?->url_anh ?? '/images/default-product.jpg',
+            ];
+        });
+
+        return response()->json($response);
+    }
+
+    public function addDiscountToSanPham(Request $request)
+    {
+        $validated = $request->validate([
+            'discount' => 'required|integer|min:1|max:100',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'product_ids' => 'required|array',
+            'product_ids.*' => 'exists:san_pham,ma_san_pham', // Kiểm tra sản phẩm tồn tại
+        ]);
+
+        $discount = $validated['discount'];
+        $startDate = $validated['start_date'];
+        $endDate = $validated['end_date'];
+        $productIds = $validated['product_ids'];
+
+        foreach ($productIds as $productId) {
+            khuyen_mai_san_pham::create([
+                'ma_san_pham' => $productId,
+                'muc_giam_gia' => $discount,
+                'ngay_bat_dau' => $startDate,
+                'ngay_ket_thuc' => $endDate,
+                'dieu_kien_ap_dung' => null, // Cập nhật nếu có điều kiện khác
+            ]);
+        }
+
+        return response()->json(['message' => 'Khuyến mãi đã được áp dụng thành công!']);
+    }
+    
+
+    public function deleteDiscountFromSanPham(Request $request)
+    {
+        // $productId = $request->input('product_id'); // Nhận product_id từ request
+
+       
+        // $sanPham = san_pham::find($productId);
+    
+        // if (!$sanPham) {
+        //     return response()->json(['message' => 'Sản phẩm không tồn tại!'], 404);
+        // }
+    
+        // // Xóa khuyến mãi của sản phẩm
+        // $sanPham->khuyen_mai_san_pham()->delete();
+    
+        // return response()->json(['message' => 'Khuyến mãi đã được xóa thành công!'], 200);
+
+        $productId = $request->input('product_id'); // Nhận product_id từ request
+
+        // Kiểm tra xem product_id có được nhận không
+        if (!$productId) {
+            Log::error('product_id không được cung cấp');
+            return response()->json(['message' => 'product_id không được cung cấp.'], 400);
+        }
+    
+        // Tìm sản phẩm theo ID
+        $sanPham = san_pham::find($productId);
+    
+        if (!$sanPham) {
+            Log::error('Sản phẩm không tồn tại, product_id: ' . $productId);
+            return response()->json(['message' => 'Sản phẩm không tồn tại!'], 404);
+        }
+    
+        // Gọi phương thức xóa khuyến mãi hết hạn
+        
+        $sanPham->khuyen_mai_san_pham()->delete();
+        // Log thành công
+        Log::info('Khuyến mãi đã được kiểm tra và xóa nếu hết hạn cho sản phẩm với ID: ' . $productId);
+    
+        return response()->json(['message' => 'Khuyến mãi đã được kiểm tra và xóa nếu hết hạn thành công!'], 200);
+    }
+
+  
 }
