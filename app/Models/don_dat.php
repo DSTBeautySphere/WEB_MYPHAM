@@ -25,6 +25,7 @@ class don_dat extends Model
         'trang_thai_giao_hang',
         'ghi_chu',
         'phuong_thuc_thanh_toan',
+        'ngay_thanh_toan',
         'trang_thai_thanh_toan',
         'trang_thai_don_dat',
     ];

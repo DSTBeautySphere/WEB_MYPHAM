@@ -70,6 +70,8 @@ Route::prefix('admin')->group(function () {
     Route::post('themdondat',[App\Http\Controllers\don_datController::class,'themDonDat']);
     Route::get('showquanlydonhang',[App\Http\Controllers\AdminController::class,'showQuanLyDonHang']);
     Route::get('/don-dat/{id}', [don_datController::class, 'show'])->name('don-dat.show');
+    Route::get('/locdulieuDH', [don_datController::class, 'loc_du_lieuDH']);
+
 
     //chi tiet don dat
     Route::post('themchitietdondat',[App\Http\Controllers\chi_tiet_don_datController::class,'themChiTietDonDat']);
@@ -90,7 +92,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/showkhuyenmai', [App\Http\Controllers\AdminController::class, 'showPromotion']);
     // Lấy danh sách khuyến mãi
     Route::get('/getsanpham', [AdminController::class, 'getSanPham']);
-
    
     Route::get('/by-loai', [AdminController::class, 'getLoai']);
     Route::get('/by-dong', [AdminController::class, 'getDong']);

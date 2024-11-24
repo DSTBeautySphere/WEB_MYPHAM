@@ -93,7 +93,7 @@
                     <thead>
                         <tr>
                             <th width="10"><input type="checkbox" id="all"></th>
-                            <th>Mã Hóa Đơn</th>
+                            <th>Mã Đơn Đặt</th>
                             <th>Mã Voucher</th>
                             <th>Số Điện Thoại</th>
                             <th>Địa Chỉ</th>
@@ -110,28 +110,21 @@
                             <tr>
                                 <td><input type="checkbox" class="checkbox" /></td>
                                 <td>{{ $don->ma_don_dat }}</td>
-                                <td>{{ $don->hoa_don ? $don->hoa_don->ma_voucher : 'N/A' }}</td>
+                                <td>{{ $don->ma_voucher ?? 'N/A' }}</td>
                                 <td>{{ $don->so_dien_thoai }}</td>
                                 <td>{{ $don->dia_chi_giao_hang }}</td>
-                                <td>{{ $don->hoa_don ? $don->hoa_don->phuong_thuc_thanh_toan : 'N/A' }}</td>
-                                <td>{{ number_format($don->tong_tien, 2) }}</td>
-                                <td>{{ $don->trang_thai }}</td>
+                                <td>{{ $don->phuong_thuc_thanh_toan ?? 'N/A' }}</td>
+                                <td>{{ number_format($don->tong_tien_cuoi_cung, 0, '.', ',') }} đ</td>
+                                <td>{{ $don->trang_thai_don_dat }}</td>
                                 <td>{{ $don->ngay_dat }}</td>
                                 <td>{{ $don->trang_thai_giao_hang }}</td>
-                                <td><a href="#" class="btn btn-info show-details" 
-                                    data-id="{{ $don->ma_don_dat }}" 
-                                    data-ma-voucher="{{ $don->hoa_don ? $don->hoa_don->ma_voucher : 'N/A' }}"
-                                    data-phone="{{ $don->so_dien_thoai }}"
-                                    data-address="{{ $don->dia_chi_giao_hang }}"
-                                    data-payment-method="{{ $don->hoa_don ? $don->hoa_don->phuong_thuc_thanh_toan : 'N/A' }}"
-                                    data-order-date="{{ $don->ngay_dat }}"
-                                    data-payment-date="{{  $don->hoa_don->ngay_thanh_toan }}"
-                                    data-delivery-fee="{{ $don->hoa_don->phi_van_chuyen }}"
-                                    data-discount="{{ $don->hoa_don->so_tien_giam }}"
-                                    data-final-amount="{{ $don->tong_tien }}"
-                                    data-status="{{ $don->trang_thai }}"
-                                    data-details="{{ json_encode($don->chi_tiet_don_dat) }}">Chi Tiết</a>
-                             </td>
+                               
+                                <td>
+                                    <button class="btn btn-info show-details" 
+                                            data-id="{{ $don->ma_don_dat }}">
+                                        Chi Tiết
+                                    </button>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -141,51 +134,6 @@
     </div>
 </div>
 
-<!-- Modal Chi Tiết Hóa Đơn -->
-{{-- <div class="modal fade" id="invoiceDetailModal" tabindex="-1" role="dialog" aria-labelledby="invoiceDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="invoiceDetailModalLabel">Chi Tiết Hóa Đơn</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Mã Đơn Hàng:</strong> <span id="invoice-id"></span></p>
-                <p><strong>Mã Voucher:</strong> <span id="invoice-voucher-code"></span></p>
-                <p><strong>Số Điện Thoại:</strong> <span id="invoice-phone"></span></p>
-                <p><strong>Địa Chỉ:</strong> <span id="invoice-address"></span></p>
-                <p><strong>Phương Thức Thanh Toán:</strong> <span id="invoice-payment-method"></span></p>
-                <p><strong>Ngày Đặt Hàng:</strong> <span id="invoice-order-date"></span></p>
-                <p><strong>Ngày Thanh Toán:</strong> <span id="invoice-payment-date"></span></p>
-                <p><strong>Phí Vận Chuyển:</strong> <span id="invoice-delivery-fee"></span></p>
-                <p><strong>Số Tiền Giảm:</strong> <span id="invoice-discount"></span></p>
-                <p><strong>Số Tiền Cuối:</strong> <span id="invoice-final-amount"></span></p>
-                <p><strong>Trạng Thái:</strong> <span id="invoice-status"></span></p>
-
-                <table id="invoice-details-table" class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Product ID</th>
-                            <th>Product Name</th>
-                            <th>Option Details</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Chi tiết hóa đơn sẽ được load từ server -->
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div> --}}
 <!-- Modal Chi Tiết Hóa Đơn -->
 <div class="modal fade" id="invoiceDetailModal" tabindex="-1" role="dialog" aria-labelledby="invoiceDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -240,186 +188,12 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 @section('js')
-{{-- <script>
 
-  $(document).ready(function() {
-    // Hàm hiển thị chi tiết hóa đơn
-    function showInvoiceDetail(invoiceId) {
-        console.log("Fetching invoice details for ID:", invoiceId);
-
-        $.ajax({
-            url: '/invoice?id=' + invoiceId, // Lấy chi tiết hóa đơn từ API
-            method: 'GET',
-            success: function(response) {
-                console.log("Invoice details fetched:", response);
-
-                if (response && response.length > 0) {
-                    // Lấy thông tin hóa đơn từ API
-                    let invoiceData = response[0];
-
-                    // Cập nhật các trường thông tin vào modal
-                    $('#invoice-id').text(invoiceData.id);
-                    $('#invoice-voucher-code').text(invoiceData.voucherCode || 'N/A');
-                    $('#invoice-phone').text(invoiceData.phoneNumber || 'N/A');
-                    $('#invoice-address').text(invoiceData.shippingAddress || 'N/A');
-                    $('#invoice-payment-method').text(invoiceData.paymentMethod || 'N/A');
-                    $('#invoice-final-amount').text(invoiceData.finalAmount || '0');
-                    $('#invoice-status').text(invoiceData.orderStatus || 'Chưa xác định');
-
-                    // Hiển thị chi tiết các sản phẩm trong hóa đơn
-                    if (invoiceData.invoice_details && Array.isArray(invoiceData.invoice_details)) {
-                        let invoiceDetailsHtml = '';
-                        invoiceData.invoice_details.forEach(function(detail) {
-                            invoiceDetailsHtml += `
-                                <tr>
-                                    <td>${detail.ID_productVariation}</td>
-                                    <td>${detail.UnitPrice}</td>
-                                    <td>${detail.Quantity}</td>
-                                    <td>${detail.Amount}</td>
-                                </tr>
-                            `;
-                        });
-                        $('#invoice-details-table tbody').html(invoiceDetailsHtml);
-                    } else {
-                        $('#invoice-details-table tbody').html('<tr><td colspan="4">No product details available.</td></tr>');
-                    }
-
-                    // Mở modal để hiển thị chi tiết hóa đơn
-                    $('#invoiceDetailModal').modal('show');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.log("Error fetching invoice details:", error);
-            }
-        });
-    }
-
-    // Hàm lấy danh sách các hóa đơn và hiển thị trên bảng
-    function getInvoices(filters = {}) {
-        $.ajax({
-            url: '/invoice',
-            method: 'GET',
-            data: filters,
-            success: function(response) {
-                var tableBody = $("#invoice-body");
-                tableBody.empty(); // Làm sạch bảng trước khi thêm dữ liệu mới
-                if (Array.isArray(response)) {
-                    response.forEach(function(invoice) {
-                        var row = `
-                            <tr>
-                                <td><input type='checkbox' name='check1' value='${invoice.id}'></td>
-                                <td>${invoice.id}</td>
-                                <td>${invoice.voucherCode || 'N/A'}</td>
-                                <td>${invoice.phoneNumber || 'N/A'}</td>
-                                <td>${invoice.address || 'N/A'}</td>
-                                <td>${invoice.paymentMethod || 'N/A'}</td>
-                                <td>${invoice.totalAmount || '0'}</td>
-                                <td>${invoice.orderStatus || '0'}</td>
-                                <td>
-                                    <button class='btn btn-primary btn-sm view-detail' type='button' data-id='${invoice.id}' title='Xem Chi Tiết'><i class='fas fa-eye'></i></button>
-                                </td>
-                            </tr>`;
-                        tableBody.append(row);
-                    });
-
-                    // Gắn sự kiện cho nút Xem Chi Tiết
-                    $(".view-detail").on("click", function() {
-                        var invoiceId = $(this).data("id");
-                        showInvoiceDetail(invoiceId); // Gọi hàm để hiển thị chi tiết hóa đơn
-                    });
-                } else {
-                    console.log("Data is not in expected format", response);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.log("Error fetching invoices:", error);
-            }
-        });
-    }
-
-    // Lấy giá trị bộ lọc
-    function getFilterValues() {
-        return {
-            createdAt: $('#filter-date').val(),
-            orderStatus: $('#filter-status').val(),
-            totalAmount: $('#filter-price').val()
-        };
-    }
-
-    // Lọc dữ liệu khi thay đổi bộ lọc
-    $("#filter-date, #filter-status, #filter-price").on("change", function() {
-        const filters = getFilterValues();
-        getInvoices(filters);
-    });
-
-    // Tìm kiếm theo mã đơn hàng
-    $("#search-button").on("click", function() {
-        const searchValue = $("#search-invoice").val().trim();
-        if (searchValue) {
-            getInvoices({ search: searchValue });
-        } else {
-            alert("Vui lòng nhập mã đơn hàng để tìm kiếm!");
-        }
-    });
-
-    // Lấy danh sách hóa đơn khi tải trang
-    getInvoices();
-});
-
-</script> --}}
 
 
 
 <script>
-//     $(document).ready(function() {
-//     // Khi nhấn vào "Chi Tiết"
-//     $('.show-details').on('click', function(e) {
-//         e.preventDefault();
 
-//         // Lấy mã đơn hàng
-//         var donDatId = $(this).data('id');
-
-//         // Gửi yêu cầu AJAX để lấy dữ liệu chi tiết đơn hàng
-//         $.ajax({
-//             url: '/don-dat/' + donDatId,
-//             method: 'GET',
-//             success: function(data) {
-//                 // Cập nhật dữ liệu vào modal
-//                 $('#invoice-id').text(data.ma_don_dat);
-//                 $('#invoice-voucher-code').text(data.ma_voucher || 'Không có');
-//                 $('#invoice-phone').text(data.so_dien_thoai);
-//                 $('#invoice-address').text(data.dia_chi_giao_hang);
-//                 $('#invoice-payment-method').text(data.phuong_thuc_thanh_toan);
-//                 $('#invoice-order-date').text(data.ngay_dat);
-//                 $('#invoice-payment-date').text(data.ngay_thanh_toan);
-//                 $('#invoice-delivery-fee').text(data.phi_van_chuyen);
-//                 $('#invoice-discount').text(data.tien_giam);
-//                 $('#invoice-final-amount').text(data.tong_tien);
-//                 $('#invoice-status').text(data.trang_thai);
-
-//                 // Cập nhật chi tiết sản phẩm
-//                 var detailsHtml = '';
-//                 data.chi_tiet_don_dat.forEach(function(item) {
-//                     detailsHtml += `<tr>
-//                                         <td>${item.ma_bien_the}</td>
-//                                         <td>${item.ten_san_pham}</td>
-//                                         <td>${item.chi_tiet_tuy_chon}</td>
-//                                         <td>${item.gia_ban}</td>
-//                                         <td>${item.so_luong}</td>
-//                                         <td>${item.so_luong * item.gia_ban}</td>
-//                                       </tr>`;
-//                 });
-//                 $('#invoice-details-table tbody').html(detailsHtml);
-
-//                 // Hiển thị modal
-//                 $('#invoiceDetailModal').modal('show');
-//             },
-//             error: function() {
-//                 alert('Lỗi khi tải dữ liệu chi tiết');
-//             }
-//         });
-//     });
-// });
 
 
 // $(document).ready(function() {
@@ -432,23 +206,23 @@
 
 //         // Gửi yêu cầu AJAX để lấy dữ liệu chi tiết đơn hàng
 //         $.ajax({
-//             url: `/don-dat/${donDatId}`,  // Sử dụng template string để xây dựng URL
+//             url: `/don-dat/${donDatId}`,  // Gửi yêu cầu đến API
 //             method: 'GET',
 //             success: function(data) {
 //                 // Cập nhật thông tin vào modal
 //                 $('#invoice-id').text(data.ma_don_dat);
-//                 $('#invoice-voucher-code').text(data.ma_voucher || 'Không có');
+//                 $('#invoice-voucher-code').text(data.hoa_don ? data.hoa_don.ma_voucher : 'Không có');
 //                 $('#invoice-phone').text(data.so_dien_thoai);
 //                 $('#invoice-address').text(data.dia_chi_giao_hang);
-//                 $('#invoice-payment-method').text(data.phuong_thuc_thanh_toan);
+//                 $('#invoice-payment-method').text(data.hoa_don ? data.hoa_don.phuong_thuc_thanh_toan : 'N/A');
 //                 $('#invoice-order-date').text(data.ngay_dat);
-//                 $('#invoice-payment-date').text(data.ngay_thanh_toan);
-//                 $('#invoice-delivery-fee').text(data.phi_van_chuyen);
-//                 $('#invoice-discount').text(data.tien_giam);
+//                 $('#invoice-payment-date').text( data.hoa_don ? data.hoa_don.ngay_thanh_toan: 'N/A');
+//                 $('#invoice-delivery-fee').text(data.hoa_don ? data.hoa_don.phi_van_chuyen: 'N/A');
+//                 $('#invoice-discount').text(data.hoa_don ? data.hoa_don.so_tien_giam : '0');
 //                 $('#invoice-final-amount').text(data.tong_tien);
 //                 $('#invoice-status').text(data.trang_thai);
 
-//                 // Cập nhật chi tiết sản phẩm
+//                 // Cập nhật chi tiết sản phẩm vào bảng
 //                 let detailsHtml = '';
 //                 data.chi_tiet_don_dat.forEach(item => {
 //                     detailsHtml += `
@@ -474,154 +248,114 @@
 //     });
 // });
 
-// $(document).ready(function() {
-//     // Khi nhấn vào "Chi Tiết"
-//     $('.show-details').on('click', function(e) {
-//         e.preventDefault();
-
-//         // Lấy các giá trị từ data-* của phần tử đã nhấn
-//         const donDatId = $(this).data('id');
-//         const maVoucher = $(this).data('ma-voucher') || 'Không có';
-//         const phone = $(this).data('phone');
-//         const address = $(this).data('address');
-//         const paymentMethod = $(this).data('payment-method');
-//         const orderDate = $(this).data('order-date');
-//         const paymentDate = $(this).data('payment-date');
-//         const deliveryFee = $(this).data('delivery-fee');
-//         const discount = $(this).data('discount');
-//         const finalAmount = $(this).data('final-amount');
-//         const status = $(this).data('status');
-
-//         // Cập nhật thông tin vào modal
-//         $('#invoice-id').text(donDatId);
-//         $('#invoice-voucher-code').text(maVoucher);
-//         $('#invoice-phone').text(phone);
-//         $('#invoice-address').text(address);
-//         $('#invoice-payment-method').text(paymentMethod);
-//         $('#invoice-order-date').text(orderDate);
-//         $('#invoice-payment-date').text(paymentDate);
-//         $('#invoice-delivery-fee').text(deliveryFee);
-//         $('#invoice-discount').text(discount);
-//         $('#invoice-final-amount').text(finalAmount);
-//         $('#invoice-status').text(status);
-
-//         // Hiển thị modal
-//         $('#invoiceDetailModal').modal('show');
-//     });
-// });
-
-
-
-$(document).ready(function() {
-    // Khi nhấn vào "Chi Tiết"
-    $('.show-details').on('click', function(e) {
+$(document).ready(function () {
+    // Khi nhấn nút "Chi Tiết"
+    $('.show-details').on('click', function (e) {
         e.preventDefault();
 
-        // Lấy mã đơn hàng từ data-id
+        // Lấy mã đơn đặt hàng từ data-id
         const donDatId = $(this).data('id');
 
         // Gửi yêu cầu AJAX để lấy dữ liệu chi tiết đơn hàng
         $.ajax({
-            url: `/don-dat/${donDatId}`,  // Gửi yêu cầu đến API
+            url: `/don-dat/${donDatId}`,
             method: 'GET',
-            success: function(data) {
-                // Cập nhật thông tin vào modal
+            success: function (data) {
+                // Điền thông tin vào modal
                 $('#invoice-id').text(data.ma_don_dat);
-                $('#invoice-voucher-code').text(data.hoa_don ? data.hoa_don.ma_voucher : 'Không có');
+                $('#invoice-voucher-code').text(data.ma_voucher || 'Không có');
                 $('#invoice-phone').text(data.so_dien_thoai);
                 $('#invoice-address').text(data.dia_chi_giao_hang);
-                $('#invoice-payment-method').text(data.hoa_don ? data.hoa_don.phuong_thuc_thanh_toan : 'N/A');
+                $('#invoice-payment-method').text(data.phuong_thuc_thanh_toan || 'N/A');
                 $('#invoice-order-date').text(data.ngay_dat);
-                $('#invoice-payment-date').text( data.hoa_don ? data.hoa_don.ngay_thanh_toan: 'N/A');
-                $('#invoice-delivery-fee').text(data.hoa_don ? data.hoa_don.phi_van_chuyen: 'N/A');
-                $('#invoice-discount').text(data.hoa_don ? data.hoa_don.so_tien_giam : '0');
-                $('#invoice-final-amount').text(data.tong_tien);
-                $('#invoice-status').text(data.trang_thai);
+                $('#invoice-payment-date').text(data.ngay_thanh_toan || 'N/A');
+                $('#invoice-delivery-fee').text(data.phi_van_chuyen || '0');
+                $('#invoice-discount').text(data.giam_gia || '0');
+                $('#invoice-final-amount').text(data.tong_tien_cuoi_cung || '0');
+                $('#invoice-status').text(data.trang_thai_don_dat);
 
-                // Cập nhật chi tiết sản phẩm vào bảng
+                // Cập nhật chi tiết đơn hàng
                 let detailsHtml = '';
                 data.chi_tiet_don_dat.forEach(item => {
                     detailsHtml += `
                         <tr>
                             <td>${item.ma_bien_the}</td>
                             <td>${item.ten_san_pham}</td>
-                            <td>${item.chi_tiet_tuy_chon}</td>
+                            <td>${item.chi_tiet_tuy_chon || 'N/A'}</td>
                             <td>${item.gia_ban}</td>
                             <td>${item.so_luong}</td>
-                            <td>${(item.so_luong * item.gia_ban).toFixed(2)}</td>
-                        </tr>
-                    `;
+                            <td>${(item.gia_ban * item.so_luong).toFixed(2)}</td>
+                        </tr>`;
                 });
                 $('#invoice-details-table tbody').html(detailsHtml);
 
                 // Hiển thị modal
                 $('#invoiceDetailModal').modal('show');
             },
-            error: function() {
-                alert('Lỗi khi tải dữ liệu chi tiết');
+            error: function () {
+                alert('Không thể tải chi tiết đơn hàng. Vui lòng thử lại sau!');
             }
         });
     });
 });
 
+$(document).ready(function () {
+    // Xử lý lọc khi có thay đổi trong các bộ lọc
+    $('#filter-date, #filter-status, #filter-price').on('change', function () {
+        const filterDate = $('#filter-date').val();
+        const filterStatus = $('#filter-status').val();
+        const filterPrice = $('#filter-price').val();
 
+        // Gửi yêu cầu AJAX để lọc dữ liệu
+        $.ajax({
+            url: '/locdulieuDH',
+            method: 'GET',
+            data: {
+                date: filterDate,
+                status: filterStatus,
+                price: filterPrice
+            },
+            success: function (response) {
+                // Cập nhật danh sách đơn đặt hàng
+                let tableHtml = '';
+                response.forEach(order => {
+                    tableHtml += `
+                        <tr>
+                            <td><input type="checkbox" class="checkbox" /></td>
+                            <td>${order.ma_don_dat}</td>
+                            <td>${order.ma_voucher || 'N/A'}</td>
+                            <td>${order.so_dien_thoai}</td>
+                            <td>${order.dia_chi_giao_hang}</td>
+                            <td>${order.phuong_thuc_thanh_toan || 'N/A'}</td>
+                            <td>${parseFloat(order.tong_tien_cuoi_cung).toLocaleString()} đ</td>
+                            <td>${order.trang_thai_don_dat}</td>
+                            <td>${order.ngay_dat}</td>
+                            <td>${order.trang_thai_giao_hang}</td>
+                            <td>
+                                <button class="btn btn-info show-details" 
+                                        data-id="${order.ma_don_dat}">
+                                    Chi Tiết
+                                </button>
+                            </td>
+                        </tr>`;
+                });
 
+                $('#invoice-body').html(tableHtml);
 
+                // Rebind the "Chi Tiết" button click event
+                $('.show-details').on('click', function (e) {
+                    e.preventDefault();
+                    const donDatId = $(this).data('id');
+                    // Call the modal display logic here
+                });
+            },
+            error: function () {
+                alert('Lỗi khi tải dữ liệu. Vui lòng thử lại!');
+            }
+        });
+    });
+});
 
-// $(document).ready(function() {
-//     // Khi nhấn vào "Chi Tiết"
-//     $('.show-details').on('click', function(e) {
-//         e.preventDefault();
-
-//         // Lấy các giá trị từ data-* của phần tử đã nhấn
-//         const donDatId = $(this).data('id');
-//         const maVoucher = $(this).data('ma-voucher') || 'Không có';
-//         const phone = $(this).data('phone');
-//         const address = $(this).data('address');
-//         const paymentMethod = $(this).data('payment-method');
-//         const orderDate = $(this).data('order-date');
-//         const paymentDate = $(this).data('payment-date');
-//         const deliveryFee = $(this).data('delivery-fee');
-//         const discount = $(this).data('discount');
-//         const finalAmount = $(this).data('final-amount');
-//         const status = $(this).data('status');
-        
-//         // Lấy chi tiết sản phẩm từ data-details (đã truyền dưới dạng JSON)
-//         const chiTietDonDat = JSON.parse($(this).data('details'));
-
-//         // Cập nhật thông tin vào modal
-//         $('#invoice-id').text(donDatId);
-//         $('#invoice-voucher-code').text(maVoucher);
-//         $('#invoice-phone').text(phone);
-//         $('#invoice-address').text(address);
-//         $('#invoice-payment-method').text(paymentMethod);
-//         $('#invoice-order-date').text(orderDate);
-//         $('#invoice-payment-date').text(paymentDate);
-//         $('#invoice-delivery-fee').text(deliveryFee);
-//         $('#invoice-discount').text(discount);
-//         $('#invoice-final-amount').text(finalAmount);
-//         $('#invoice-status').text(status);
-
-//         // Cập nhật chi tiết sản phẩm vào bảng
-//         let detailsHtml = '';
-//         chiTietDonDat.forEach(item => {
-//             detailsHtml += `
-//                 <tr>
-//                     <td>${item.ma_bien_the}</td>
-//                     <td>${item.ten_san_pham}</td>
-//                     <td>${item.chi_tiet_tuy_chon}</td>
-//                     <td>${item.gia_ban}</td>
-//                     <td>${item.so_luong}</td>
-//                     <td>${(item.so_luong * item.gia_ban).toFixed(2)}</td>
-//                 </tr>
-//             `;
-//         });
-//         $('#invoice-details-table tbody').html(detailsHtml);
-
-//         // Hiển thị modal
-//         $('#invoiceDetailModal').modal('show');
-//     });
-// });
 
 
 </script>

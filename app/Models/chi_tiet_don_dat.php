@@ -32,8 +32,5 @@ class chi_tiet_don_dat extends Model
     {
         return $this->belongsTo(bien_the_san_pham::class, 'ma_bien_the');
     }
-    // public function getThanhTienAttribute()
-    // {
-    //     return $this->so_luong * $this->gia_ban;
-    // }
+    
 }
