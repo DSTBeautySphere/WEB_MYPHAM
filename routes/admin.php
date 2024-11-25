@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 // Route::prefix('admin')->group(function () {
 
-Route::post('/admin/register', [AdminController::class, 'register']);
+Route::get('/admin/register', [AdminController::class, 'register']);
 Route::post('/admin/login', [AdminController::class, 'login']);
 Route::prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'showLoginForm']);

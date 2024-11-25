@@ -78,13 +78,13 @@ class AdminController extends Controller
         }
     
         // Tạo token đăng nhập
-        //$token = $admin->createToken('auth_token')->plainTextToken;
+        // $token = $admin->createToken('auth_token')->plainTextToken;
         
         // Đăng nhập và trả về dữ liệu
         Auth::guard('admin')->login($admin);
         return response()->json([
-            'message' => 'Đăng nhập thành công!',
-            //'token' => $token,
+            'message' => 'DNTC',
+            // 'token' => $token,
             'redirect_url' => url('/showquanlysanpham'), // Chuyển hướng
             'admin' => $admin
         ]);
