@@ -25,4 +25,8 @@ class voucher extends Model
     ];
     public $timestamps = false;
 
+    public function user_voucher()
+    {
+        return $this->hasMany(user_voucher::class, 'ma_voucher', 'ma_voucher');
+    }
 }

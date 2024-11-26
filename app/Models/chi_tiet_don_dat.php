@@ -12,13 +12,14 @@ class chi_tiet_don_dat extends Model
     protected $table = 'chi_tiet_don_dat';
     protected $primaryKey = 'ma_chi_tiet_don_dat';
     protected $fillable = [
-        'ma_don_dat', 
-        'ma_bien_the', 
-        'so_luong', 
+        'ma_don_dat',
+        'ma_bien_the',
+        'so_luong',
         'gia_ban',
         'ten_san_pham',
-        'chi_tiet_tuy_chon'
+        'chi_tiet_tuy_chon',
     ];
+
     public $timestamps = false;
 
 
@@ -31,8 +32,5 @@ class chi_tiet_don_dat extends Model
     {
         return $this->belongsTo(bien_the_san_pham::class, 'ma_bien_the');
     }
-    // public function getThanhTienAttribute()
-    // {
-    //     return $this->so_luong * $this->gia_ban;
-    // }
+    
 }

@@ -11,7 +11,14 @@ class gio_hang extends Model
 
     protected $table = 'gio_hang';
     protected $primaryKey = 'ma_gio_hang';
-    protected $fillable = ['ma_user', 'ma_bien_the', 'so_luong', 'gia_ban', 'ngay_tao', 'trang_thai'];
+    protected $fillable = [
+        'ma_user', 
+        'ma_bien_the', 
+        'so_luong', 
+        'gia_ban', 
+        'ngay_tao', 
+       
+    ];
     public $timestamps = false;
 
 

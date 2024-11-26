@@ -7,7 +7,9 @@ use App\Http\Controllers\nha_cung_capController;
 use App\Http\Controllers\san_phamController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\don_datController;
+use App\Http\Controllers\khuyen_mai_san_phamController;
 use App\Http\Controllers\tuy_chonController;
+use App\Http\Controllers\UserController;
 use App\Models\loai_san_pham;
 use Illuminate\Support\Facades\Route;
 
@@ -69,6 +71,8 @@ Route::prefix('admin')->group(function () {
     Route::post('themdondat',[App\Http\Controllers\don_datController::class,'themDonDat']);
     Route::get('showquanlydonhang',[App\Http\Controllers\AdminController::class,'showQuanLyDonHang']);
     Route::get('/don-dat/{id}', [don_datController::class, 'show'])->name('don-dat.show');
+    Route::get('/locdulieuDH', [don_datController::class, 'loc_du_lieuDH']);
+
 
     //chi tiet don dat
     Route::post('themchitietdondat',[App\Http\Controllers\chi_tiet_don_datController::class,'themChiTietDonDat']);
@@ -84,4 +88,29 @@ Route::prefix('admin')->group(function () {
     Route::get('/thongke', [AdminController::class, 'Statistics']);
     Route::post('/thongke/revenue', [App\Http\Controllers\AdminController::class, 'getRevenueData'])->name('thongke.revenue');
 
+
+    //Khuyen mai 
+    Route::get('/showkhuyenmai', [App\Http\Controllers\AdminController::class, 'showPromotion']);
+    // Lấy danh sách khuyến mãi
+    Route::get('/getsanpham', [AdminController::class, 'getSanPham']);
+   
+    Route::get('/by-loai', [AdminController::class, 'getLoai']);
+    Route::get('/by-dong', [AdminController::class, 'getDong']);
+
+    Route::get('/getsanpham-by-dong', [AdminController::class, 'getSanPhamByDong']);
+    Route::get('/getsanpham-by-loai', [AdminController::class, 'getSanPhamByLoai']);
+
+    // Lấy danh sách sản phẩm có khuyến mãi
+    Route::get('/with-discount', [AdminController::class, 'getSanPhamWithDiscount']);
+
+    Route::post('/add-discount', [AdminController::class, 'addDiscountToSanPham']);
+    Route::post('/delete-discount', [AdminController::class, 'deleteDiscountFromSanPham']);
+
+    //User
+    Route::get('/showUser',[UserController::class,'showUser']);
+    Route::get('/locUser',[UserController::class,'LocUser']);
+    Route::get('/timKiem',[UserController::class,'timKiem']);
+    Route::get('/thongTinUser/{id}',[UserController::class,'thongTinUser']);
+    Route::post('/update-status/{id}', [UserController::class, 'updateStatus']);
+   
 // });

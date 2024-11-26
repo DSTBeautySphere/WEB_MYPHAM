@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -42,5 +43,22 @@ class san_pham extends Model
     public function anh_san_pham()
     {
         return $this->hasMany(anh_san_pham::class, 'ma_san_pham', 'ma_san_pham');
+    }
+
+    public function deleteExpiredDiscounts()
+    {
+        $currentDate = Carbon::now(); // Lấy ngày hiện tại
+
+        // Lấy tất cả các khuyến mãi của sản phẩm
+        $khuyenMai = $this->khuyen_mai_san_pham;
+
+        foreach ($khuyenMai as $discount) {
+            $discountEndDate = Carbon::parse($discount->ngay_ket_thuc); // Giả sử 'ngay_ket_thuc' là ngày kết thúc của khuyến mãi
+
+            if ($discountEndDate->lt($currentDate)) {
+                // Nếu ngày kết thúc nhỏ hơn ngày hiện tại, xóa khuyến mãi
+                $discount->delete();
+            }
+        }
     }
 }

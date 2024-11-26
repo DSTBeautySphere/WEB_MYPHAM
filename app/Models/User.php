@@ -49,10 +49,7 @@ class User extends Authenticatable
             return $this->hasMany(don_dat::class, 'ma_user', 'ma_user');
         }
     
-        public function hoa_don()
-        {
-            return $this->hasMany(hoa_don::class, 'ma_user', 'ma_user');
-        }
+       
     
         public function vi_dien_tu()
         {
