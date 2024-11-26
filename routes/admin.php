@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\don_datController;
 use App\Http\Controllers\khuyen_mai_san_phamController;
 use App\Http\Controllers\tuy_chonController;
+use App\Http\Controllers\UserController;
 use App\Models\loai_san_pham;
 use Illuminate\Support\Facades\Route;
 
@@ -102,12 +103,14 @@ Route::prefix('admin')->group(function () {
     // Lấy danh sách sản phẩm có khuyến mãi
     Route::get('/with-discount', [AdminController::class, 'getSanPhamWithDiscount']);
 
-    // Thêm khuyến mãi cho sản phẩm
     Route::post('/add-discount', [AdminController::class, 'addDiscountToSanPham']);
-
-    // Xóa khuyến mãi từ sản phẩm
     Route::post('/delete-discount', [AdminController::class, 'deleteDiscountFromSanPham']);
 
-    
+    //User
+    Route::get('/showUser',[UserController::class,'showUser']);
+    Route::get('/locUser',[UserController::class,'LocUser']);
+    Route::get('/timKiem',[UserController::class,'timKiem']);
+    Route::get('/thongTinUser/{id}',[UserController::class,'thongTinUser']);
+    Route::post('/update-status/{id}', [UserController::class, 'updateStatus']);
    
 // });
