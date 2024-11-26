@@ -4,7 +4,7 @@
             <div class="card-header pb-0 p-3">
                 <div class="d-flex justify-content-between ">
                     <h6 class="mb-2">
-                        Category
+                        Loại sản phẩm
                     </h6>
                     <a href="#" data-bs-toggle="modal" data-bs-target="#movie" class="float-end">Xem tất cả</a>
                 </div>
@@ -13,8 +13,8 @@
                 <table class="table align-items-center">
                     <thead>
                         <tr>
-                            <th class="w-30">Category</th>
-                            <th class="text-center">Sale</th>
+                            <th class="w-30">Loại sản phẩm</th>
+                            <th class="text-center">Doanh thu</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +51,7 @@
         <div class="card ">
             <div class="card-header pb-0 p-3">
                 <div class="d-flex justify-content-between">
-                    <h6 class="mb-2">Product</h6>
+                    <h6 class="mb-2">Sản phẩm</h6>
                     <a href="#" data-bs-toggle="modal" data-bs-target="#theater_modal" class="float-end">Xem tất cả</a>
                 </div>
             </div>
@@ -59,8 +59,8 @@
                 <table class="table align-items-center ">
                     <tbody>
                         <tr>
-                            <th>Product</th>
-                            <th>Sales</th>
+                            <th>Sản phẩm</th>
+                            <th>Doanh thu</th>
                         </tr>
                         @foreach(collect($revenueByProduct)->take(5) as $vl)
                         <tr>

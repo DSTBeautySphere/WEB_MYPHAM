@@ -1,9 +1,9 @@
-<div class="row mt-4">
+{{-- <div class="row mt-4">
     <!-- Biểu đồ danh mục -->
     <div class="col-md-6"> <!-- Chiếm 6 cột -->
         <div class="card mb-4">
             <div class="card-header pb-0">
-                <h6>Products Statistics</h6>
+                <h6>Doanh thu loại sản phẩm</h6>
             </div>
             <div class="card-body">
                 <canvas id="categoryChart" style="height: 250px; width: 100%"></canvas>
@@ -15,10 +15,100 @@
     <div class="col-md-6"> <!-- Chiếm 6 cột -->
         <div class="card mb-4">
             <div class="card-header pb-0">
-                <h6>DetailsProduct Statistics</h6>
+                <h6>Doanh thu sản phẩm</h6>
             </div>
             <div class="card-body">
                 <canvas id="productChart" style="height: 250px; width: 100%"></canvas>
+            </div>
+        </div>
+    </div>
+</div> --}}
+<div class="row mt-4">
+    <!-- Doanh thu theo loại sản phẩm -->
+    <div class="col-md-12">
+        <div class="row">
+            <!-- Bảng dữ liệu -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header pb-0">
+                        <h6>Bảng Doanh thu loại sản phẩm</h6>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Loại sản phẩm</th>
+                                    <th>Doanh thu</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoryTable">
+                                <!-- Nội dung sẽ được thêm qua JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Biểu đồ -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header pb-0">
+                        <h6>Doanh thu loại sản phẩm</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="categoryChart" style="height: 250px; width: 100%"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doanh thu theo sản phẩm -->
+    <div class="col-md-12">
+        <div class="row">
+            <!-- Bảng dữ liệu -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header pb-0">
+                        <h6>Bảng Doanh thu sản phẩm</h6>
+                    </div>
+                    <div class="card-body">
+                        {{-- <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th>Doanh thu</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productTable">
+                               
+                            </tbody>
+                        </table> --}}
+                        <table id="productTable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th>Doanh thu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Nội dung sẽ được thêm qua JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Biểu đồ -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header pb-0">
+                        <h6>Doanh thu sản phẩm</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="productChart" style="height: 250px; width: 100%"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -86,9 +176,12 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 {{-- <script>
     $(document).ready(function() {
     // Hàm vẽ biểu đồ
@@ -169,6 +262,58 @@
 
         var products = @json($revenueByProduct->pluck('product')); // Lấy sản phẩm
         var productRevenue = @json($revenueByProduct->pluck('revenue')); // Lấy doanh thu sản phẩm
+        // Thêm dữ liệu vào bảng loại sản phẩm
+        var categoryTable = $('#categoryTable');
+            categories.forEach(function (category, index) {
+                var revenue = categoryRevenue[index];
+                categoryTable.append(
+                    `<tr>
+                        <td>${category}</td>
+                        <td>${revenue.toLocaleString()} đ</td>
+                    </tr>`
+                );
+            });
+
+       // Chuẩn bị dữ liệu cho bảng
+        var productData = products.map((product, index) => {
+            return [product, `${productRevenue[index].toLocaleString()} đ`];
+        });
+
+        // Khởi tạo DataTables
+        $('#productTable').DataTable({
+            data: productData, // Gán dữ liệu
+            columns: [
+                { title: "Sản phẩm" },
+                { title: "Doanh thu" }
+            ],
+            pageLength: 5, // Số dòng trên mỗi trang
+            //dom: 'lrtip', // Loại bỏ lengthMenu
+            dom: 'ftp',
+            language: {
+                search: "Tìm kiếm:",
+                
+            
+                paginate: {
+                    first: "Đầu",
+                    last: "Cuối",
+                    next: ">",
+                    previous: "<"
+                },
+            }
+        });
+
+        // Hàm tạo màu ngẫu nhiên
+        function generateRandomColors(count) {
+            let colors = [];
+            for (let i = 0; i < count; i++) {
+                const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+                colors.push(color);
+            }
+            return colors;
+        }
+
+        // Tạo màu tự động dựa trên số lượng danh mục
+        var categoryColors = generateRandomColors(categories.length);
 
         // Biểu đồ Tròn cho Doanh Thu theo Danh Mục
         var ctx1 = document.getElementById('categoryChart').getContext('2d');
@@ -179,7 +324,7 @@
                 datasets: [{
                     label: 'Revenue by Category',
                     data: categoryRevenue,
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#FF5733', '#C70039'],
+                    backgroundColor: categoryColors,
                     borderColor: '#fff',
                     borderWidth: 1
                 }]
@@ -201,6 +346,8 @@
             }
         });
 
+
+        var productColors = generateRandomColors(products.length);
         // Biểu đồ Tròn cho Doanh Thu theo Sản Phẩm
         var ctx2 = document.getElementById('productChart').getContext('2d');
         new Chart(ctx2, {
@@ -210,7 +357,7 @@
                 datasets: [{
                     label: 'Revenue by Product',
                     data: productRevenue,
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#FF5733', '#C70039'],
+                    backgroundColor: productColors,
                     borderColor: '#fff',
                     borderWidth: 1
                 }]

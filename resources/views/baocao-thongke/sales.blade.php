@@ -5,7 +5,7 @@
                 <div class="row">
                     <div class="col-8">
                         <div class="numbers">
-                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Sales For Day</p>
+                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Doanh thu ngày</p>
                             <h5 class="font-weight-bolder">
                                 {!! number_format($sum_today,0,",",".") !!} Vnđ
                             </h5>
@@ -29,7 +29,7 @@
                 <div class="row">
                     <div class="col-8">
                         <div class="numbers">
-                            <p class="text-sm mb-0 text-uppercase font-weight-bold">New Customer</p>
+                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Khách hàng</p>
                             <h5 class="font-weight-bolder">
                                {{ $userCount }}
                                 
@@ -54,7 +54,7 @@
                 <div class="row">
                     <div class="col-8">
                         <div class="numbers">
-                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Invoices In Day</p>
+                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Đơn đặt trong ngày</p>
                             <h5 class="font-weight-bolder">
                                 {!! $ordersToday !!}
                             </h5>
@@ -77,7 +77,7 @@
                 <div class="row">
                     <div class="col-8">
                         <div class="numbers">
-                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Sales</p>
+                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Tổng doanh thu năm</p>
                             <h5 class="font-weight-bolder">
                                 {!! number_format($sum_year,0,",",".") !!} Vnđ
                             </h5>
