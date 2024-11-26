@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\danh_giaController;
 use App\Http\Controllers\don_datController;
 use App\Http\Controllers\gio_hangController;
@@ -78,3 +79,8 @@ Route::get('/danhsachloai',[loai_san_phamController::class,'loadLoaiSanPham']);
 Route::get('/laynhomtuychontheoloai',[App\Http\Controllers\loai_san_phamController::class,'layNhomTuyChonTheoLoai']);
 Route::get('/layloaisanpham',[App\Http\Controllers\loai_san_phamController::class,'layLoaiSanPham']);
 Route::get('/laynhomtuychon',[App\Http\Controllers\tuy_chonController::class,'layNhomTuyChon']);
+
+
+Route::controller(ProductController::class)->group(function () {
+    Route::get('/products/{id}', 'index');
+  });

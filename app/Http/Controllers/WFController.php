@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\anh_san_pham;
 use App\Models\bien_the_san_pham;
+use App\Models\chi_tiet_don_dat;
+use App\Models\don_dat;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -183,6 +185,86 @@ class WFController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => 'Đã xảy ra lỗi: ' . $e->getMessage()], 500);
         }
+    }
+
+    //đơn hàng
+    public function themDonDat(Request $request)
+{
+    // Xác thực dữ liệu đầu vào
+    $validatedData = $request->validate([
+        'ma_user' => 'required|exists:user,ma_user',
+        'ma_voucher' => 'nullable|exists:voucher,ma_voucher',
+        'giam_gia' => 'required|numeric',
+        'tong_tien_ban_dau' => 'required|numeric',
+        'phi_van_chuyen' => 'required|numeric',
+        'tong_tien_cuoi_cung' => 'required|numeric',
+        'so_dien_thoai' => 'required|string',
+        'dia_chi_giao_hang' => 'required|string',
+        'ngay_du_kien_giao' => 'nullable|date',
+        'trang_thai_giao_hang' => 'required|string',
+        'ghi_chu' => 'nullable|string',
+        'phuong_thuc_thanh_toan' => 'required|string',
+        'ngay_thanh_toan' => 'nullable|date',
+        'trang_thai_thanh_toan' => 'required|string',
+        'trang_thai_don_dat' => 'required|string',
+        'chi_tiet_don_dat' => 'required|array', // Kiểm tra danh sách chi tiết đơn đặt
+        'chi_tiet_don_dat.*.ma_bien_the' => 'required|string',
+        'chi_tiet_don_dat.*.so_luong' => 'required|integer',
+        'chi_tiet_don_dat.*.gia_ban' => 'required|numeric',
+        'chi_tiet_don_dat.*.ten_san_pham' => 'required|string',
+        'chi_tiet_don_dat.*.chi_tiet_tuy_chon' => 'nullable|string',
+    ]);
+
+    // Lấy ngày hiện tại theo múi giờ Việt Nam
+    $ngayDat = now()->setTimezone('Asia/Ho_Chi_Minh');
+
+    // Tạo đơn đặt hàng mới
+    $donDat = new don_dat();
+    $donDat->ma_user = $validatedData['ma_user'];
+    $donDat->ngay_dat = $ngayDat;
+    $donDat->ma_voucher = $validatedData['ma_voucher'];
+    $donDat->giam_gia = $validatedData['giam_gia'];
+    $donDat->tong_tien_ban_dau = $validatedData['tong_tien_ban_dau'];
+    $donDat->phi_van_chuyen = $validatedData['phi_van_chuyen'];
+    $donDat->tong_tien_cuoi_cung = $validatedData['tong_tien_cuoi_cung'];
+    $donDat->so_dien_thoai = $validatedData['so_dien_thoai'];
+    $donDat->dia_chi_giao_hang = $validatedData['dia_chi_giao_hang'];
+    $donDat->ngay_du_kien_giao = $validatedData['ngay_du_kien_giao'] ?? $ngayDat;
+    $donDat->trang_thai_giao_hang = $validatedData['trang_thai_giao_hang'];
+    $donDat->ghi_chu = $validatedData['ghi_chu'] ?? null;
+    $donDat->phuong_thuc_thanh_toan = $validatedData['phuong_thuc_thanh_toan'];
+    $donDat->ngay_thanh_toan = $validatedData['ngay_thanh_toan'] ?? $ngayDat;
+    $donDat->trang_thai_thanh_toan = $validatedData['trang_thai_thanh_toan'];
+    $donDat->trang_thai_don_dat = $validatedData['trang_thai_don_dat'];
+
+    // Lưu đơn đặt hàng vào cơ sở dữ liệu
+    $donDat->save();
+
+    // Lưu các chi tiết đơn đặt hàng
+    foreach ($validatedData['chi_tiet_don_dat'] as $chiTiet) {
+        $chiTietDonDat = new chi_tiet_don_dat();
+        $chiTietDonDat->ma_don_dat = $donDat->ma_don_dat; // Gán mã đơn đặt hàng
+        $chiTietDonDat->ma_bien_the = $chiTiet['ma_bien_the'];
+        $chiTietDonDat->so_luong = $chiTiet['so_luong'];
+        $chiTietDonDat->gia_ban = $chiTiet['gia_ban'];
+        $chiTietDonDat->ten_san_pham = $chiTiet['ten_san_pham'];
+        $chiTietDonDat->chi_tiet_tuy_chon = $chiTiet['chi_tiet_tuy_chon'] ?? null;
+        $chiTietDonDat->save();
+    }
+
+    // Trả về phản hồi sau khi thêm thành công
+    return response()->json([
+        'message' => 'Đơn đặt hàng và chi tiết đơn hàng đã được thêm thành công.',
+        'don_dat' => $donDat,
+        'chi_tiet_don_dat' => $donDat->chiTietDonDat // Trả về chi tiết đơn đặt hàng
+    ], 201);
+}
+
+
+    public function layDonDat()
+    {
+        $donDat=don_dat::all();
+        return response()->json($donDat);
     }
 
 

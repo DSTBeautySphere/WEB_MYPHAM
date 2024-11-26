@@ -34,14 +34,14 @@
                         <h6>Bảng Doanh thu loại sản phẩm</h6>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered">
+                        <table id="categoryTable" class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>Loại sản phẩm</th>
                                     <th>Doanh thu</th>
                                 </tr>
                             </thead>
-                            <tbody id="categoryTable">
+                            <tbody>
                                 <!-- Nội dung sẽ được thêm qua JavaScript -->
                             </tbody>
                         </table>
@@ -264,15 +264,24 @@
         var productRevenue = @json($revenueByProduct->pluck('revenue')); // Lấy doanh thu sản phẩm
         // Thêm dữ liệu vào bảng loại sản phẩm
         var categoryTable = $('#categoryTable');
-            categories.forEach(function (category, index) {
-                var revenue = categoryRevenue[index];
-                categoryTable.append(
-                    `<tr>
-                        <td>${category}</td>
-                        <td>${revenue.toLocaleString()} đ</td>
-                    </tr>`
-                );
-            });
+    categories.forEach(function (category, index) {
+        var revenue = categoryRevenue[index];
+        categoryTable.append(
+            `<tr>
+                <td>${category}</td>
+                <td>${revenue.toLocaleString()} đ</td>
+            </tr>`
+        );
+    });
+
+    // Khởi tạo phân trang cho bảng categoryTable
+    $('#categoryTable').DataTable({
+        "pageLength": 5, 
+        "lengthChange": true, 
+        "paging": true, 
+        "searching": true, 
+        "ordering": true, 
+    });
 
        // Chuẩn bị dữ liệu cho bảng
         var productData = products.map((product, index) => {

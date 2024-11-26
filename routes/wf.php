@@ -5,3 +5,4 @@ Route::post('/suaanhsanpham',[App\Http\Controllers\WFController::class,'suaAnhSa
 Route::get('/laybienthetheosanpham',[App\Http\Controllers\WFController::class,'layBienTheTheoSanPham']);
 Route::post('/themanhsanpham',[App\Http\Controllers\WFController::class,'themAnhSanPham']);
 Route::post('/xoaanhsanpham',[App\Http\Controllers\WFController::class,'xoaAnhSanPham']);
+Route::post('/themdondat',[App\Http\Controllers\WFController::class,'themDonDat']);
