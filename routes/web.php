@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 include 'admin.php';
-
+include 'wf.php';
 
 Route::get('/test',[App\Http\Controllers\TestController::class,'tat_ca_san_pham']);
 
