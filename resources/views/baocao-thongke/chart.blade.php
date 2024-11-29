@@ -277,10 +277,11 @@
     // Khởi tạo phân trang cho bảng categoryTable
     $('#categoryTable').DataTable({
         "pageLength": 5, 
-        "lengthChange": true, 
+        "lengthChange": false, 
         "paging": true, 
         "searching": true, 
         "ordering": true, 
+        "info":false,
     });
 
        // Chuẩn bị dữ liệu cho bảng

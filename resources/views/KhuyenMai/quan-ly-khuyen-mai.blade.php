@@ -2,101 +2,101 @@
 @section('title','Management Promotion')
 @section('css')
 <style>
-.promotion-info {
-    max-width: 800px; 
-    margin: 0 auto;
-}
+    .promotion-info {
+        max-width: 800px; 
+        margin: 0 auto;
+    }
 
-.form-row {
-    display: flex;
-    justify-content: space-between; 
-    gap: 10px; 
-    align-items: flex-start;
-}
+    .form-row {
+        display: flex;
+        justify-content: space-between; 
+        gap: 10px; 
+        align-items: flex-start;
+    }
 
-.form-group {
-    flex: 1;
-    min-width: 150px;
-}
+    .form-group {
+        flex: 1;
+        min-width: 150px;
+    }
 
-label {
-    display: block;
-    margin-bottom: 5px;
-}
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
 
-input.form-control {
-    width: 100%;
-    padding: 8px;
-    font-size: 14px;
-}
+    input.form-control {
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+    }
 
-.product-list {
-    max-width: 1000px;
-    margin: 0 auto;
-}
+    .product-list {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
 
-.product-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: flex-start;
-    max-height: 300px; /* Giới hạn chiều cao */
-    overflow-y: auto; /* Hiển thị thanh cuộn dọc nếu nội dung vượt quá chiều cao */
-}
+    .product-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-start;
+        max-height: 300px; /* Giới hạn chiều cao */
+        overflow-y: auto; /* Hiển thị thanh cuộn dọc nếu nội dung vượt quá chiều cao */
+    }
 
 
-.product-card {
-    flex: 1 0 21%;  
-    min-width: 200px; 
-    max-width: 210px; 
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    padding: 10px;  
-}
+    .product-card {
+        flex: 1 0 21%;  
+        min-width: 200px; 
+        max-width: 210px; 
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        padding: 10px;  
+    }
 
-.product-card input {
-    margin-bottom: 10px;
-}
+    .product-card input {
+        margin-bottom: 10px;
+    }
 
-.product-card p {
-    margin: 5px 0;
-}
+    .product-card p {
+        margin: 5px 0;
+    }
 
-button#apply-discount {
-    margin-top: 20px;
-    display: block;
-    width: 200px;
-    margin-left: auto;
-    margin-right: auto;
-}
-.product-checkbox{
-    float: left;
-}
-.form-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px; /* Khoảng cách giữa các ô */
-    align-items: flex-start;
-    margin-top: 10px; /* Tạo khoảng cách với phần trên */
-}
+    button#apply-discount {
+        margin-top: 20px;
+        display: block;
+        width: 200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .product-checkbox{
+        float: left;
+    }
+    .form-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px; /* Khoảng cách giữa các ô */
+        align-items: flex-start;
+        margin-top: 10px; /* Tạo khoảng cách với phần trên */
+    }
 
-.form-group {
-    flex: 1;
-    min-width: 150px;
-}
+    .form-group {
+        flex: 1;
+        min-width: 150px;
+    }
 
-label {
-    display: block;
-    margin-bottom: 5px;
-}
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
 
-select.form-control {
-    width: 100%;
-    padding: 8px;
-    font-size: 14px;
-}
+    select.form-control {
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+    }
 
 
 </style>
@@ -240,9 +240,14 @@ select.form-control {
             });
         }
 
+        let currentDongSanPhamId = null;
+        let currentLoaiSanPhamId = null;
+
         // Lắng nghe sự kiện thay đổi trên dropdown dòng sản phẩm
         $('#dongSanPham').on('change', function() {
             var dongSanPhamId = $(this).val();
+            currentDongSanPhamId = $(this).val();
+            currentLoaiSanPhamId = null;
             if (dongSanPhamId) {
                 loadSanPhamByDong(dongSanPhamId); // Tải sản phẩm theo dòng sản phẩm đã chọn
             } else {
@@ -253,6 +258,8 @@ select.form-control {
         // Lắng nghe sự kiện thay đổi trên dropdown loại sản phẩm
         $('#loaiSanPham').on('change', function() {
             var loaiSanPhamId = $(this).val();
+            currentLoaiSanPhamId = $(this).val();
+            currentDongSanPhamId = null;
             if (loaiSanPhamId) {
                 loadSanPhamByLoai(loaiSanPhamId); // Tải sản phẩm theo loại sản phẩm đã chọn
             } else {
@@ -321,18 +328,18 @@ select.form-control {
 
         var selectedProducts = []; 
             //này check all
-            $('#check-all').on('change', function() {
-                var isChecked = $(this).prop('checked'); 
-                $('.product-checkbox').prop('checked', isChecked);
+        $('#check-all').on('change', function() {
+            var isChecked = $(this).prop('checked'); 
+            $('.product-checkbox').prop('checked', isChecked);
 
-                if (isChecked) {
-                    $('.product-checkbox').each(function() {
-                        selectedProducts.push($(this).data('product-id'));
-                    });
-                } else {
-                    selectedProducts = [];
-                }
-                console.log('Selected Products:', selectedProducts); 
+            if (isChecked) {
+                $('.product-checkbox').each(function() {
+                    selectedProducts.push($(this).data('product-id'));
+                });
+            } else {
+                selectedProducts = [];
+            }
+            console.log('Selected Products:', selectedProducts); 
         });
         //này xóa check hoặc thêm
         $(document).on('change', '.product-checkbox', function() {
@@ -385,6 +392,13 @@ select.form-control {
                     alert('Khuyến mãi đã được áp dụng thành công!');
                     console.log(response);
                     loadDiscountProducts();
+                     // Xác định loại dữ liệu nào cần load lại
+                    if (currentDongSanPhamId) { // Nếu có dòng sản phẩm hiện tại
+                        loadSanPhamByDong(currentDongSanPhamId);
+                    } else if (currentLoaiSanPhamId) { // Nếu có loại sản phẩm hiện tại
+                        loadSanPhamByLoai(currentLoaiSanPhamId);
+                    }
+                    
                 },
                 error: function(xhr, status, error) {
                     console.error('Lỗi áp dụng khuyến mãi:', error);
@@ -905,71 +919,7 @@ select.form-control {
 
 
 <script>
-    // $(document).ready(function () {
-    //     loadDiscountProducts();
-
-    //     function loadDiscountProducts() {
-    //         // Gửi yêu cầu GET tới API
-    //         $.ajax({
-    //             url: '/with-discount', // API lấy danh sách sản phẩm khuyến mãi
-    //             method: 'GET',
-    //             dataType: 'json',
-    //             success: function (data) {
-    //                 // Làm trống bảng trước khi hiển thị dữ liệu mới
-    //                 $('#product-list-discount').empty();
-
-    //                 // Duyệt qua danh sách sản phẩm và thêm vào bảng
-    //                 $.each(data, function (index, product) {
-    //                     var rowHtml = `
-    //                         <tr>
-    //                             <td>${product.ten_san_pham}</td>
-    //                             <td>${product.discount}%</td>
-    //                             <td><img src="${product.image_url}" alt="Product Image" style="width: 100px; height: auto;"></td>
-    //                             <td><button  class="btn btn-success delete-discount" data-id="${product.ma_san_pham}">Delete</button></td>
-    //                         </tr>
-    //                     `;
-    //                     $('#product-list-discount').append(rowHtml);
-    //                 });
-    //                 // Gắn sự kiện Click sau khi thêm HTML
-    //                 $('.delete-discount').on('click', function () {
-    //                     var productId = $(this).data('id');
-    //                     deleteDiscount(productId);
-    //                 });
-    //             },
-    //             error: function (xhr, status, error) {
-    //                 console.error('Error loading discount products:', error);
-    //             }
-    //         });
-    //     }
-
-    //     function deleteDiscount(productId) {
-    //         if (!confirm('Bạn có chắc muốn xóa khuyến mãi này không?')) {
-    //             return;
-    //         }
-
-    //         // Gửi yêu cầu POST tới server để xóa khuyến mãi
-    //         $.ajax({
-    //             url: '/remove-discount', // API xóa khuyến mãi
-    //             method: 'POST',
-    //             data: {
-    //                 product_id: productId // Gửi product_id trong dữ liệu
-    //             },
-    //             headers: {
-    //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Token bảo mật
-    //             },
-    //             success: function (response) {
-    //                 alert('Khuyến mãi đã được xóa thành công!');
-    //                 loadDiscountProducts(); // Tải lại danh sách sản phẩm khuyến mãi
-    //             },
-    //             error: function (xhr, status, error) {
-    //                 console.error('Error deleting discount:', error);
-    //                 alert('Có lỗi xảy ra khi xóa khuyến mãi.');
-    //             }
-    //         });
-    //     }
-
-        
-    // });
+   
     function loadDiscountProducts() {
         // Gửi yêu cầu GET tới API
         $.ajax({
