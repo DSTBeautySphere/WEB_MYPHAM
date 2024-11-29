@@ -15,12 +15,6 @@ class ProductController extends Controller
     public function index($id)
     {
         try {
-            // $products = bien_the_san_pham::join('san_pham', 'bien_the_san_pham.ma_san_pham', '=', 'san_pham.ma_san_pham')
-            //             ->where('san_pham.ma_loai_san_pham', $id)
-            //             ->select('bien_the_san_pham.*')
-            //             ->with(['san_pham.loai_san_pham', 'san_pham.anh_san_pham'])
-            //             ->get();
-
             $products = san_pham::with(['loai_san_pham', 'anh_san_pham', 'bien_the_san_pham'])
                 ->where('ma_loai_san_pham', $id)
                 ->get();
@@ -52,7 +46,15 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            $product = san_pham::with(['loai_san_pham', 'anh_san_pham', 'bien_the_san_pham'])
+                ->where('ma_san_pham', $id)
+                ->first();
+
+            return response()->json($product);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage());
+        }
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
-
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Client\AuthController as ClientAuthController;
+use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\danh_giaController;
 use App\Http\Controllers\don_datController;
@@ -80,7 +81,18 @@ Route::get('/laynhomtuychontheoloai',[App\Http\Controllers\loai_san_phamControll
 Route::get('/layloaisanpham',[App\Http\Controllers\loai_san_phamController::class,'layLoaiSanPham']);
 Route::get('/laynhomtuychon',[App\Http\Controllers\tuy_chonController::class,'layNhomTuyChon']);
 
-
 Route::controller(ProductController::class)->group(function () {
-    Route::get('/products/{id}', 'index');
-  });
+  Route::get('/products/category/{id}', 'index');
+  Route::get('/product/{id}', 'show');
+});
+
+Route::controller(ClientAuthController::class)->group(function () {
+  Route::post('/register', 'register');
+  Route::post('/login', 'login');
+});
+
+Route::controller(CartController::class)->group(function () {
+  Route::post('/cart/addToCart', 'store');
+  Route::post('/cart', 'index');
+  Route::get('/cart/{id}/delete', 'destroy');
+});

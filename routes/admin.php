@@ -8,6 +8,7 @@ use App\Http\Controllers\san_phamController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\don_datController;
 use App\Http\Controllers\khuyen_mai_san_phamController;
+use App\Http\Controllers\phieu_nhapController;
 use App\Http\Controllers\tuy_chonController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\voucherController;
