@@ -8,6 +8,7 @@ use App\Http\Controllers\san_phamController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\don_datController;
 use App\Http\Controllers\khuyen_mai_san_phamController;
+use App\Http\Controllers\phieu_nhapController;
 use App\Http\Controllers\tuy_chonController;
 use App\Http\Controllers\UserController;
 use App\Models\loai_san_pham;
@@ -112,5 +113,27 @@ Route::prefix('admin')->group(function () {
     Route::get('/timKiem',[UserController::class,'timKiem']);
     Route::get('/thongTinUser/{id}',[UserController::class,'thongTinUser']);
     Route::post('/update-status/{id}', [UserController::class, 'updateStatus']);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //Kho
+    Route::get('/nhapkho.html',[phieu_nhapController::class,'showPhieuNhap']);
+    Route::get('/laysanphamtheonhacungcap',[phieu_nhapController::class,'laySanPhamTheoNhaCC']);
    
 // });
