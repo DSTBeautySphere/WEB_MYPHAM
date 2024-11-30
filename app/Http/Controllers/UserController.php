@@ -34,8 +34,15 @@ class UserController extends Controller
         } else {
             $users = $query->get(); 
         }
+        // $users = $query->paginate(3); // 10 dòng mỗi trang
 
-        return response()->json($users);
+        // if ($request->ajax()) {
+        //     return response()->json($users);
+        // }
+    
+        // return view('khachHang.user-management', compact('users'));
+
+         return response()->json($users);
     }
     public function timKiem(Request $request){
         $query = User::query();
@@ -49,6 +56,13 @@ class UserController extends Controller
         } else {
             $users = $query->get(); 
         }
+        // $users = $query->paginate(3); // 10 dòng mỗi trang
+
+        // if ($request->ajax()) {
+        //     return response()->json($users);
+        // }
+    
+        //return view('khachHang.user-management', compact('users'));
         return response()->json($users);
     }
 

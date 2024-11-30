@@ -119,6 +119,9 @@ Route::prefix('admin')->group(function () {
     Route::get('/showvoucher',[voucherController::class,'showVoucher'])->name('voucher.index');;
     Route::post('/themvoucher', [VoucherController::class, 'themVoucher']);
     Route::delete('/xoavoucher/{id}', [VoucherController::class, 'xoaVoucher']);
-    
-   
+
+    //Nhap kho
+    Route::get('/showphieunhap',[phieu_nhapController::class,'showPhieuNhap']);
+    Route::get('/laysanphamtheonhacungcap',[phieu_nhapController::class,'laySanPhamTheoNhaCC']);
+    Route::post('/themphieunhap',[phieu_nhapController::class,'themPhieuNhap']);
 // });

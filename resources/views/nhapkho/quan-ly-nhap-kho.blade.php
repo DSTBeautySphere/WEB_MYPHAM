@@ -34,33 +34,33 @@
     width: 100%;
     border: 1px solid #ddd; /* Viền ngoài bảng */
     min-height: 200px; /* Chiều cao tối thiểu của bảng */
-}
+    }
 
-#sampleTable th, #sampleTable td {
-    border: 1px solid #ddd; /* Viền cho từng ô */
-    text-align: center; /* Căn giữa nội dung */
-    padding: 8px;
-}
+    #sampleTable th, #sampleTable td {
+        border: 1px solid #ddd; /* Viền cho từng ô */
+        text-align: center; /* Căn giữa nội dung */
+        padding: 8px;
+    }
 
-#sampleTable tbody tr.empty-row td {
-    text-align: center;
-    color: #aaa; /* Màu sắc cho dòng thông báo */
-    font-style: italic; /* Kiểu chữ nghiêng */
-}
-.table-responsive {
-    max-height: 400px; /* Chiều cao tối đa của bảng */
-    overflow-y: auto; /* Thêm thanh cuộn dọc */
-    border: 1px solid #ddd; /* Đường viền cho khu vực cuộn */
-    position: relative; /* Đảm bảo tiêu đề có thể dính */
-}
+    #sampleTable tbody tr.empty-row td {
+        text-align: center;
+        color: #aaa; /* Màu sắc cho dòng thông báo */
+        font-style: italic; /* Kiểu chữ nghiêng */
+    }
+    .table-responsive {
+        max-height: 400px; /* Chiều cao tối đa của bảng */
+        overflow-y: auto; /* Thêm thanh cuộn dọc */
+        border: 1px solid #ddd; /* Đường viền cho khu vực cuộn */
+        position: relative; /* Đảm bảo tiêu đề có thể dính */
+    }
 
-#sampleTable thead {
-    position: sticky; /* Tiêu đề cố định */
-    top: 0; /* Dính ở phía trên */
-    background-color: #f8f9fa; /* Màu nền cho tiêu đề để rõ ràng */
-    z-index: 1; /* Đảm bảo tiêu đề nằm trên các nội dung khác */
-    border-bottom: 1px solid #ddd; /* Viền dưới cho tiêu đề */
-}
+    #sampleTable thead {
+        position: sticky; /* Tiêu đề cố định */
+        top: 0; /* Dính ở phía trên */
+        background-color: #f8f9fa; /* Màu nền cho tiêu đề để rõ ràng */
+        z-index: 1; /* Đảm bảo tiêu đề nằm trên các nội dung khác */
+        border-bottom: 1px solid #ddd; /* Viền dưới cho tiêu đề */
+    }
 
 
 </style>
@@ -81,10 +81,10 @@
                     </select>
                 </div>
 
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label for="price">Giá Nhập</label>
                     <input type="number" id="price" class="form-control" placeholder="Nhập giá nhập">
-                </div>
+                </div> --}}
 
                 <div class="form-group">
                     <label for="quantity">Số Lượng</label>
@@ -97,7 +97,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="discount">Chiết Khấu (%)</label>
+                    <label for="discount">Lãi (%)</label>
                     <input type="number" id="discount" class="form-control" placeholder="Nhập chiết khấu (%)">
                 </div>
 
@@ -129,7 +129,7 @@
                 </table>
             </div>
 
-            <button style="margin-top: 5px" class="btn btn-primary">Chọn Nhiều Sản Phẩm</button>
+            <button style="margin-top: 5px" class="btn btn-primary btn-add-multiple" id="themNhieu">Chọn Nhiều Sản Phẩm</button>
             
 
             <h4>Danh Sách Sản Phẩm Tạm Thêm</h4>
@@ -145,7 +145,7 @@
                             <th>Số Lượng</th>
                             <th>Giá Nhập</th>
                             <th>VAT</th>
-                            <th>Chiết Khấu</th>
+                            <th>Lãi</th>
                             <th>Hành Động</th>
                         </tr>
                     </thead>
@@ -155,6 +155,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <button id="btnAddPhieuNhap" class="btn btn-primary">Thêm Phiếu Nhập</button>
             </div>
 
             
@@ -179,33 +180,33 @@
             let isChecked = $(this).is(':checked');
             $('.product-checkbox').prop('checked', isChecked);
 
-            // Cập nhật danh sách ID sản phẩm
-            if (isChecked) {
-                selectedProducts = $('.product-checkbox').map(function () {
-                    return $(this).data('id'); // Lấy ID từ thuộc tính data-id
-                }).get();
-            } else {
-                selectedProducts = [];
-            }
-            console.log('Danh sách sản phẩm đã chọn:', selectedProducts);
+            // // Cập nhật danh sách ID sản phẩm
+            // if (isChecked) {
+            //     selectedProducts = $('.product-checkbox').map(function () {
+            //         return $(this).data('id'); // Lấy ID từ thuộc tính data-id
+            //     }).get();
+            // } else {
+            //     selectedProducts = [];
+            // }
+            // console.log('Danh sách sản phẩm đã chọn:', selectedProducts);
         });
 
         // Sự kiện thay đổi của từng checkbox sản phẩm
         $(document).on('change', '.product-checkbox', function () {
-            let productId = $(this).data('id');
-            if ($(this).is(':checked')) {
-                if (!selectedProducts.includes(productId)) {
-                    selectedProducts.push(productId); // Thêm vào danh sách
-                }
-            } else {
-                selectedProducts = selectedProducts.filter(id => id !== productId); // Xóa khỏi danh sách
-            }
+            // let productId = $(this).data('id');
+            // if ($(this).is(':checked')) {
+            //     if (!selectedProducts.includes(productId)) {
+            //         selectedProducts.push(productId); // Thêm vào danh sách
+            //     }
+            // } else {
+            //     selectedProducts = selectedProducts.filter(id => id !== productId); // Xóa khỏi danh sách
+            // }
 
-            // Kiểm tra và cập nhật trạng thái của "Chọn tất cả"
-            let allChecked = $('.product-checkbox').length === $('.product-checkbox:checked').length;
-            $('#all_product').prop('checked', allChecked);
+            // // Kiểm tra và cập nhật trạng thái của "Chọn tất cả"
+            // let allChecked = $('.product-checkbox').length === $('.product-checkbox:checked').length;
+            // $('#all_product').prop('checked', allChecked);
 
-            console.log('Danh sách sản phẩm đã chọn:', selectedProducts);
+            // console.log('Danh sách sản phẩm đã chọn:', selectedProducts);
         });
 
         // Tải nhà cung cấp
@@ -253,9 +254,10 @@
                                         <td>${item.loai_da}</td>
                                         <td>${item.dung_tich}</td>
                                         <td>${item.so_luong_ton_kho}</td>
-                                        <td>${item.gia_ban}</td>
+                                        <td>${parseFloat(item.gia_ban).toLocaleString()}</td>
+                                       
                                         <td>
-                                            <button class="btn btn-info">Chọn</button>
+                                            <button class="btn btn-info btn-add-temp" data-id="${item.ma_bien_the}">Chọn</button>
                                         </td>
                                     </tr>
                                 `;
@@ -274,6 +276,230 @@
                 $('#product-body').append('<tr class="empty-row"><td colspan="9">Không có dữ liệu</td></tr>');
             }
         });
+
+          // Sự kiện khi nhấn nút "Chọn" sản phẩm
+        $(document).on('click', '.btn-add-temp', function () {
+            const row = $(this).closest('tr');
+            const maBienThe = $(this).data('id');
+            const tenSanPham = row.find('td:nth-child(3)').text();
+            const mauSac = row.find('td:nth-child(4)').text();
+            const loaiDa = row.find('td:nth-child(5)').text();
+            const dungTich = row.find('td:nth-child(6)').text();
+            const giaBan = row.find('td:nth-child(8)').text();
+            
+            const soLuong = $('#quantity').val();
+            const vat = $('#vat').val();
+            const discount = $('#discount').val();
+            // Kiểm tra dữ liệu nhập vào
+            if (!soLuong || !vat || !discount) {
+                alert('Vui lòng nhập đầy đủ thông tin: Số lượng, VAT, Chiết khấu.');
+                return;
+            }
+
+            // Kiểm tra sản phẩm đã tồn tại trong danh sách tạm hay chưa
+            const exists = selectedProducts.find(product => product.maBienThe === maBienThe);
+            if (exists) {
+                alert('Sản phẩm này đã được thêm vào danh sách tạm.');
+                return;
+            }
+
+            // Thêm vào mảng danh sách tạm
+            selectedProducts.push({
+                maBienThe,
+                tenSanPham,
+                mauSac,
+                loaiDa,
+                dungTich,
+                soLuong,
+                giaBan,
+                vat,
+                discount
+            });
+
+            // Cập nhật bảng "Danh Sách Sản Phẩm Tạm Thêm"
+            updateTempProductTable();
+        });
+            // them nhieu san pham
+        $(document).on('click', '.btn-add-multiple', function () {
+            // Lặp qua các checkbox được chọn
+            $('.product-checkbox:checked').each(function () {
+
+                const row = $(this).closest('tr');
+                // Kiểm tra nếu dòng này có số cột ít hơn số cần thiết, bỏ qua dòng này
+                if (row.find('td').length < 8) {
+                    console.warn('Dòng dữ liệu không hợp lệ:', row.html());
+                    return; // Bỏ qua dòng này
+                }
+                const maBienThe = $(this).data('id');
+                const tenSanPham = row.find('td:nth-child(3)').text();
+                const mauSac = row.find('td:nth-child(4)').text();
+                const loaiDa = row.find('td:nth-child(5)').text();
+                const dungTich = row.find('td:nth-child(6)').text();
+                const giaBan = row.find('td:nth-child(8)').text();
+
+                const soLuong = $('#quantity').val() || 1; // Giá trị mặc định nếu không nhập
+                const vat = $('#vat').val() || 0; // VAT mặc định nếu không nhập
+                const discount = $('#discount').val() || 0; // Discount mặc định nếu không nhập
+                // Kiểm tra nếu bất kỳ cột nào trả về `undefined` hoặc trống
+                if (!maBienThe || !tenSanPham || !mauSac || !loaiDa || !dungTich || !giaBan) {
+                    console.warn('Thông tin dòng không đầy đủ:', { maBienThe, tenSanPham, mauSac, loaiDa, dungTich, giaBan });
+                    return; // Bỏ qua dòng này
+                }
+                // Kiểm tra sản phẩm đã tồn tại trong danh sách tạm hay chưa
+                const exists = selectedProducts.find(product => product.maBienThe === maBienThe);
+                if (exists) {
+                    alert(`Sản phẩm ${tenSanPham} đã tồn tại trong danh sách tạm.`);
+                    return;
+                }
+                console.log('Dòng được chọn:', row.html());
+                // Thêm sản phẩm vào danh sách tạm
+                selectedProducts.push({
+                    maBienThe,
+                    tenSanPham,
+                    mauSac,
+                    loaiDa,
+                    dungTich,
+                    soLuong,
+                    giaBan,
+                    vat,
+                    discount
+                });
+            });
+
+            // Cập nhật bảng "Danh Sách Sản Phẩm Tạm Thêm"
+            updateTempProductTable();
+
+            // Bỏ chọn tất cả checkbox sau khi thêm
+            $('.product-checkbox:checked').prop('checked', false);
+            $('#all_product').prop('checked', false);
+        });
+
+
+        // Hàm cập nhật bảng "Danh Sách Sản Phẩm Tạm Thêm"
+        function updateTempProductTable() {
+            const tbody = $('#tempProductBody');
+            tbody.empty();
+
+            if (selectedProducts.length === 0) {
+                tbody.append('<tr class="empty-row"><td colspan="10">Chưa có sản phẩm nào được thêm.</td></tr>');
+                return;
+            }
+
+            selectedProducts.forEach((product, index) => {
+                const row = `
+                    <tr>
+                        
+                        <td>${product.maBienThe}</td>
+                        <td>${product.tenSanPham}</td>
+                        <td>${product.mauSac}</td>
+                        <td>${product.loaiDa}</td>
+                        <td>${product.dungTich}</td>
+                        <td><input type="number" class="form-control temp-soLuong" value="${product.soLuong}" data-index="${index}"></td>
+                        <td><input type="float" class="form-control temp-giaNhap" value="" data-index="${index}"></td>
+                        <td><input type="number" class="form-control temp-vat" value="${product.vat}" data-index="${index}"></td>
+                        <td><input type="number" class="form-control temp-discount" value="${product.discount}" data-index="${index}"></td>
+                        <td>
+                            <button class="btn btn-danger btn-remove-temp" data-index="${index}">Xóa</button>
+                            
+                        </td>
+                        
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+            // Thêm sự kiện khi người dùng chỉnh sửa dữ liệu
+            tbody.find('.temp-soLuong').on('input', function () {
+                const index = $(this).data('index');
+                selectedProducts[index].soLuong = parseInt($(this).val(), 10) || 0; // Cập nhật số lượng
+            });
+
+            tbody.find('.temp-giaNhap').on('input', function () {
+                const index = $(this).data('index');
+                selectedProducts[index].giaNhap = parseFloat($(this).val()) || 0; // Cập nhật giá nhập
+            });
+
+            tbody.find('.temp-vat').on('input', function () {
+                const index = $(this).data('index');
+                selectedProducts[index].vat = parseInt($(this).val(), 10) || 0; // Cập nhật VAT
+            });
+
+            tbody.find('.temp-discount').on('input', function () {
+                const index = $(this).data('index');
+                selectedProducts[index].discount = parseInt($(this).val(), 10) || 0; // Cập nhật giảm giá
+            });
+        }
+
+        // Sự kiện xóa sản phẩm khỏi danh sách tạm
+        $(document).on('click', '.btn-remove-temp', function () {
+            const index = $(this).data('index');
+            selectedProducts.splice(index, 1);
+            updateTempProductTable();
+        });
+
+
+        $('#btnAddPhieuNhap').on('click', function () {
+            // Thu thập thông tin phiếu nhập
+            const nhaCungCap = $('#supplier').val();
+            const ghiChu = $('#note').val();
+            const tongSoLuong = selectedProducts.reduce((total, product) => total + parseInt(product.soLuong || 0), 0);
+            const tongGiaTri = selectedProducts.reduce((total, product) => {
+                const giaNhap = parseFloat(product.giaNhap || 0);
+                const soLuong = parseInt(product.soLuong || 0);
+                return total + (giaNhap * soLuong);
+            }, 0);
+
+            // Kiểm tra dữ liệu hợp lệ
+            if (!nhaCungCap || selectedProducts.length === 0) {
+                alert('Vui lòng chọn nhà cung cấp và thêm sản phẩm.');
+                return;
+            }
+             // Tính giá bán cho từng sản phẩm
+            const vat = parseFloat($('#vat').val()) || 10; // VAT mặc định 10% nếu không nhập
+            const lai = parseFloat($('#discount').val()) || 20; // Lãi mặc định 20% nếu không nhập
+            selectedProducts.forEach((product) => {
+                const giaNhap = parseFloat(product.giaNhap || 0);
+                product.giaBan = giaNhap * (1 + lai / 100) * (1 + vat / 100);
+            });
+
+            // Tạo dữ liệu gửi đi
+            const data = {
+                ma_nha_cung_cap: nhaCungCap,
+                ghi_chu: ghiChu || '',
+                tong_so_luong: tongSoLuong,
+                tong_gia_tri: tongGiaTri,
+                chi_tiet_phieu_nhap: selectedProducts,
+            };
+
+            // Gửi dữ liệu qua AJAX
+            $.ajax({
+                url: '/themphieunhap', // Đường dẫn tới route xử lý thêm phiếu nhập
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert('Thêm phiếu nhập thành công!');
+                        // Reset giao diện
+                        $('#supplier').val('');
+                        $('#note').val('');
+                        selectedProducts = [];
+                        updateTempProductTable();
+                    } else {
+                        alert('Lỗi: ' + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Lỗi khi thêm phiếu nhập:', error);
+                    alert('Không thể thêm phiếu nhập.');
+                },
+            });
+        });
+
+        
+
     });
 
 
