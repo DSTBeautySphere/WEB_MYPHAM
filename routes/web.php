@@ -6,6 +6,7 @@ use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Client\ReviewController;
 use App\Http\Controllers\Client\VnPayController;
+use App\Http\Controllers\Client\VoucherController;
 use App\Http\Controllers\danh_giaController;
 use App\Http\Controllers\don_datController;
 use App\Http\Controllers\gio_hangController;
@@ -88,7 +89,7 @@ Route::get('/laynhomtuychon',[App\Http\Controllers\tuy_chonController::class,'la
 Route::controller(ProductController::class)->group(function () {
   Route::get('/products/category/{id}', 'index');
   Route::get('/product/{id}', 'show');
-  Route::post('/products', 'getAll');
+  Route::get('/products', 'getAll');
   Route::get('/categories', 'getAllCategories');
  
 });
@@ -98,6 +99,7 @@ Route::controller(ClientAuthController::class)->group(function () {
   Route::post('/login', 'login');
   Route::post('/username/check', 'checkUsername');
   Route::post('/password/change', 'changePassword');
+  Route::post('/sendemailupdatepassword', 'sendEmailUpdatePassword');
 });
 
 Route::controller(CartController::class)->group(function () {
@@ -120,4 +122,10 @@ Route::controller(ReviewController::class)->group(function () {
   Route::get('/review/{id}', 'index');
   Route::post('/review/create', 'store');
   Route::post('/checkboughtproduct', 'checkUserPurchasedProduct');
+});
+
+Route::controller(VoucherController::class)->group(function () {
+  Route::get('/getvoucher', 'getVouchers');
+  Route::post('/storevoucher', 'storeVoucher');
+  
 });
