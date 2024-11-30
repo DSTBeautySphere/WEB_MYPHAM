@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\bien_the_san_pham;
+use App\Models\loai_san_pham;
 use App\Models\san_pham;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -15,11 +17,68 @@ class ProductController extends Controller
     public function index($id)
     {
         try {
-            $products = san_pham::with(['loai_san_pham', 'anh_san_pham', 'bien_the_san_pham'])
-                ->where('ma_loai_san_pham', $id)
-                ->get();
+            $products = san_pham::with(['loai_san_pham', 'anh_san_pham', 'bien_the_san_pham', 'khuyen_mai_san_pham'])
+                        ->where('ma_loai_san_pham', $id)
+                        ->get();
 
             return response()->json($products);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage());
+        }
+    }
+
+    // public function getAll(Request $request)
+    // {
+    //     try {
+    //         $categoriesId = $request->input('categories');
+
+    //         $query = san_pham::with(['loai_san_pham', 'anh_san_pham', 'bien_the_san_pham', 'khuyen_mai_san_pham']);
+
+    //         if (!empty($categoriesId) && is_array($categoriesId)) {
+    //             $query->whereIn('ma_loai_san_pham', $categoriesId);
+    //         }
+
+    //         $products = $query->get();
+
+    //         return response()->json($products);
+    //     } catch (\Exception $e) {
+    //         return response()->json($e->getMessage());
+    //     }
+    // }
+
+    public function getAll(Request $request)
+    {
+        try {
+            $categoriesId = $request->input('categories');
+
+            $query = san_pham::with([
+                'loai_san_pham',
+                'anh_san_pham',
+                'bien_the_san_pham',
+                'khuyen_mai_san_pham',
+            ])
+            ->withCount(['danh_gia as so_sao_trung_binh' => function ($query) {
+                $query->select(DB::raw('ROUND(AVG(so_sao), 0)')); // Làm tròn nửa lên
+            }]);
+
+            if (!empty($categoriesId) && is_array($categoriesId)) {
+                $query->whereIn('ma_loai_san_pham', $categoriesId);
+            }
+
+            $products = $query->get();
+
+            return response()->json($products);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage());
+        }
+    }
+
+    public function getAllCategories()
+    {
+        try {
+            $categories = loai_san_pham::all();
+
+            return response()->json($categories);
         } catch (\Exception $e) {
             return response()->json($e->getMessage());
         }
@@ -47,8 +106,10 @@ class ProductController extends Controller
     public function show(string $id)
     {
         try {
-            $product = san_pham::with(['loai_san_pham', 'anh_san_pham', 'bien_the_san_pham'])
-                ->where('ma_san_pham', $id)
+            $product = san_pham::with(['loai_san_pham', 'anh_san_pham', 'bien_the_san_pham', 'khuyen_mai_san_pham', 'mo_ta', 'mo_ta.chi_tiet_mo_ta'])
+                ->where('ma_san_pham', $id)->withCount(['danh_gia as so_sao_trung_binh' => function ($query) {
+                    $query->select(DB::raw('ROUND(AVG(so_sao), 0)')); // Làm tròn nửa lên
+                }])
                 ->first();
 
             return response()->json($product);

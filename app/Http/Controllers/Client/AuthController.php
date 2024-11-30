@@ -48,4 +48,33 @@ class AuthController extends Controller
             return response()->json($e->getMessage(), 500);
         }
     }
+
+    public function checkUsername(Request $request)
+    {
+        try {
+            $user = User::where('ten_dang_nhap', $request->username)->first();
+
+            return response()->json([
+                'isSuccess' => $user ? true : false
+            ]);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    public function changePassword(Request $request)
+    {
+        try {
+            $user = User::where('ten_dang_nhap', $request->username)->first();
+
+            $user->mat_khau = Hash::make($request->password);
+            $user->save();
+
+            return response()->json([
+                'isSuccess' => true
+            ]);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+    }
 }

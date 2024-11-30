@@ -61,4 +61,15 @@ class san_pham extends Model
             }
         }
     }
+
+    public function mo_ta()
+    {
+        return $this->hasMany(mo_ta::class, 'ma_san_pham', 'ma_san_pham');
+    }
+
+    public function danh_gia()
+    {
+        return $this->hasMany(danh_gia::class, 'ma_san_pham', 'ma_san_pham');
+    }
+
 }
