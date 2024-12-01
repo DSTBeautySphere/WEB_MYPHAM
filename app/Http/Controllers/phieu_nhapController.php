@@ -101,4 +101,19 @@ class phieu_nhapController extends Controller
             ], 500);
         }
     }
+    public function layPhieuNhap(){
+        $phieuNhaps= phieu_nhap::paginate(5);
+        return view('nhapkho.quan-ly-phieu-nhap',compact('phieuNhaps'));
+    }
+
+    public function chiTietPhieuNhap($id)
+    {
+        $phieuNhap = phieu_nhap::with(['nha_cung_cap', 'chi_tiet_phieu_nhap.bien_the_san_pham.san_pham'])
+            ->findOrFail($id);
+
+        return response()->json([
+            'success' => true,
+            'data' => $phieuNhap,
+        ]);
+    }
 }

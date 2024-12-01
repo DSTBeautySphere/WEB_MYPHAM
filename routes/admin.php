@@ -124,4 +124,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/showphieunhap',[phieu_nhapController::class,'showPhieuNhap']);
     Route::get('/laysanphamtheonhacungcap',[phieu_nhapController::class,'laySanPhamTheoNhaCC']);
     Route::post('/themphieunhap',[phieu_nhapController::class,'themPhieuNhap']);
+
+    //phieu nhap
+    Route::get('/showqlphieunhap',[phieu_nhapController::class,'layPhieuNhap']);
+    Route::get('/chitietphieunhap/{id}', [phieu_nhapController::class, 'chiTietPhieuNhap']);
 // });
