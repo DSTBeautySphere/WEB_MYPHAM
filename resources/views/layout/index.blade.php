@@ -64,14 +64,14 @@
       <li><a class="app-menu__item" href="/showquanlysanpham"><i
             class='app-menu__icon bx bx-purchase-tag-alt'></i><span class="app-menu__label">Quản lý sản phẩm</span></a>
       </li>
-      <li><a class="app-menu__item" href="table-data-oder.html"><i class='app-menu__icon bx bx-task'></i><span
-            class="app-menu__label">Quản lý đơn hàng</span></a></li>
+      <li><a class="app-menu__item" href="showqlphieunhap"><i class='app-menu__icon bx bx-task'></i><span
+            class="app-menu__label">Quản lý phiếu nhập</span></a></li>
 
-      <li><a class="app-menu__item" href="/showkhuyenmai"><i class='app-menu__icon bx bx-run'></i><span
+      <li><a class="app-menu__item" href="/showkhuyenmai"><i class='app-menu__icon bx bx-task'></i><span
             class="app-menu__label">Quản lý giảm giá
           </span></a></li>
-      <li><a class="app-menu__item" href="table-data-money.html"><i class='app-menu__icon bx bx-dollar'></i><span
-            class="app-menu__label">Bảng kê lương</span></a></li>
+      <li><a class="app-menu__item" href="/showvoucher"><i class='app-menu__icon bx bx-task'></i><span
+            class="app-menu__label">Quản lý voucher</span></a></li>
 
       <li><a class="app-menu__item" href="quan-ly-bao-cao.html"><i
             class='app-menu__icon bx bx-pie-chart-alt-2'></i><span class="app-menu__label">Báo cáo doanh thu</span></a>

@@ -215,19 +215,97 @@
                         <td>${user.email}</td>
                         <td>${user.ngay_sinh}</td>
                        <td>
-                            <span class="badge ${user.trang_thai == 1 ? 'bg-success' : 'bg-danger'}">
-                                ${user.trang_thai == 1 ? 'Hoạt động' : 'Không hoạt động'}
+                           <span 
+                                class="badge {{ $user->trang_thai ? 'bg-success' : 'bg-danger' }}" 
+                                data-id="{{ $user->ma_user }}" 
+                                data-status="{{ $user->trang_thai ? 'active' : 'inactive' }}"
+                                style="cursor: pointer;">
+                                {{ $user->trang_thai ? 'Hoạt động' : 'Không hoạt động' }}
                             </span>
                         </td>
                         <td>
-                            <a href="#" class="btn btn-info btn-sm">Chi tiết</a>
+                            <a href="#" class="btn btn-info btn-sm" data-id="{{ $user->ma_user }}">Chi tiết</a>
                         </td>
                     </tr>
                 `;
                 tableBody.append(row);
             });
+           
         }
     });
+    // $(document).ready(function () {
+    //     // Lọc theo trạng thái
+    //     $("#statusFilter").on("change", function () {
+    //         const status = $("#statusFilter").val();
+    //         fetchUsers({ status: status || "" }, "/locUser");
+    //     });
+
+    //     // Tìm kiếm theo tên
+    //     $("#searchUser").on("change", function () {
+    //         const name = $(this).val();
+    //         fetchUsers({ name }, "/timKiem");
+    //     });
+
+    //     // Sự kiện phân trang
+    //     $("#userTable").on("click", ".pagination a", function (e) {
+    //         e.preventDefault();
+    //         const url = $(this).attr("href"); // URL phân trang
+    //         fetchUsers({}, url);
+    //     });
+
+    //     // Hàm gửi AJAX để lấy dữ liệu
+    //     function fetchUsers(filters = {}, url = "/locUser") {
+    //         $.ajax({
+    //             url: url, // URL lọc hoặc tìm kiếm
+    //             method: "GET",
+    //             data: filters, // Truyền thêm tham số lọc hoặc tìm kiếm
+    //             success: function (response) {
+    //                 console.log(response); // Kiểm tra phản hồi
+    //                 updateUserList(response); // Cập nhật bảng và phân trang
+    //             },
+    //             error: function (err) {
+    //                 console.error("Lỗi khi tải dữ liệu:", err.responseText); // Kiểm tra lỗi
+    //             },
+    //         });
+    //     }
+
+    //     // Cập nhật nội dung bảng và phân trang
+    //     function updateUserList(data) {
+    //         const tableBody = $("#userTable tbody");
+    //         const paginationWrapper = $(".pagination-wrapper");
+
+    //         // Làm trống bảng và thêm dữ liệu mới
+    //         tableBody.empty();
+    //         data.data.forEach((user, index) => {
+    //             const row = `
+    //                 <tr>
+    //                     <td>${user.ma_user}</td>
+    //                     <td>${user.ten_dang_nhap}</td>
+    //                     <td>${user.ho_ten}</td>
+    //                     <td>${user.gioi_tinh}</td>
+    //                     <td>${user.so_dien_thoai}</td>
+    //                     <td>${user.email}</td>
+    //                     <td>${user.ngay_sinh}</td>
+    //                     <td>
+    //                         <span 
+    //                             class="badge ${user.trang_thai ? 'bg-success' : 'bg-danger'}" 
+    //                             data-id="${user.ma_user}" 
+    //                             data-status="${user.trang_thai ? 'active' : 'inactive'}">
+    //                             ${user.trang_thai ? 'Hoạt động' : 'Không hoạt động'}
+    //                         </span>
+    //                     </td>
+    //                     <td>
+    //                         <a href="#" class="btn btn-info btn-sm" data-id="${user.ma_user}">Chi tiết</a>
+    //                     </td>
+    //                 </tr>
+    //             `;
+    //             tableBody.append(row);
+    //         });
+
+    //         // Cập nhật phân trang
+    //         paginationWrapper.html(data.links);
+    //     }
+    // });
 
     // Lắng nghe sự kiện click trên nút "Chi tiết"
     $(document).on('click', '.btn-info', function(e) {
@@ -285,73 +363,43 @@
         });
     });
 
-    // $(document).on('click', '.badge', function() {
-    //     var userId = $(this).data('id');  // Lấy ID người dùng
-    //     var currentStatus = $(this).data('status');  // Lấy trạng thái hiện tại (active/inactive)
-
-    //     // Chuyển trạng thái (nếu là 'active' thì chuyển thành 'inactive', ngược lại)
-    //     var newStatus = (currentStatus === 'active') ? 'inactive' : 'active';
-
-    //     // Gửi yêu cầu AJAX để cập nhật trạng thái
-    //     $.ajax({
-    //         url: '/update-status/' + userId,  // URL route để cập nhật trạng thái
-    //         method: 'POST',
-    //         data: {
-    //             _token: '{{ csrf_token() }}',  // CSRF token
-    //             status: newStatus
-    //         },
-    //         success: function(response) {
-    //             // Cập nhật lại giao diện (thay đổi badge và trạng thái)
-    //             if (newStatus === 'active') {
-    //                 $(this).removeClass('bg-danger').addClass('bg-success').text('Hoạt động');
-    //             } else {
-    //                 $(this).removeClass('bg-success').addClass('bg-danger').text('Không hoạt động');
-    //             }
-
-    //             // Cập nhật lại thuộc tính 'data-status' của badge
-    //             $(this).data('status', newStatus);
-    //         },
-    //         error: function(xhr, status, error) {
-    //             alert('Lỗi khi cập nhật trạng thái người dùng.');
-    //         }
-    //     });
-    // });
+  
     $(document).on('click', '.badge', function() {
-    var badgeElement = $(this); // Lưu tham chiếu đến element .badge
-    var userId = badgeElement.data('id'); // Lấy ID người dùng
-    var currentStatus = badgeElement.data('status'); // Lấy trạng thái hiện tại (active/inactive)
+        var badgeElement = $(this); // Lưu tham chiếu đến element .badge
+        var userId = badgeElement.data('id'); // Lấy ID người dùng
+        var currentStatus = badgeElement.data('status'); // Lấy trạng thái hiện tại (active/inactive)
 
-    // Chuyển trạng thái (nếu là 'active' thì chuyển thành 'inactive', ngược lại)
-    var newStatus = (currentStatus === 'active') ? 'inactive' : 'active';
+        // Chuyển trạng thái (nếu là 'active' thì chuyển thành 'inactive', ngược lại)
+        var newStatus = (currentStatus === 'active') ? 'inactive' : 'active';
 
-    // Gửi yêu cầu AJAX để cập nhật trạng thái
-    $.ajax({
-        url: '/update-status/' + userId, // URL route để cập nhật trạng thái
-        method: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}', // CSRF token
-            status: newStatus
-        },
-        success: function(response) {
-            if (response.success) {
-                // Cập nhật lại giao diện (thay đổi badge và trạng thái)
-                if (newStatus === 'active') {
-                    badgeElement.removeClass('bg-danger').addClass('bg-success').text('Hoạt động');
+        // Gửi yêu cầu AJAX để cập nhật trạng thái
+        $.ajax({
+            url: '/update-status/' + userId, // URL route để cập nhật trạng thái
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}', // CSRF token
+                status: newStatus
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Cập nhật lại giao diện (thay đổi badge và trạng thái)
+                    if (newStatus === 'active') {
+                        badgeElement.removeClass('bg-danger').addClass('bg-success').text('Hoạt động');
+                    } else {
+                        badgeElement.removeClass('bg-success').addClass('bg-danger').text('Không hoạt động');
+                    }
+
+                    // Cập nhật lại thuộc tính 'data-status' của badge
+                    badgeElement.data('status', newStatus);
                 } else {
-                    badgeElement.removeClass('bg-success').addClass('bg-danger').text('Không hoạt động');
+                    alert('Cập nhật trạng thái thất bại.');
                 }
-
-                // Cập nhật lại thuộc tính 'data-status' của badge
-                badgeElement.data('status', newStatus);
-            } else {
-                alert('Cập nhật trạng thái thất bại.');
+            },
+            error: function(xhr, status, error) {
+                alert('Lỗi khi cập nhật trạng thái người dùng.');
             }
-        },
-        error: function(xhr, status, error) {
-            alert('Lỗi khi cập nhật trạng thái người dùng.');
-        }
+        });
     });
-});
 
 </script>
     

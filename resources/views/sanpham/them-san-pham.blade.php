@@ -136,6 +136,17 @@
         position: relative;  /* Đảm bảo modal header có thể chứa nút đóng */
     }
 
+    .scrollable-table {
+    max-height: 400px; /* Chiều cao tối đa cho bảng */
+    overflow-y: auto; /* Bật thanh cuộn dọc */
+    overflow-x: auto; /* Bật thanh cuộn ngang nếu cần */
+    border: 1px solid #ddd; /* Tùy chọn: thêm viền */
+    }
+
+    .table {
+        margin-bottom: 0; /* Loại bỏ khoảng cách dưới bảng nếu cần */
+    }
+
 
 </style>
 @endsection
@@ -489,36 +500,38 @@
             </div>
             <div class="modal-body">
                 <!-- Danh sách loại sản phẩm dưới dạng bảng -->
-                <table class="table table-bordered" id="tableLoaiSanPham">
-                    <thead>
-                        <tr>
-                            <th>Mã Loại Sản Phẩm</th>
-                            <th>Tên Loại Sản Phẩm</th>
-                            <th>Mô Tả</th>
-                          
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($loaiSanPham as $loai)
+                <div class="table-responsive scrollable-table">
+                    <table class="table table-bordered" id="tableLoaiSanPham">
+                        <thead>
                             <tr>
-                                <td>{{ $loai->ma_loai_san_pham }}</td>
-                                <td>{{ $loai->ten_loai_san_pham }}</td>
-                                <td>{{ $loai->mo_ta }}</td>
-                                <td>
-                                    <button class="btn btn-warning btn-sm btn-edit" 
-                                            data-id="{{ $loai->ma_loai_san_pham }}" 
-                                            data-ten="{{ $loai->ten_loai_san_pham }}" 
-                                            data-mo-ta="{{ $loai->mo_ta }}" 
-                                            data-dong-san-pham="{{ $loai->ma_dong_san_pham }}"
-                                            data-nhom-tuy-chon="{{ json_encode($loai->nhom_tuy_chon->map(fn($nhom) => $nhom->ma_nhom_tuy_chon)) }}">
-                                        Sửa
-                                    </button>
-                                    <button class="btn btn-danger btn-sm btn-delete" data-id="{{ $loai->ma_loai_san_pham }}">Xóa</button>
-                                </td>
+                                <th>Mã Loại Sản Phẩm</th>
+                                <th>Tên Loại Sản Phẩm</th>
+                                <th>Mô Tả</th>
+                                <th>Hành Động</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($loaiSanPham as $loai)
+                                <tr>
+                                    <td>{{ $loai->ma_loai_san_pham }}</td>
+                                    <td>{{ $loai->ten_loai_san_pham }}</td>
+                                    <td>{{ $loai->mo_ta }}</td>
+                                    <td>
+                                        <button class="btn btn-warning btn-sm btn-edit" 
+                                                data-id="{{ $loai->ma_loai_san_pham }}" 
+                                                data-ten="{{ $loai->ten_loai_san_pham }}" 
+                                                data-mo-ta="{{ $loai->mo_ta }}" 
+                                                data-dong-san-pham="{{ $loai->ma_dong_san_pham }}"
+                                                data-nhom-tuy-chon="{{ json_encode($loai->nhom_tuy_chon->map(fn($nhom) => $nhom->ma_nhom_tuy_chon)) }}">
+                                            Sửa
+                                        </button>
+                                        <button class="btn btn-danger btn-sm btn-delete" data-id="{{ $loai->ma_loai_san_pham }}">Xóa</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
                 <!-- Form Thêm/Sửa Loại Sản Phẩm -->
                 <form id="formLoaiSanPham" method="POST" action="/themloaisanpham">

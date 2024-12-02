@@ -726,7 +726,7 @@ class AdminController extends Controller
         $sanPhams->each(function ($product) {
             $product->deleteExpiredDiscounts(); // Xóa khuyến mãi hết hạn cho sản phẩm
         });
-        // Định dạng dữ liệu trả về
+       
         $response = $sanPhams->map(function ($product) {
             return [
                 'ma_san_pham'=> $product->ma_san_pham,
@@ -770,19 +770,7 @@ class AdminController extends Controller
 
     public function deleteDiscountFromSanPham(Request $request)
     {
-        // $productId = $request->input('product_id'); // Nhận product_id từ request
-
-       
-        // $sanPham = san_pham::find($productId);
-    
-        // if (!$sanPham) {
-        //     return response()->json(['message' => 'Sản phẩm không tồn tại!'], 404);
-        // }
-    
-        // // Xóa khuyến mãi của sản phẩm
-        // $sanPham->khuyen_mai_san_pham()->delete();
-    
-        // return response()->json(['message' => 'Khuyến mãi đã được xóa thành công!'], 200);
+        
 
         $productId = $request->input('product_id'); // Nhận product_id từ request
 

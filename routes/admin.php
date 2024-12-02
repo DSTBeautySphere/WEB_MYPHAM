@@ -11,6 +11,7 @@ use App\Http\Controllers\khuyen_mai_san_phamController;
 use App\Http\Controllers\phieu_nhapController;
 use App\Http\Controllers\tuy_chonController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\voucherController;
 use App\Models\loai_san_pham;
 use Illuminate\Support\Facades\Route;
 
@@ -114,26 +115,17 @@ Route::prefix('admin')->group(function () {
     Route::get('/thongTinUser/{id}',[UserController::class,'thongTinUser']);
     Route::post('/update-status/{id}', [UserController::class, 'updateStatus']);
 
+    //voucher
+    Route::get('/showvoucher',[voucherController::class,'showVoucher'])->name('voucher.index');;
+    Route::post('/themvoucher', [VoucherController::class, 'themVoucher']);
+    Route::delete('/xoavoucher/{id}', [VoucherController::class, 'xoaVoucher']);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //Kho
-    Route::get('/nhapkho.html',[phieu_nhapController::class,'showPhieuNhap']);
+    //Nhap kho
+    Route::get('/showphieunhap',[phieu_nhapController::class,'showPhieuNhap']);
     Route::get('/laysanphamtheonhacungcap',[phieu_nhapController::class,'laySanPhamTheoNhaCC']);
-   
+    Route::post('/themphieunhap',[phieu_nhapController::class,'themPhieuNhap']);
+
+    //phieu nhap
+    Route::get('/showqlphieunhap',[phieu_nhapController::class,'layPhieuNhap']);
+    Route::get('/chitietphieunhap/{id}', [phieu_nhapController::class, 'chiTietPhieuNhap']);
 // });
