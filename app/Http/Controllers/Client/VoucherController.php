@@ -65,4 +65,29 @@ class VoucherController extends Controller
             'message' => 'Voucher không tồn tại hoặc đã hết số lượng.',
         ], 404);
     }
+
+
+    public function showVoucherUser(Request $request)
+{
+    try {
+        // Lấy ID người dùng từ request
+        $userId = $request->input('ma_user');
+
+        // Kiểm tra nếu không có userId
+        if (!$userId) {
+            return response()->json(['error' => 'Mã người dùng không được cung cấp'], 400);
+        }
+
+        // Lấy danh sách voucher đã lưu
+        $vouchers = user_voucher::where('ma_user', $userId)
+            ->with('voucher') // Eager load để lấy thông tin từ bảng voucher nếu cần
+            ->get();
+
+        // Trả về danh sách voucher đã lưu
+        return response()->json($vouchers, 200);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Đã xảy ra lỗi: ' . $e->getMessage()], 500);
+    }
+}
+
 }

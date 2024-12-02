@@ -127,5 +127,5 @@ Route::controller(ReviewController::class)->group(function () {
 Route::controller(VoucherController::class)->group(function () {
   Route::get('/getvoucher', 'getVouchers');
   Route::post('/storevoucher', 'storeVoucher');
-  
+  Route::get('/showvoucheruser', 'showVoucherUser');
 });

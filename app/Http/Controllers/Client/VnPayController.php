@@ -24,7 +24,8 @@ class VnPayController extends Controller
         $order = don_dat::create([
             "ma_user" => $request->userId,
             "ngay_dat" => now(),
-            "tong_tien_ban_dau" => $vnp_Amount,
+            "tong_tien_ban_dau" => $request->amountbf,
+            "giam_gia"=>$request->discount,
             "tong_tien_cuoi_cung" => $vnp_Amount,
             "so_dien_thoai" => $request->phone,
             "dia_chi_giao_hang" => $request->address,
