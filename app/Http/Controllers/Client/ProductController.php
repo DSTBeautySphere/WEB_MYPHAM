@@ -15,21 +15,31 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     public function index($id)
-    {
-        try {
-            $query = san_pham::with(['loai_san_pham', 'anh_san_pham', 'bien_the_san_pham', 'khuyen_mai_san_pham']);
-    
-            if ($id != -1) {
-                $query->where('ma_loai_san_pham', $id);
-            }
-    
-            $products = $query->paginate(8); // 10 sản phẩm mỗi trang
-    
-            return response()->json($products);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+{
+    try {
+        $query = san_pham::with(['loai_san_pham', 'anh_san_pham', 'bien_the_san_pham', 'khuyen_mai_san_pham'])
+                         ->withCount(['danh_gia as so_sao_trung_binh' => function ($query) {
+                             $query->select(DB::raw('ROUND(AVG(so_sao), 0)')); // Làm tròn số sao trung bình
+                         }])
+                         ->whereHas('bien_the_san_pham') // Chỉ chọn sản phẩm có biến thể
+                         ->where('trang_thai', "1"); // Chỉ chọn sản phẩm có trạng thái = 1
+
+        // Kiểm tra nếu id khác -1 thì thêm điều kiện lọc theo loại sản phẩm
+        if ($id != -1) {
+            $query->where('ma_loai_san_pham', $id);
         }
+
+        // Phân trang và lấy 8 sản phẩm mỗi trang
+        $products = $query->paginate(8);
+
+        return response()->json($products);
+    } catch (\Exception $e) {
+        // Xử lý lỗi nếu có
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
+
+    
     
 
 
@@ -38,8 +48,14 @@ class ProductController extends Controller
         try {
             $categoriesId = $request->input('categories');
 
-            $query = san_pham::with(['loai_san_pham', 'anh_san_pham', 'bien_the_san_pham', 'khuyen_mai_san_pham']);
+            $query = san_pham::with(['loai_san_pham', 'anh_san_pham', 'bien_the_san_pham', 'khuyen_mai_san_pham'])
+                            ->withCount(['danh_gia as so_sao_trung_binh' => function ($query) {
+                                $query->select(DB::raw('ROUND(AVG(so_sao), 0)')); // Làm tròn số sao trung bình
+                            }])
+                            ->whereHas('bien_the_san_pham') // Chỉ chọn những sản phẩm có biến thể
+                            ->where('trang_thai', "1"); // Chỉ chọn sản phẩm có trạng thái = 1
 
+            // Lọc theo danh mục nếu có
             if (!empty($categoriesId) && is_array($categoriesId)) {
                 $query->whereIn('ma_loai_san_pham', $categoriesId);
             }
@@ -51,6 +67,8 @@ class ProductController extends Controller
             return response()->json($e->getMessage());
         }
     }
+
+
 
  
     

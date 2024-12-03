@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\bien_the_san_pham;
 use App\Models\chi_tiet_don_dat;
 use App\Models\don_dat;
 use App\Models\gio_hang;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class VnPayController extends Controller
 {
@@ -30,9 +32,11 @@ class VnPayController extends Controller
             "so_dien_thoai" => $request->phone,
             "dia_chi_giao_hang" => $request->address,
             "ghi_chu" => $request->note,
+            "ngay_du_kien_giao"=>now(),
+            "ngay_thanh_toan"=>now(),
             "phuong_thuc_thanh_toan" => "CARD",
             "trang_thai_thanh_toan" => "CHO_THANH_TOAN",
-            "trang_thai_don_dat" => "CHO_XAC_NHAN"
+            "trang_thai_don_dat" => "Chờ xác nhận"
         ]);
 
         $vnp_TxnRef = $order->ma_don_dat;
@@ -40,13 +44,22 @@ class VnPayController extends Controller
         $cart = gio_hang::where('ma_user', $request->userId)->get();
 
         foreach ($cart as $item) {
+
+            $variant = bien_the_san_pham::find($item->ma_bien_the);
+            if ($variant->so_luong_ton_kho < $item->so_luong) {
+                return response()->json([
+                    'status' => 'error'
+                   
+                ]);
+            }
             chi_tiet_don_dat::create([
                 "ma_don_dat" => $order->ma_don_dat,
                 "ma_bien_the" => $item->ma_bien_the,
                 "so_luong" => $item->so_luong,
                 "gia_ban" => $item->gia_ban
             ]);
-
+            $variant->so_luong_ton_kho -= $item->so_luong;
+            $variant->save();
             $item->delete();
         }
  

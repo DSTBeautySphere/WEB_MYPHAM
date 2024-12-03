@@ -12,6 +12,7 @@ use App\Http\Controllers\don_datController;
 use App\Http\Controllers\gio_hangController;
 use App\Http\Controllers\loai_san_phamController;
 use App\Http\Controllers\nha_cung_capController;
+use App\Http\Controllers\RecommenderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -89,7 +90,7 @@ Route::get('/laynhomtuychon',[App\Http\Controllers\tuy_chonController::class,'la
 Route::controller(ProductController::class)->group(function () {
   Route::get('/products/category/{id}', 'index');
   Route::get('/product/{id}', 'show');
-  Route::get('/products', 'getAll');
+  Route::post('/products', 'getAll');
   Route::get('/categories', 'getAllCategories');
  
 });
@@ -128,4 +129,7 @@ Route::controller(VoucherController::class)->group(function () {
   Route::get('/getvoucher', 'getVouchers');
   Route::post('/storevoucher', 'storeVoucher');
   Route::get('/showvoucheruser', 'showVoucherUser');
+  Route::post('/deletevoucheruser', 'deleteVoucherUser');
 });
+
+Route::get('/timsanphamtuongtu', [RecommenderController::class,"timSanPhamTuongTu"]);

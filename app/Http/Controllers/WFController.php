@@ -6,6 +6,8 @@ use App\Models\anh_san_pham;
 use App\Models\bien_the_san_pham;
 use App\Models\chi_tiet_don_dat;
 use App\Models\don_dat;
+use App\Models\gio_hang;
+use App\Models\san_pham;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -285,6 +287,97 @@ class WFController extends Controller
         $donDat=don_dat::all();
         return response()->json($donDat);
     }
+
+    public function layChiTietDon(Request $request)
+    {
+        $chiTiet = chi_tiet_don_dat::with('bien_the_san_pham','bien_the_san_pham.san_pham') // Tải quan hệ bien_the_san_pham
+                    ->where('ma_don_dat', $request->ma_don_dat) // Lọc theo ma_don_dat
+                    ->get();
+    
+        return response()->json($chiTiet); // Trả về JSON
+    }
+
+    public function capNhatTrangThaiDon(Request $request)
+    {
+        $donDat=don_dat::find($request->ma_don_dat);
+        $donDat->trang_thai_don_dat=$request->trang_thai_don_dat;
+        $donDat->save();
+        return response()->json(true);
+    }
+
+    public function capNhatSanPham(Request $request)
+    {
+        $sanPham=san_pham::find($request->ma_san_pham);
+        $sanPham->ten_san_pham=$request->ten_san_pham;
+        $sanPham->ma_nha_cung_cap=$request->ma_nha_cung_cap;
+        $sanPham->ma_loai_san_pham=$request->ma_loai_san_pham;
+        $sanPham->trang_thai=$request->trang_thai;
+        $sanPham->save();
+        return response()->json(true);
+    }
+
+    public function themSanPham(Request $request)
+    {
+        $sanPham = new san_pham();
+        $sanPham->ten_san_pham = $request->ten_san_pham;
+        $sanPham->ma_nha_cung_cap = $request->ma_nha_cung_cap;
+        $sanPham->ma_loai_san_pham = $request->ma_loai_san_pham;
+        $sanPham->trang_thai = $request->trang_thai;
+        $sanPham->save();
+
+        return response()->json(true);
+    }
+
+    public function xoaSanPham(Request $request)
+{
+    // Tìm sản phẩm theo mã sản phẩm
+    $sanPham = san_pham::find($request->ma_san_pham);
+
+    // Kiểm tra nếu sản phẩm không tồn tại
+    if (!$sanPham) {
+        return response()->json(['message' => 'Sản phẩm không tồn tại'], 404);
+    }
+
+    // Kiểm tra xem sản phẩm có biến thể không
+    $bienTheCount = bien_the_san_pham::where('ma_san_pham', $request->ma_san_pham)->count();
+
+    // Kiểm tra xem sản phẩm có liên quan đến bảng gio_hang hay chi_tiet_don_dat không
+    $gioHangCount = gio_hang::whereHas('san_pham', function ($query) use ($request) {
+        $query->where('ma_san_pham', $request->ma_san_pham);
+    })->count();
+
+    $chiTietDonDatCount = chi_tiet_don_dat::whereHas('bien_the_san_pham', function ($query) use ($request) {
+        $query->where('ma_san_pham', $request->ma_san_pham);
+    })->count();
+
+    // Nếu sản phẩm không có trong giỏ hàng và chi tiết đơn đặt, xóa sản phẩm và biến thể của nó
+    if ($gioHangCount == 0 && $chiTietDonDatCount == 0) {
+        // Xóa các biến thể liên quan đến sản phẩm
+        if ($bienTheCount > 0) {
+            bien_the_san_pham::where('ma_san_pham', $request->ma_san_pham)->delete();
+        }
+
+        // Xóa sản phẩm
+        $sanPham->delete();
+
+        return response()->json(true);
+    } else {
+        // Nếu sản phẩm có trong giỏ hàng hoặc chi tiết đơn đặt, cập nhật trạng thái thành "0" (ngừng bán)
+        $sanPham->trang_thai = "0";
+        $sanPham->save();
+
+        // Cập nhật trạng thái của các biến thể nếu có
+        if ($bienTheCount > 0) {
+            bien_the_san_pham::where('ma_san_pham', $request->ma_san_pham)
+                             ->update(['trang_thai' => '0']);
+        }
+
+        return response()->json(true);
+    }
+}
+
+
+    
 
 
 
