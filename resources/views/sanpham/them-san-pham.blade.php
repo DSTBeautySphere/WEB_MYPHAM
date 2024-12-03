@@ -313,6 +313,7 @@
                     <textarea class="form-control" name="txt_noidung" id="txt_noidung" placeholder="Nhập Nội Dung"></textarea>
                     <button style="margin-top: 10px" class="btn btn-success" id="btn_themctmota" >Thêm Chi Tiết Mô Tả</button>
                 </div>
+
                 <div class="form-group col-md-12 d-flex justify-content-center" style="align-items: center;">
                     <button style="width: 200px;" class="btn btn-save mx-2 px-4 py-2" type="submit" id="themSP">Thêm</button>
                     <a style="width: 200px;" class="btn btn-cancel mx-2 px-4 py-2" href="table-data-product.html">Hủy bỏ</a>
@@ -619,85 +620,7 @@
 
 <script>
 
-// let sanPhamMau = [];
-//  $('#danhmuc').change(function() {
-//     $('input[name="mau[]"]').prop("checked", false);
-//     $('input[name="dungtich[]"]').prop("checked", false);
-//     $('input[name="loaida[]"]').prop("checked", false);
-//     var maLoaiSanPham = $(this).val();
 
-   
-//     $.ajax({
-//         url: '/laynhomtuychontheoloai',
-//         type: 'GET',
-//         data: {
-//             ma_loai_san_pham: maLoaiSanPham,
-//             _token: '{{ csrf_token() }}'
-//         },
-//         success: function(response) {
-          
-//             var hasMauSac = false;
-//             var hasDungTich = false;
-//             var hasLoaiDa = false;
-
-          
-//             response.forEach(function(nhom) {
-               
-//                 if (nhom.ma_nhom_tuy_chon == 1) hasMauSac = true;
-//                 if (nhom.ma_nhom_tuy_chon == 2) hasDungTich = true;
-//                 if (nhom.ma_nhom_tuy_chon == 3) hasLoaiDa = true;
-
-               
-//                 var groupName = nhom.ten_nhom_tuy_chon;  
-//                 var groupHTML = '<h4>' + groupName + '</h4>';  
-
-//                 // Kiểm tra xem nhóm có tùy chọn không
-//                 if (nhom.tuy_chon.length === 0) {
-//                     // Nếu không có tùy chọn, thêm lớp CSS để làm mờ và vô hiệu hóa
-//                     groupHTML = ` 
-//                         <div class="group-readonly" style="opacity: 0.5; pointer-events: none;">
-//                             <h4>${groupName}</h4>
-//                             <p>Không có tùy chọn nào.</p>
-//                         </div>`;
-//                 } else {
-//                     // Nếu có tùy chọn, hiển thị bình thường
-//                     nhom.tuy_chon.forEach(function(tuyChon) {
-//                         groupHTML += ` 
-//                             <label>
-//                                 <input type="checkbox" name="tuy_chon[]" value="${tuyChon.ma_tuy_chon}" 
-//                                     class="tuy-chon" data-nhom="${groupName}" 
-//                                     ${tuyChon.is_choosen ? '' : 'disabled'}> 
-//                                 ${tuyChon.ten_tuy_chon}
-//                             </label><br>
-//                         `;
-//                     });
-//                 }
-
-//                 // Thêm nhóm vào đúng vị trí
-//                 $('#group-' + groupName.toLowerCase().replace(" ", "-")).html(groupHTML);
-//             });
-
-//             // Kiểm tra và áp dụng hiệu ứng làm mờ cho các nhóm không có tùy chọn
-//             if (!hasMauSac) {
-//                 $('#group-mau').css({'opacity': '0.5', 'pointer-events': 'none'}); // Làm mờ nhóm màu sắc
-//             } else {
-//                 $('#group-mau').css({'opacity': '1', 'pointer-events': 'auto'}); // Hiển thị nhóm màu sắc
-//             }
-
-//             if (!hasDungTich) {
-//                 $('#group-dungtich').css({'opacity': '0.5', 'pointer-events': 'none'}); // Làm mờ nhóm dung tích
-//             } else {
-//                 $('#group-dungtich').css({'opacity': '1', 'pointer-events': 'auto'}); // Hiển thị nhóm dung tích
-//             }
-
-//             if (!hasLoaiDa) {
-//                 $('#group-loaida').css({'opacity': '0.5', 'pointer-events': 'none'}); // Làm mờ nhóm loại da
-//             } else {
-//                 $('#group-loaida').css({'opacity': '1', 'pointer-events': 'auto'}); // Hiển thị nhóm loại da
-//             }
-//         }
-//     });
-// });
 let sanPhamMau = [];
     $('#danhmuc').change(function() {
         $('input[name="mau[]"]').prop("checked", false);
@@ -1064,120 +987,7 @@ $(document).on('click', '.Choicefile', function() {
 });
 
 
-// $('#themSP').on('click', function() {
-//     let tenSanPham = $('input[name="ten_san_pham"]').val();
-//     let maLoaiSanPham = $('#danhmuc').val();
-//     let maNhaCungCap = $('#nhacungcap').val();
 
-//     // Chuyển đổi tất cả giá trị của dung_tich trong sanPhamMau thành chuỗi
-//     sanPhamMau = sanPhamMau.map(item => ({
-//         ...item,
-//         dung_tich: String(item.dung_tich)  // Chuyển dung_tich thành chuỗi
-//     }));
-
-//     console.log("SanPhamMau:", sanPhamMau);
-
-//     if (sanPhamMau.length === 0) {
-//         alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
-//         return;
-//     }
-   
-//     // Lấy các file đã được chọn từ input file
-//     var imageFiles = $('#images')[0].files;
-    
-//     // In ra console để kiểm tra
-
-//     // var formData = new FormData();
-
-//     // // Đưa tất cả tệp ảnh vào FormData
-//     // for (var i = 0; i < imageFiles.length; i++) {
-//     //     formData.append('image_files[]', imageFiles[i]);
-//     // }
-
-//     $.ajax({
-//         url: 'themsanpham',
-//         type: 'POST',
-//         data: {
-
-//             ten_san_pham: tenSanPham,
-//             ma_loai_san_pham: maLoaiSanPham,
-//             ma_nha_cung_cap: maNhaCungCap,
-//             bien_the: sanPhamMau,
-//             //images:imageFiles,
-//             _token: '{{ csrf_token() }}'
-//         },
-//         success: function(response) {
-//             alert(response.message);
-//         },
-//        error: function(xhr, status, error) {
-//     // Hiển thị mã trạng thái HTTP
-//     var statusCode = xhr.status;
-
-//     // Lấy thông báo lỗi từ responseText (nếu có)
-//     var errorMessage = xhr.responseText || "Không có thông báo lỗi";
-
-//     // Hiển thị lỗi trong alert
-//     alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
-//     }
-
-//     });
-// }); 
-
-// $('#themSP').on('click', function() {
-//     event.preventDefault();
-//     let tenSanPham = $('input[name="ten_san_pham"]').val();
-//     let maLoaiSanPham = $('#danhmuc').val();
-//     let maNhaCungCap = $('#nhacungcap').val();
-
-//     // Chuyển đổi tất cả giá trị của dung_tich trong sanPhamMau thành chuỗi
-//     sanPhamMau = sanPhamMau.map(item => ({
-//         ...item,
-//         dung_tich: String(item.dung_tich)  // Chuyển dung_tich thành chuỗi
-//     }));
-
-//     console.log("SanPhamMau:", sanPhamMau);
-
-//     if (sanPhamMau.length === 0) {
-//         alert("Vui lòng chọn đầy đủ thông tin về Màu sắc, Loại da và Dung tích.");
-//         return;
-//     }
-
-//     //var imageFiles = $('#images')[0].files;
-//     // var formData = new FormData();
-
-//     // // Đưa tất cả tệp ảnh vào FormData
-//     // for (var i = 0; i < imageFiles.length; i++) {
-//     //     formData.append('image_files[]', imageFiles[i]);
-//     // }
-
-//     $.ajax({
-//         url: 'themsanpham',
-//         type: 'POST',
-//         data: {
-
-//             ten_san_pham: tenSanPham,
-//             ma_loai_san_pham: maLoaiSanPham,
-//             ma_nha_cung_cap: maNhaCungCap,
-//             bien_the: JSON.stringify(sanPhamMau),
-//             //anh_san_pham:imageFiles,
-//             _token: '{{ csrf_token() }}'
-//         },
-//         success: function(response) {
-//             alert(response.message);
-//         },
-//        error: function(xhr, status, error) {
-//     // Hiển thị mã trạng thái HTTP
-//     var statusCode = xhr.status;
-
-//     // Lấy thông báo lỗi từ responseText (nếu có)
-//     var errorMessage = xhr.responseText || "Không có thông báo lỗi";
-
-//     // Hiển thị lỗi trong alert
-//     alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
-//     }
-
-//     });
-// }); 
 let ds_mota = [];
 // Mảng lưu chi tiết mô tả
 let ds_ctmota = [];
