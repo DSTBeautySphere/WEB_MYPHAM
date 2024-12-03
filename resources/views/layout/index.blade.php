@@ -73,8 +73,8 @@
       <li><a class="app-menu__item" href="/showvoucher"><i class='app-menu__icon bx bx-task'></i><span
             class="app-menu__label">Quản lý voucher</span></a></li>
 
-      <li><a class="app-menu__item" href="quan-ly-bao-cao.html"><i
-            class='app-menu__icon bx bx-pie-chart-alt-2'></i><span class="app-menu__label">Báo cáo doanh thu</span></a>
+      <li><a class="app-menu__item" href="/showphieunhap"><i
+            class='app-menu__icon bx bx-pie-chart-alt-2'></i><span class="app-menu__label">Nhập kho</span></a>
       </li>
       <li><a class="app-menu__item" href="page-calendar.html"><i class='app-menu__icon bx bx-calendar-check'></i><span
             class="app-menu__label">Lịch công tác </span></a></li>

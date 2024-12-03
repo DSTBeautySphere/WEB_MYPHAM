@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\anh_san_pham;
 use App\Models\bien_the_san_pham;
+use App\Models\chi_tiet_don_dat;
 use App\Models\chi_tiet_mo_ta;
 use Illuminate\Http\Request;
 use App\Models\san_pham;
 use App\Models\loai_san_pham;
 use App\Models\dong_san_pham;
+use App\Models\gio_hang;
 use App\Models\mo_ta;
 use App\Models\nha_cung_cap;
 use App\Models\tuy_chon;
@@ -475,5 +477,42 @@ class san_phamController extends Controller
             return response()->json(['error' => 'Cập nhật sản phẩm không thành công. Vui lòng thử lại.'], 500);
         }
     }
-    
+    public function xoaSanPham($id)
+    {
+        // Tìm sản phẩm cần xóa
+        $sanPham = san_pham::find($id);
+
+        if (!$sanPham) {
+            return response()->json(['message' => 'Sản phẩm không tồn tại'], 404);
+        }
+
+        // Kiểm tra sản phẩm có trong giỏ hàng
+        $sanPhamTrongGioHang = gio_hang::where('ma_bien_the', $sanPham->bien_the_san_pham->pluck('ma_bien_the'))->exists();
+
+        // Kiểm tra sản phẩm có trong chi tiết đơn đặt
+        $sanPhamTrongDonDat = chi_tiet_don_dat::where('ma_bien_the', $sanPham->bien_the_san_pham->pluck('ma_bien_the'))->exists();
+
+        if ($sanPhamTrongGioHang || $sanPhamTrongDonDat) {
+            // Nếu sản phẩm có dữ liệu liên quan, chỉ ẩn bằng cách cập nhật trạng thái
+            $sanPham->trang_thai = 0; // Giả sử 0 là trạng thái ẩn
+            $sanPham->save();
+
+            return response()->json(['message' => 'Sản phẩm đã được ẩn vì có liên quan dữ liệu'], 200);
+        }
+
+        // Xóa các liên kết liên quan
+        $sanPham->anh_san_pham()->delete(); // Xóa ảnh sản phẩm
+        $sanPham->bien_the_san_pham()->delete(); // Xóa biến thể sản phẩm
+        $sanPham->mo_ta->each(function ($moTa) {
+            $moTa->chi_tiet_mo_ta()->delete(); // Xóa chi tiết mô tả
+            $moTa->delete(); // Xóa mô tả
+        });
+        //$sanPham->mo_ta()->delete(); // Xóa mô tả sản phẩm
+
+        // Cuối cùng, xóa sản phẩm
+        $sanPham->delete();
+
+        return response()->json(['message' => 'Sản phẩm và các dữ liệu liên quan đã được xóa thành công'], 200);
+    }
+
 }

@@ -1,5 +1,5 @@
 @extends('layout.index')
-@section('title','Báo Cáo Doanh Thu')
+@section('title','Thêm sản phẩm')
 @section('css')
 <style>
     .Choicefile {

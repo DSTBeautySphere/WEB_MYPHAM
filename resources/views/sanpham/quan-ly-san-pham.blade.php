@@ -1,6 +1,6 @@
 
 @extends('layout.index')
-@section('title','Báo Cáo Doanh Thu')
+@section('title','Quản lý sản phẩm')
 @section('css')
 
 @endsection
@@ -60,6 +60,7 @@
                         <th>Tình trạng</th>
                         <th>Giá tiền</th>
                         <th>Loại sản phẩm</th>
+                        <th>Trạng thái</th>
                         <th>Chức năng</th>
                     </tr>
                 </thead>
@@ -92,9 +93,16 @@
                         <td>  {{ number_format($item->bien_the_san_pham->first()->gia_ban, 0, ',', '.') }} đ</td>
                         <td>{{ $item->loai_san_pham->ten_loai_san_pham }}</td>
                         <td>
+                            @if ($item->trang_thai == 1)
+                                <span class="badge bg-success">Đang bán</span>
+                            @else
+                                <span class="badge bg-secondary">Ngừng bán</span>
+                            @endif
+                        </td>
+                        <td>
 
                             <button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
-                                onclick="myFunction(this)"><i class="fas fa-trash-alt"></i>
+                                data-id="{{ $item->ma_san_pham }}"><i class="fas fa-trash-alt"></i>
                             </button>
                             <button class="btn btn-primary btn-sm edit" type="button" title="Sửa" id="show-emp" data-id="{{ $item->ma_san_pham }}" data-toggle="modal"
                                 data-target="#ModalUP"><i class="fas fa-edit"></i>
@@ -591,6 +599,31 @@
             };
         });
     }
+
+    //Xóa sản phẩm
+    document.querySelectorAll('.trash').forEach(button => {
+    button.addEventListener('click', function () {
+        const sanPhamId = this.dataset.id; // Lấy ID của sản phẩm từ dataset
+
+        if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')) {
+            fetch(`/xoaSP/${sanPhamId}`, {
+                method: 'DELETE',
+                // headers: {
+                //     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                // }
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                location.reload(); // Tải lại trang sau khi xóa
+            })
+            .catch(error => {
+                console.error('Lỗi:', error);
+                alert('Có lỗi xảy ra, vui lòng thử lại!');
+            });
+        }
+    });
+});
 
 
 </script>
