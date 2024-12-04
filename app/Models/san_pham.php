@@ -25,6 +25,12 @@ class san_pham extends Model
         return $this->hasMany(bien_the_san_pham::class,'ma_san_pham', 'ma_san_pham');
     }
 
+    public function chi_tiet_don_dat()
+{
+    return $this->hasManyThrough(chi_tiet_don_dat::class, bien_the_san_pham::class, 'ma_san_pham', 'ma_bien_the', 'ma_san_pham', 'ma_bien_the');
+}
+
+
     public function loai_san_pham()
     {
         return $this->belongsTo(loai_san_pham::class, 'ma_loai_san_pham', 'ma_loai_san_pham');

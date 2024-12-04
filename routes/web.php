@@ -133,3 +133,4 @@ Route::controller(VoucherController::class)->group(function () {
 });
 
 Route::get('/timsanphamtuongtu', [RecommenderController::class,"timSanPhamTuongTu"]);
+Route::get('/goiysanphamdt', [RecommenderController::class,"goiYSanPhamDT"]);
