@@ -18,6 +18,7 @@ class bien_the_san_pham extends Model
         'dung_tich',
         'so_luong_ton_kho',
         'gia_ban',
+        
     ];
     public $timestamps = false;
 

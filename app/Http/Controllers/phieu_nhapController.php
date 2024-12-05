@@ -36,7 +36,7 @@ class phieu_nhapController extends Controller
                         'so_luong_ton_kho' => $bienThe->so_luong_ton_kho,
                         'gia_ban' => $bienThe->gia_ban,
                         'ten_san_pham' => $bienThe->san_pham->ten_san_pham ?? 'Không xác định',
-                        'hinh_anh' => $bienThe->san_pham->anh_san_pham->pluck('url_anh')->toArray()
+                        // 'hinh_anh' => $bienThe->san_pham->anh_san_pham->pluck('url_anh')->toArray()
                     ];
                 });
 

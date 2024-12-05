@@ -117,7 +117,10 @@ Route::prefix('admin')->group(function () {
     Route::post('/update-status/{id}', [UserController::class, 'updateStatus']);
 
     //voucher
-    Route::get('/showvoucher',[voucherController::class,'showVoucher'])->name('voucher.index');;
+    Route::get('/showvoucher',[voucherController::class,'showVoucher'])->name('voucher.index');
+    Route::get('/showvoucherfrm',[voucherController::class,'showVoucherForm']);
+    Route::post('/themvoucherfrm', [VoucherController::class, 'themVoucherFrom']);
+    Route::delete('/xoavoucherfrm/{id}', [VoucherController::class, 'xoaVoucherFrom']);
     Route::post('/themvoucher', [VoucherController::class, 'themVoucher']);
     Route::delete('/xoavoucher/{id}', [VoucherController::class, 'xoaVoucher']);
 

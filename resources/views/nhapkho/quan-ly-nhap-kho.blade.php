@@ -111,8 +111,8 @@
                     <thead>
                         <tr>
                             <th width="10"><input type="checkbox" id="all_product"></th>
-                            <th>Mã Phiếu Nhập</th>
-                            <th>Nhà Cung Cấp</th>
+                            <th>Mã biến thể</th>
+                            <th>Tên sản phẩm</th>
                             <th>Màu Sắc</th>
                             <th>Loại Da</th>
                             <th>Dung Tích</th>
