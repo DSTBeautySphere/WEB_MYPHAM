@@ -18,7 +18,8 @@ class Admin
     {
         if (!Auth::guard('admin')->check()) {
            
-            return redirect()->route('/admin/login')->withErrors([
+            // dd("Chưa Đăng Nhập Nên Ko Vào Đc");
+            return redirect()->route('admin.index')->withErrors([
                 'loginError' => 'Bạn cần đăng nhập để truy cập trang này.',
             ]);
         }

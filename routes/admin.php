@@ -30,7 +30,7 @@ Route::prefix('admin')->group(function () {
     // Route::post('/login', [AdminController::class, 'login']);
 
     Route::middleware(['admin'])->group(function () {
-       
+        // Route::get('/layphieunhapwf',[App\Http\Controllers\WFController::class,'layPhieuNhap']);
     });
 });
     //san pham

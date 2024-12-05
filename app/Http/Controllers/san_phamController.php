@@ -121,7 +121,7 @@ class san_phamController extends Controller
     public function lay_san_pham()
     {
         
-        $sanpham = san_pham::with(['loai_san_pham', 'nha_cung_cap', 'khuyen_mai_san_pham', 'anh_san_pham','bien_the_san_pham'])->get();
+        $sanpham = san_pham::with(['loai_san_pham', 'nha_cung_cap', 'khuyen_mai_san_pham', 'anh_san_pham','bien_the_san_pham'])->where('trang_thai',"1")->get();
         
         return response()->json($sanpham);
     }
@@ -198,6 +198,7 @@ class san_phamController extends Controller
                 'ten_san_pham' => $request->ten_san_pham,
                 'ma_loai_san_pham' => $request->ma_loai_san_pham,
                 'ma_nha_cung_cap' => $request->ma_nha_cung_cap,
+                'trang_thai'=>"1"
             ]);
 
             // Xử lý hình ảnh
@@ -238,6 +239,7 @@ class san_phamController extends Controller
                         'dung_tich' => $bienThe['dung_tich'] ?? null,  
                         'so_luong_ton_kho' => $bienThe['so_luong_ton_kho'] ?? null,
                         'gia_ban' => $bienThe['gia_ban'] ?? null,
+                        'trang_thai'=>"1"
                     ]);
                 }
             }

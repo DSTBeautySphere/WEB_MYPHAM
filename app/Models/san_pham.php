@@ -15,7 +15,8 @@ class san_pham extends Model
     protected $fillable = [
         'ma_loai_san_pham',
         'ma_nha_cung_cap',
-        'ten_san_pham'
+        'ten_san_pham',
+        'trang_thai'
     ];
     public $timestamps = false;
 

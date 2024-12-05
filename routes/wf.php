@@ -22,3 +22,11 @@ Route::post('/sudungvoucherwf',[App\Http\Controllers\WFController::class,'suDung
 
 Route::post('/thongkewf',[App\Http\Controllers\WFController::class,'thongKe']);
 Route::get('/topsanphambanchay',[App\Http\Controllers\WFController::class,'topSanPhamBanChay']);
+Route::get('/vaoday',[App\Http\Controllers\WFController::class,'vaoDay'])->name('admin.index');
+
+Route::middleware(['admin'])->group(function () {
+    Route::get('/layphieunhapwf',[App\Http\Controllers\WFController::class,'layPhieuNhap']);   
+});
+// Route::middleware('auth:admin')->group(function () {
+//     Route::get('/layphieunhapwf',[App\Http\Controllers\WFController::class,'layPhieuNhap']);
+// });

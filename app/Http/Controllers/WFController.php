@@ -7,6 +7,7 @@ use App\Models\bien_the_san_pham;
 use App\Models\chi_tiet_don_dat;
 use App\Models\don_dat;
 use App\Models\gio_hang;
+use App\Models\phieu_nhap;
 use App\Models\san_pham;
 use App\Models\voucher;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
@@ -258,6 +259,10 @@ class WFController extends Controller
                 $chiTietDonDat->ten_san_pham = $chiTiet['ten_san_pham'];
                 $chiTietDonDat->chi_tiet_tuy_chon = $chiTiet['chi_tiet_tuy_chon'] ?? null;
                 $chiTietDonDat->save();
+
+                $bien_thes=bien_the_san_pham::find($chiTiet['ma_bien_the']);
+                $bien_thes->so_luong_ton_kho=$bien_thes->so_luong_ton_kho-$chiTiet['so_luong'];
+                $bien_thes->save();
             }
     
             // Trả về phản hồi sau khi thêm thành công
@@ -330,52 +335,64 @@ class WFController extends Controller
     }
 
     public function xoaSanPham(Request $request)
-    {
-        // Tìm sản phẩm theo mã sản phẩm
-        $sanPham = san_pham::find($request->ma_san_pham);
+{
+    // Tìm sản phẩm theo mã sản phẩm
+    $sanPham = san_pham::find($request->ma_san_pham);
 
-        // Kiểm tra nếu sản phẩm không tồn tại
-        if (!$sanPham) {
-            return response()->json(['message' => 'Sản phẩm không tồn tại'], 404);
-        }
-
-        // Kiểm tra xem sản phẩm có biến thể không
-        $bienTheCount = bien_the_san_pham::where('ma_san_pham', $request->ma_san_pham)->count();
-
-        // Kiểm tra xem sản phẩm có liên quan đến bảng gio_hang hay chi_tiet_don_dat không
-        $gioHangCount = gio_hang::whereHas('san_pham', function ($query) use ($request) {
-            $query->where('ma_san_pham', $request->ma_san_pham);
-        })->count();
-
-        $chiTietDonDatCount = chi_tiet_don_dat::whereHas('bien_the_san_pham', function ($query) use ($request) {
-            $query->where('ma_san_pham', $request->ma_san_pham);
-        })->count();
-
-        // Nếu sản phẩm không có trong giỏ hàng và chi tiết đơn đặt, xóa sản phẩm và biến thể của nó
-        if ($gioHangCount == 0 && $chiTietDonDatCount == 0) {
-            // Xóa các biến thể liên quan đến sản phẩm
-            if ($bienTheCount > 0) {
-                bien_the_san_pham::where('ma_san_pham', $request->ma_san_pham)->delete();
-            }
-
-            // Xóa sản phẩm
-            $sanPham->delete();
-
-            return response()->json(true);
-        } else {
-            // Nếu sản phẩm có trong giỏ hàng hoặc chi tiết đơn đặt, cập nhật trạng thái thành "0" (ngừng bán)
-            $sanPham->trang_thai = "0";
-            $sanPham->save();
-
-            // Cập nhật trạng thái của các biến thể nếu có
-            if ($bienTheCount > 0) {
-                bien_the_san_pham::where('ma_san_pham', $request->ma_san_pham)
-                                ->update(['trang_thai' => '0']);
-            }
-
-            return response()->json(true);
-        }
+    // Kiểm tra nếu sản phẩm không tồn tại
+    if (!$sanPham) {
+        return response()->json(['message' => 'Sản phẩm không tồn tại'], 404);
     }
+    $sanPham->mo_ta->each(function ($moTa) {
+        $moTa->chi_tiet_mo_ta()->delete(); // Xóa chi tiết mô tả
+        $moTa->delete(); // Xóa mô tả
+    });
+    // Kiểm tra xem sản phẩm có biến thể không
+    $bienTheCount = bien_the_san_pham::where('ma_san_pham', $request->ma_san_pham)->count();
+
+    // Lấy danh sách ảnh của sản phẩm và xóa các ảnh này
+    $anhsanpham = anh_san_pham::where('ma_san_pham', $request->ma_san_pham)->get();
+    foreach ($anhsanpham as $vl) {
+        // Xóa ảnh nếu cần (Nếu lưu ảnh trên hệ thống, bạn có thể dùng unlink để xóa file từ thư mục)
+        // unlink(public_path('images/' . $vl->url_anh)); // Nếu lưu ảnh trên server
+        $vl->delete(); // Xóa bản ghi trong bảng ảnh
+    }
+
+    // Kiểm tra xem sản phẩm có liên quan đến bảng giỏ hàng hay chi tiết đơn đặt không
+    $gioHangExists = gio_hang::whereHas('san_pham', function ($query) use ($request) {
+        $query->where('ma_san_pham', $request->ma_san_pham);
+    })->exists();
+
+    $chiTietDonDatExists = chi_tiet_don_dat::whereHas('bien_the_san_pham', function ($query) use ($request) {
+        $query->where('ma_san_pham', $request->ma_san_pham);
+    })->exists();
+
+    // Nếu sản phẩm không có trong giỏ hàng và chi tiết đơn đặt, xóa sản phẩm và biến thể của nó
+    if (!$gioHangExists && !$chiTietDonDatExists) {
+        // Xóa các biến thể liên quan đến sản phẩm
+        if ($bienTheCount > 0) {
+            bien_the_san_pham::where('ma_san_pham', $request->ma_san_pham)->delete();
+        }
+
+        // Xóa sản phẩm
+        $sanPham->delete();
+
+        return response()->json(['message' => 'Sản phẩm và ảnh đã được xóa thành công']);
+    } else {
+        // Nếu sản phẩm có trong giỏ hàng hoặc chi tiết đơn đặt, cập nhật trạng thái thành "0" (ngừng bán)
+        $sanPham->trang_thai = "0";
+        $sanPham->save();
+
+        // Cập nhật trạng thái của các biến thể nếu có
+        if ($bienTheCount > 0) {
+            bien_the_san_pham::where('ma_san_pham', $request->ma_san_pham)
+                            ->update(['trang_thai' => '0']);
+        }
+
+        return response()->json(['message' => 'Sản phẩm đã ngừng bán và ảnh đã được xóa']);
+    }
+}
+
 
     public function suaBienThe(Request $request)
     {
@@ -505,6 +522,15 @@ class WFController extends Controller
     return response()->json($topSellingProducts->values()); // .values() để loại bỏ các chỉ số
 }
 
+public function layPhieuNhap(){
+    $phieuNhaps= phieu_nhap::all();
+    return response()->json($phieuNhaps);
+}
+
+public function vaoDay()
+{
+    return response()->json("Dữ Liệu Rỗng");
+}
 
 
 
