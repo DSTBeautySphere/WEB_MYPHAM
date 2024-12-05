@@ -30,7 +30,7 @@ Route::prefix('admin')->group(function () {
     // Route::post('/login', [AdminController::class, 'login']);
 
     Route::middleware(['admin'])->group(function () {
-       
+        // Route::get('/layphieunhapwf',[App\Http\Controllers\WFController::class,'layPhieuNhap']);
     });
 });
     //san pham
@@ -123,7 +123,10 @@ Route::prefix('admin')->group(function () {
     Route::delete('/xoavoucherfrm/{id}', [VoucherController::class, 'xoaVoucherFrom']);
     Route::post('/themvoucher', [VoucherController::class, 'themVoucher']);
     Route::delete('/xoavoucher/{id}', [VoucherController::class, 'xoaVoucher']);
-
+    Route::get('/showvoucherfrm',[voucherController::class,'showVoucherForm']);
+    Route::post('/themvoucherfrm', [VoucherController::class, 'themVoucherFrom']);
+    Route::delete('/xoavoucherfrm/{id}', [VoucherController::class, 'xoaVoucherFrom']);
+    
     //Nhap kho
     Route::get('/showphieunhap',[phieu_nhapController::class,'showPhieuNhap']);
     Route::get('/laysanphamtheonhacungcap',[phieu_nhapController::class,'laySanPhamTheoNhaCC']);

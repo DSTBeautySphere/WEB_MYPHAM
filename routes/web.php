@@ -2,12 +2,17 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Client\AuthController as ClientAuthController;
 use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Client\ProductController;
+use App\Http\Controllers\Client\ReviewController;
+use App\Http\Controllers\Client\VnPayController;
+use App\Http\Controllers\Client\VoucherController;
 use App\Http\Controllers\danh_giaController;
 use App\Http\Controllers\don_datController;
 use App\Http\Controllers\gio_hangController;
 use App\Http\Controllers\loai_san_phamController;
 use App\Http\Controllers\nha_cung_capController;
+use App\Http\Controllers\RecommenderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -81,14 +86,21 @@ Route::get('/laynhomtuychontheoloai',[App\Http\Controllers\loai_san_phamControll
 Route::get('/layloaisanpham',[App\Http\Controllers\loai_san_phamController::class,'layLoaiSanPham']);
 Route::get('/laynhomtuychon',[App\Http\Controllers\tuy_chonController::class,'layNhomTuyChon']);
 
+
 Route::controller(ProductController::class)->group(function () {
   Route::get('/products/category/{id}', 'index');
   Route::get('/product/{id}', 'show');
+  Route::post('/products', 'getAll');
+  Route::get('/categories', 'getAllCategories');
+ 
 });
 
 Route::controller(ClientAuthController::class)->group(function () {
   Route::post('/register', 'register');
   Route::post('/login', 'login');
+  Route::post('/username/check', 'checkUsername');
+  Route::post('/password/change', 'changePassword');
+  Route::post('/sendemailupdatepassword', 'sendEmailUpdatePassword');
 });
 
 Route::controller(CartController::class)->group(function () {
@@ -96,3 +108,29 @@ Route::controller(CartController::class)->group(function () {
   Route::post('/cart', 'index');
   Route::get('/cart/{id}/delete', 'destroy');
 });
+
+Route::controller(VnPayController::class)->group(function () {
+  Route::post('/create-payment', 'createPayment');
+});
+
+Route::controller(OrderController::class)->group(function () {
+  Route::post('/order/{id}/status', 'edit');
+  Route::get('/order/user/{id}', 'show');
+  Route::get('/order/{id}', 'detail');
+});
+
+Route::controller(ReviewController::class)->group(function () {
+  Route::get('/review/{id}', 'index');
+  Route::post('/review/create', 'store');
+  Route::post('/checkboughtproduct', 'checkUserPurchasedProduct');
+});
+
+Route::controller(VoucherController::class)->group(function () {
+  Route::get('/getvoucher', 'getVouchers');
+  Route::post('/storevoucher', 'storeVoucher');
+  Route::get('/showvoucheruser', 'showVoucherUser');
+  Route::post('/deletevoucheruser', 'deleteVoucherUser');
+});
+
+Route::get('/timsanphamtuongtu', [RecommenderController::class,"timSanPhamTuongTu"]);
+Route::get('/goiysanphamdt', [RecommenderController::class,"goiYSanPhamDT"]);

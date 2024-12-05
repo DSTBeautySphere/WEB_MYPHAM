@@ -6,6 +6,10 @@ use App\Models\anh_san_pham;
 use App\Models\bien_the_san_pham;
 use App\Models\chi_tiet_don_dat;
 use App\Models\don_dat;
+use App\Models\gio_hang;
+use App\Models\phieu_nhap;
+use App\Models\san_pham;
+use App\Models\voucher;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -255,6 +259,10 @@ class WFController extends Controller
                 $chiTietDonDat->ten_san_pham = $chiTiet['ten_san_pham'];
                 $chiTietDonDat->chi_tiet_tuy_chon = $chiTiet['chi_tiet_tuy_chon'] ?? null;
                 $chiTietDonDat->save();
+
+                $bien_thes=bien_the_san_pham::find($chiTiet['ma_bien_the']);
+                $bien_thes->so_luong_ton_kho=$bien_thes->so_luong_ton_kho-$chiTiet['so_luong'];
+                $bien_thes->save();
             }
     
             // Trả về phản hồi sau khi thêm thành công
@@ -285,6 +293,249 @@ class WFController extends Controller
         $donDat=don_dat::all();
         return response()->json($donDat);
     }
+
+    public function layChiTietDon(Request $request)
+    {
+        $chiTiet = chi_tiet_don_dat::with('bien_the_san_pham','bien_the_san_pham.san_pham') // Tải quan hệ bien_the_san_pham
+                    ->where('ma_don_dat', $request->ma_don_dat) // Lọc theo ma_don_dat
+                    ->get();
+    
+        return response()->json($chiTiet); // Trả về JSON
+    }
+
+    public function capNhatTrangThaiDon(Request $request)
+    {
+        $donDat=don_dat::find($request->ma_don_dat);
+        $donDat->trang_thai_don_dat=$request->trang_thai_don_dat;
+        $donDat->save();
+        return response()->json(true);
+    }
+
+    public function capNhatSanPham(Request $request)
+    {
+        $sanPham=san_pham::find($request->ma_san_pham);
+        $sanPham->ten_san_pham=$request->ten_san_pham;
+        $sanPham->ma_nha_cung_cap=$request->ma_nha_cung_cap;
+        $sanPham->ma_loai_san_pham=$request->ma_loai_san_pham;
+        $sanPham->trang_thai=$request->trang_thai;
+        $sanPham->save();
+        return response()->json(true);
+    }
+
+    public function themSanPham(Request $request)
+    {
+        $sanPham = new san_pham();
+        $sanPham->ten_san_pham = $request->ten_san_pham;
+        $sanPham->ma_nha_cung_cap = $request->ma_nha_cung_cap;
+        $sanPham->ma_loai_san_pham = $request->ma_loai_san_pham;
+        $sanPham->trang_thai = $request->trang_thai;
+        $sanPham->save();
+
+        return response()->json(true);
+    }
+
+    public function xoaSanPham(Request $request)
+{
+    // Tìm sản phẩm theo mã sản phẩm
+    $sanPham = san_pham::find($request->ma_san_pham);
+
+    // Kiểm tra nếu sản phẩm không tồn tại
+    if (!$sanPham) {
+        return response()->json(['message' => 'Sản phẩm không tồn tại'], 404);
+    }
+    $sanPham->mo_ta->each(function ($moTa) {
+        $moTa->chi_tiet_mo_ta()->delete(); // Xóa chi tiết mô tả
+        $moTa->delete(); // Xóa mô tả
+    });
+    // Kiểm tra xem sản phẩm có biến thể không
+    $bienTheCount = bien_the_san_pham::where('ma_san_pham', $request->ma_san_pham)->count();
+
+    // Lấy danh sách ảnh của sản phẩm và xóa các ảnh này
+    $anhsanpham = anh_san_pham::where('ma_san_pham', $request->ma_san_pham)->get();
+    foreach ($anhsanpham as $vl) {
+        // Xóa ảnh nếu cần (Nếu lưu ảnh trên hệ thống, bạn có thể dùng unlink để xóa file từ thư mục)
+        // unlink(public_path('images/' . $vl->url_anh)); // Nếu lưu ảnh trên server
+        $vl->delete(); // Xóa bản ghi trong bảng ảnh
+    }
+
+    // Kiểm tra xem sản phẩm có liên quan đến bảng giỏ hàng hay chi tiết đơn đặt không
+    $gioHangExists = gio_hang::whereHas('san_pham', function ($query) use ($request) {
+        $query->where('ma_san_pham', $request->ma_san_pham);
+    })->exists();
+
+    $chiTietDonDatExists = chi_tiet_don_dat::whereHas('bien_the_san_pham', function ($query) use ($request) {
+        $query->where('ma_san_pham', $request->ma_san_pham);
+    })->exists();
+
+    // Nếu sản phẩm không có trong giỏ hàng và chi tiết đơn đặt, xóa sản phẩm và biến thể của nó
+    if (!$gioHangExists && !$chiTietDonDatExists) {
+        // Xóa các biến thể liên quan đến sản phẩm
+        if ($bienTheCount > 0) {
+            bien_the_san_pham::where('ma_san_pham', $request->ma_san_pham)->delete();
+        }
+
+        // Xóa sản phẩm
+        $sanPham->delete();
+
+        return response()->json(['message' => 'Sản phẩm và ảnh đã được xóa thành công']);
+    } else {
+        // Nếu sản phẩm có trong giỏ hàng hoặc chi tiết đơn đặt, cập nhật trạng thái thành "0" (ngừng bán)
+        $sanPham->trang_thai = "0";
+        $sanPham->save();
+
+        // Cập nhật trạng thái của các biến thể nếu có
+        if ($bienTheCount > 0) {
+            bien_the_san_pham::where('ma_san_pham', $request->ma_san_pham)
+                            ->update(['trang_thai' => '0']);
+        }
+
+        return response()->json(['message' => 'Sản phẩm đã ngừng bán và ảnh đã được xóa']);
+    }
+}
+
+
+    public function suaBienThe(Request $request)
+    {
+        $bienThe = bien_the_san_pham::find($request->ma_bien_the);
+        if (!$bienThe) {
+            return response()->json(['message' => 'Không tìm thấy biến thể'], 404);
+        }
+    
+        $bienThe->ma_san_pham = $request->ma_san_pham ?? null;
+        $bienThe->mau_sac = $request->mau_sac ?? null;
+        $bienThe->loai_da = $request->loai_da ?? null;
+        $bienThe->dung_tich = $request->dung_tich ?? null;
+        $bienThe->so_luong_ton_kho = $request->so_luong_ton_kho ?? null;
+        $bienThe->gia_ban = $request->gia_ban ?? null;
+        $bienThe->trang_thai = $request->trang_thai ?? null;
+    
+        $bienThe->save();
+    
+        return response()->json(true);
+    }
+    
+
+    public function themBienThe(Request $request)
+    {
+        $bienThe = new bien_the_san_pham();
+        $bienThe->ma_san_pham = $request->ma_san_pham ?? null;
+        $bienThe->mau_sac = $request->mau_sac ?? null;
+        $bienThe->loai_da = $request->loai_da ?? null;
+        $bienThe->dung_tich = $request->dung_tich ?? null;
+        $bienThe->so_luong_ton_kho = $request->so_luong_ton_kho ?? null;
+        $bienThe->gia_ban = $request->gia_ban ?? null;
+        $bienThe->trang_thai = $request->trang_thai ?? null;
+        $bienThe->save();
+        return response()->json(true);
+    }
+
+    public function xoaBienThe(Request $request)
+    {
+        $bienThe = bien_the_san_pham::find($request->ma_bien_the);
+        if (!$bienThe) {
+            return response()->json(['message' => 'Không tìm thấy biến thể'], 404);
+        }
+        $existsInGioHang = gio_hang::where('ma_bien_the', $bienThe->ma_bien_the)->exists();
+        $existsInDonDat = chi_tiet_don_dat::where('ma_bien_the', $bienThe->ma_bien_the)->exists();
+
+        if ($existsInGioHang || $existsInDonDat) {
+            $bienThe->trang_thai = "0";
+            $bienThe->save();
+            return response()->json(['message' => 'Trạng thái biến thể đã được cập nhật thành ngừng bán.'], 200);
+        } else {
+            $bienThe->delete();
+            return response()->json(['message' => 'Biến thể đã được xóa thành công.'], 200);
+        }
+    }
+
+    public function layVoucher()
+    {
+        $currentDate = now();
+        $voucher = voucher::where('ngay_bat_dau', '<=', $currentDate)
+                        ->where('ngay_ket_thuc', '>=', $currentDate)
+                        ->where('so_luong','>',0)
+                        ->get();
+
+        return response()->json($voucher);
+    }
+
+    public function suDungVoucher(Request $request)
+    {
+        $voucher=voucher::find($request->ma_voucher);
+        $voucher->so_luong=$voucher->so_luong-1;
+        $voucher->save();
+        return response()->json(true);
+    }
+
+    public function thongKe(Request $request)
+    {
+        $ngayBatDau = $request->input('ngay_bat_dau');
+        $ngayKetThuc = $request->input('ngay_ket_thuc');
+        $trangThaiDon = $request->input('trang_thai_don');
+        if (!$ngayBatDau || !$ngayKetThuc) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Vui lòng nhập ngày bắt đầu và ngày kết thúc!'
+            ]);
+        }
+        $query = don_dat::query();
+        $query->whereBetween('ngay_thanh_toan', [$ngayBatDau, $ngayKetThuc]);
+        if ($trangThaiDon !== null) {
+            $query->where('trang_thai_don_dat', $trangThaiDon);
+        }
+        $donHangs = $query->get();
+        return response()->json($donHangs);
+    }
+
+    public function topSanPhamBanChay()
+{
+    // Lấy tất cả sản phẩm và tính doanh thu của mỗi sản phẩm
+    $products = san_pham::with(['bien_the_san_pham', 'chi_tiet_don_dat']) // Eager load các quan hệ
+        ->get()
+        ->map(function ($sanPham) {
+            $totalRevenue = 0;
+
+            // Duyệt qua từng biến thể sản phẩm để tính doanh thu
+            foreach ($sanPham->bien_the_san_pham as $bienThe) {
+                // Lấy các chi tiết đơn đặt cho biến thể này
+                foreach ($sanPham->chi_tiet_don_dat as $chiTiet) {
+                    if ($chiTiet->ma_bien_the == $bienThe->ma_bien_the) {
+                        // Tính doanh thu cho sản phẩm (số lượng * giá bán)
+                        $totalRevenue += $chiTiet->so_luong * $bienThe->gia_ban;
+                    }
+                }
+            }
+
+            // Trả về một mảng chỉ chứa thông tin sản phẩm và doanh thu
+            return [
+                'ma_san_pham' => $sanPham->ma_san_pham,
+                'ten_san_pham' => $sanPham->ten_san_pham,
+                'doanh_thu' => $totalRevenue,
+            ];
+        })
+        ->sortByDesc('doanh_thu'); // Sắp xếp theo doanh thu giảm dần
+
+    // Lấy top 10 sản phẩm có doanh thu lớn nhất
+    $topSellingProducts = $products->take(5);
+
+    // Trả về dữ liệu dưới dạng JSON, không cần key như "0", "1", "2"
+    return response()->json($topSellingProducts->values()); // .values() để loại bỏ các chỉ số
+}
+
+public function layPhieuNhap(){
+    $phieuNhaps= phieu_nhap::all();
+    return response()->json($phieuNhaps);
+}
+
+public function vaoDay()
+{
+    return response()->json("Dữ Liệu Rỗng");
+}
+
+
+
+
+    
 
 
 
