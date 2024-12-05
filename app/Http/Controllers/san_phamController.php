@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\anh_san_pham;
 use App\Models\bien_the_san_pham;
+use App\Models\chi_tiet_don_dat;
 use App\Models\chi_tiet_mo_ta;
 use Illuminate\Http\Request;
 use App\Models\san_pham;
 use App\Models\loai_san_pham;
 use App\Models\dong_san_pham;
+use App\Models\gio_hang;
 use App\Models\mo_ta;
 use App\Models\nha_cung_cap;
 use App\Models\tuy_chon;
@@ -342,5 +344,177 @@ class san_phamController extends Controller
         return response()->json($sanpham);
     }
 
+    public function edit($id)
+    {
+        $sanPham = san_pham::with(['loai_san_pham', 'nha_cung_cap', 'mo_ta.chi_tiet_mo_ta','anh_san_pham'])->find($id);
+
+        if (!$sanPham) {
+            return response()->json(['error' => 'Sản phẩm không tồn tại'], 404);
+        }
+
+        $danhSachMoTa = $sanPham->mo_ta;
+        $danhSachLoaiSanPham = loai_san_pham::all(['ma_loai_san_pham', 'ten_loai_san_pham']);
+        $danhSachNhaCungCap = nha_cung_cap::all(['ma_nha_cung_cap', 'ten_nha_cung_cap']);
+        // Log::info(['danhSachMoTa' => $danhSachMoTa]);
+        Log::info('San Pham:', ['sanPham' => $sanPham]);
+        return response()->json([
+            'sanPham' => $sanPham,
+            'danhSachLoaiSanPham' => $danhSachLoaiSanPham,
+            'danhSachNhaCungCap' => $danhSachNhaCungCap,
+            'danhSachMoTa' => $danhSachMoTa
+        ]);
+    }
+
+    // public function update(Request $request, $ma_san_pham)
+    // {
+        
+    //     try {
+    //         Log::info('Dữ liệu nhận được từ request:', $request->all());
+    //         // Cập nhật thông tin sản phẩm
+    //         $sanPham = san_pham::findOrFail($ma_san_pham);
+    //         $sanPham->ten_san_pham = $request->input('ten_san_pham');
+    //         $sanPham->ma_loai_san_pham = $request->input('ma_loai_san_pham');
+    //         $sanPham->ma_nha_cung_cap = $request->input('ma_nha_cung_cap');
+    //         $sanPham->save();
+
+    //         // Cập nhật ảnh sản phẩm (xóa ảnh cũ nếu có và thêm ảnh mới)
+    //         if ($request->has('anh_san_pham')) {
+    //             // Xóa ảnh cũ trước khi thêm ảnh mới
+    //             anh_san_pham::where('ma_san_pham', $ma_san_pham)->delete();
+
+    //             // Thêm ảnh mới
+    //             foreach ($request->input('anh_san_pham') as $anh) {
+    //                 anh_san_pham::create([
+    //                     'ma_san_pham' => $ma_san_pham,
+    //                     'url_anh' => $anh['url_anh'],
+    //                 ]);
+    //             }
+    //         }
+
+    //         // Cập nhật mô tả sản phẩm
+    //         if ($request->has('danhSachMoTa')) {
+    //             // Xóa các mô tả cũ
+    //             mo_ta::where('ma_san_pham', $ma_san_pham)->delete();
+
+    //             // Thêm mô tả mới
+    //             foreach ($request->input('danhSachMoTa') as $mota) {
+    //                 mo_ta::create([
+                       
+    //                     'ten_mo_ta' => $mota['mo_ta'], // Giả sử đây là trường mô tả
+    //                 ]);
+    //             }
+    //         }
+
+    //         // Cập nhật chi tiết mô tả sản phẩm
+    //         if ($request->has('danhSachChiTietMoTa')) {
+    //             // Xóa chi tiết mô tả cũ
+    //             chi_tiet_mo_ta::where('ma_san_pham', $ma_san_pham)->delete();
+
+    //             // Thêm chi tiết mô tả mới
+    //             foreach ($request->input('danhSachChiTietMoTa') as $chiTiet) {
+    //                 chi_tiet_mo_ta::create([
+                       
+    //                     'tieu_de' => $chiTiet['tieude'], // Sửa lại tên trường đúng
+    //                     'noi_dung' => $chiTiet['noidung'], // Sửa lại tên trường đúng
+    //                 ]);
+    //             }
+    //         }
+
+        
+    //         return response()->json(['success' => 'Cập nhật sản phẩm thành công!'], 200);
+    //     } catch (\Exception $e) {
+        
+    //         return response()->json(['error' => 'Cập nhật sản phẩm không thành công. Vui lòng thử lại.'], 500);
+    //     }
+    // }
+    public function update(Request $request, $ma_san_pham)
+    {
+        try {
+            Log::info('Dữ liệu nhận được từ request:', $request->all());
+            // Cập nhật thông tin sản phẩm
+            $sanPham = san_pham::findOrFail($ma_san_pham);
+            $sanPham->ten_san_pham = $request->input('ten_san_pham');
+            // $sanPham->ma_loai_san_pham = $request->input('ma_loai_san_pham');
+            // $sanPham->ma_nha_cung_cap = $request->input('ma_nha_cung_cap');
+            $sanPham->save();
+    
+            // Cập nhật ảnh sản phẩm (xóa ảnh cũ nếu có và thêm ảnh mới)
+            // Xử lý ảnh sản phẩm
+        
+
+    
+            // // Cập nhật mô tả sản phẩm
+          
+            if ($request->has('danhSachMoTa')) {
+                // Duyệt qua từng mô tả trong danh sách
+                foreach ($request->input('danhSachMoTa') as $mota) {
+                    // Tìm mô tả đã tồn tại cho sản phẩm, nếu không có thì tạo mới
+                    $moTa = mo_ta::updateOrCreate(
+                        ['ma_mo_ta' => $mota['ma_mo_ta']], // Điều kiện tìm kiếm
+                        [
+                            'ten_mo_ta' => $mota['ten_mota'],  // Cập nhật tên mô tả
+                            'ma_san_pham' => $ma_san_pham // Cập nhật mã sản phẩm
+                        ] // Dữ liệu cần cập nhật
+                    );
+
+                    // Cập nhật chi tiết mô tả nếu có
+                    if (isset($mota['danhSachChiTietMoTa'])) {
+                        foreach ($mota['danhSachChiTietMoTa'] as $chiTiet) {
+                            // Tìm chi tiết mô tả đã tồn tại và cập nhật, nếu không có thì tạo mới
+                            chi_tiet_mo_ta::updateOrCreate(
+                                ['ma_mo_ta' => $moTa->ma_mo_ta], // Điều kiện tìm kiếm
+                                [
+                                    'tieu_de' => $chiTiet['tieude'], 
+                                    'noi_dung' => $chiTiet['noidung']
+                                ]
+                            );
+                        }
+                    }
+                }
+            }
+    
+            return response()->json(['success' => 'Cập nhật sản phẩm thành công!',  'redirect_url' => route('showquanlysanpham'),], 200);
+        } catch (\Exception $e) {
+            Log::error('Lỗi khi cập nhật sản phẩm: ' . $e->getMessage());
+            return response()->json(['error' => 'Cập nhật sản phẩm không thành công. Vui lòng thử lại.'], 500);
+        }
+    }
+    public function xoaSanPham($id)
+    {
+        // Tìm sản phẩm cần xóa
+        $sanPham = san_pham::find($id);
+
+        if (!$sanPham) {
+            return response()->json(['message' => 'Sản phẩm không tồn tại'], 404);
+        }
+
+        // Kiểm tra sản phẩm có trong giỏ hàng
+        $sanPhamTrongGioHang = gio_hang::where('ma_bien_the', $sanPham->bien_the_san_pham->pluck('ma_bien_the'))->exists();
+
+        // Kiểm tra sản phẩm có trong chi tiết đơn đặt
+        $sanPhamTrongDonDat = chi_tiet_don_dat::where('ma_bien_the', $sanPham->bien_the_san_pham->pluck('ma_bien_the'))->exists();
+
+        if ($sanPhamTrongGioHang || $sanPhamTrongDonDat) {
+            // Nếu sản phẩm có dữ liệu liên quan, chỉ ẩn bằng cách cập nhật trạng thái
+            $sanPham->trang_thai = 0; // Giả sử 0 là trạng thái ẩn
+            $sanPham->save();
+
+            return response()->json(['message' => 'Sản phẩm đã được ẩn vì có liên quan dữ liệu'], 200);
+        }
+
+        // Xóa các liên kết liên quan
+        $sanPham->anh_san_pham()->delete(); // Xóa ảnh sản phẩm
+        $sanPham->bien_the_san_pham()->delete(); // Xóa biến thể sản phẩm
+        $sanPham->mo_ta->each(function ($moTa) {
+            $moTa->chi_tiet_mo_ta()->delete(); // Xóa chi tiết mô tả
+            $moTa->delete(); // Xóa mô tả
+        });
+        //$sanPham->mo_ta()->delete(); // Xóa mô tả sản phẩm
+
+        // Cuối cùng, xóa sản phẩm
+        $sanPham->delete();
+
+        return response()->json(['message' => 'Sản phẩm và các dữ liệu liên quan đã được xóa thành công'], 200);
+    }
 
 }

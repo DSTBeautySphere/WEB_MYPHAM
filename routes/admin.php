@@ -40,8 +40,9 @@ Route::prefix('admin')->group(function () {
     Route::get('/showthemsanpham',[App\Http\Controllers\AdminController::class,'showThemSanPham']);
     Route::post('/themsanpham',[App\Http\Controllers\san_phamController::class,'themSanPhamVaBienThe']);
     Route::get('/showquanlysanpham',[App\Http\Controllers\AdminController::class,'showQuanLySanPham'])->name('showquanlysanpham');;
-
-
+    Route::get('/sanphamedit/{id}', [san_phamController::class, 'edit']);
+    Route::put('/updatesanpham/{id}', [san_phamController::class, 'update']);
+    Route::delete('/xoaSP/{id}', [san_phamController::class, 'xoaSanPham']);
 
     //bien the san pham
     Route::get('/danhsachbienthesanpham',[bien_the_san_phamController::class,'loadBienTheSanPham']);

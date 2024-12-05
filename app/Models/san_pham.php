@@ -51,6 +51,11 @@ class san_pham extends Model
     {
         return $this->hasMany(anh_san_pham::class, 'ma_san_pham', 'ma_san_pham');
     }
+    public function mo_ta()
+    {
+        return $this->hasMany(mo_ta::class, 'ma_san_pham', 'ma_san_pham');
+    }
+
 
     public function deleteExpiredDiscounts()
     {
