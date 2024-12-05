@@ -99,7 +99,7 @@
                             <th>Địa Chỉ</th>
                             <th>Phương Thức Thanh Toán</th>
                             <th>Số Tiền Cuối</th>
-                            <th>Trạng Thái</th>
+                            <th>Trạng Thái Đơn Đặt</th>
                             <th>Ngày Đặt Hàng</th>
                             <th>Trạng Thái Giao Hàng</th>
                             <th>Chức Năng</th>

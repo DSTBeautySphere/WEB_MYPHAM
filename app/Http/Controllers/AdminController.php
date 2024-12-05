@@ -448,13 +448,13 @@ class AdminController extends Controller
     
         // Tổng đơn hàng hoàn tất trong năm
         $total_year = don_dat::whereBetween('ngay_dat', [$year, $now])
-            ->where('trang_thai_don_dat', "Hoàn tất")
+            ->where('trang_thai_don_dat', "Đã hoàn thành")
             ->get();
         Log::info('Total orders in the last year: ', ['total_year' => $total_year->count()]);
     
         // Tổng đơn hàng hoàn tất hôm nay
         $ordersToday = don_dat::whereDate('ngay_dat', Carbon::today())
-            ->where('trang_thai_don_dat', "Hoàn tất")
+            ->where('trang_thai_don_dat', "Đã hoàn thành")
             ->get();
         Log::info('Orders for today: ', ['ordersToday' => $ordersToday->count()]);
     
@@ -468,13 +468,13 @@ class AdminController extends Controller
     
         // Tính tổng doanh thu hôm nay từ cột tong_tien_cuoi_cung trong bảng don_dat
         $sum_today = don_dat::whereDate('ngay_thanh_toan', Carbon::today())
-            ->where('trang_thai_don_dat', 'Hoàn tất')
+            ->where('trang_thai_don_dat', 'Đã hoàn thành')
             ->sum('tong_tien_cuoi_cung');
         Log::info('Total revenue for today: ', ['sum_today' => $sum_today]);
     
         // Tổng doanh thu trong năm
         $sum_year = don_dat::whereBetween('ngay_thanh_toan', [$year, $now])
-            ->where('trang_thai_don_dat', 'Hoàn tất')
+            ->where('trang_thai_don_dat', 'Đã hoàn thành')
             ->sum('tong_tien_cuoi_cung');
         Log::info('Total revenue for the last year: ', ['sum_year' => $sum_year]);
     
@@ -485,7 +485,7 @@ class AdminController extends Controller
                 $totalRevenue = $category->san_pham->flatMap(function ($product) {
                     return $product->bien_the_san_pham->flatMap(function ($variation) {
                         return $variation->chi_tiet_don_dat->filter(function ($orderDetail) {
-                            return $orderDetail->don_dat && $orderDetail->don_dat->trang_thai_don_dat === 'Hoàn tất';
+                            return $orderDetail->don_dat && $orderDetail->don_dat->trang_thai_don_dat === 'Đã hoàn thành';
                         });
                     });
                 })->sum(function ($orderDetail) {
@@ -505,7 +505,7 @@ class AdminController extends Controller
             ->map(function ($product) {
                 $totalRevenue = $product->bien_the_san_pham->flatMap(function ($variation) {
                     return $variation->chi_tiet_don_dat->filter(function ($orderDetail) {
-                        return $orderDetail->don_dat && $orderDetail->don_dat->trang_thai_don_dat === 'Hoàn tất';
+                        return $orderDetail->don_dat && $orderDetail->don_dat->trang_thai_don_dat === 'Đã hoàn thành';
                     });
                 })->sum(function ($orderDetail) {
                     return $orderDetail->so_luong * $orderDetail->gia_ban;
@@ -564,8 +564,8 @@ class AdminController extends Controller
             $end_time = Carbon::now(); 
         }
 
-        // Lọc các đơn hàng hoàn tất trong khoảng thời gian
-        $revenue_per_day = don_dat::where('trang_thai_don_dat', 'Hoàn tất')
+        // Lọc các đơn hàng Đã hoàn thành trong khoảng thời gian
+        $revenue_per_day = don_dat::where('trang_thai_don_dat', 'Đã hoàn thành')
             ->whereBetween('ngay_dat', [$start_time, $end_time])
             ->with(['chi_tiet_don_dat' => function ($query) {
                 $query->select('ma_don_dat', 'so_luong', 'gia_ban');
@@ -600,58 +600,7 @@ class AdminController extends Controller
 
     
 
-    // public function getRevenueData(Request $request)
-    // {
-    //     $statistical = $request->statistical;
-        
-    //     // Xử lý thời gian bắt đầu và kết thúc
-    //     $start_time = $request->start_time ? Carbon::parse($request->start_time) : Carbon::now();
-    //     $end_time = $request->end_time ? Carbon::parse($request->end_time) : Carbon::now();
-        
-    //     // Lọc theo khoảng thời gian được yêu cầu
-    //     if ($statistical == 'week') {
-    //         $start_time = Carbon::now()->startOfWeek(); 
-    //         $end_time = Carbon::now()->endOfWeek(); 
-    //     } elseif ($statistical == 'last_week') {
-    //         $start_time = Carbon::now()->subWeek()->startOfWeek();
-    //         $end_time = Carbon::now()->subWeek()->endOfWeek();
-    //     } elseif ($statistical == 'this_month') {
-    //         $start_time = Carbon::now()->startOfMonth();
-    //         $end_time = Carbon::now()->endOfMonth();
-    //     } elseif ($statistical == 'last_month') {
-    //         $start_time = Carbon::now()->subMonth()->startOfMonth();
-    //         $end_time = Carbon::now()->subMonth()->endOfMonth();
-    //     } elseif ($statistical == 'year') {
-    //         $start_time = Carbon::now()->startOfYear();
-    //         $end_time = Carbon::now()->endOfYear();
-    //     } elseif ($statistical == 'last_year') {
-    //         $start_time = Carbon::now()->subYear()->startOfYear();
-    //         $end_time = Carbon::now()->subYear()->endOfYear();
-    //     } elseif ($statistical == 'all_time') {
-    //         $start_time = Carbon::createFromDate(2000, 1, 1); 
-    //         $end_time = Carbon::now(); 
-    //     }
-
-    //     // Lọc các hóa đơn trong khoảng thời gian, thuộc đơn hàng hoàn tất
-    //     $revenue_per_day = hoa_don::whereHas('don_dat', function ($query) {
-    //         $query->where('trang_thai', 'Hoàn tất');
-    //     })
-    //     ->whereBetween('ngay_thanh_toan', [$start_time, $end_time])
-    //     ->selectRaw('DATE(ngay_thanh_toan) as date, SUM(tong_tien) as revenue')
-    //     ->groupBy('date')
-    //     ->orderBy('date')
-    //     ->get();
-
-    //     // Lấy dữ liệu cho nhãn và doanh thu
-    //     $labels = $revenue_per_day->pluck('date');
-    //     $revenues = $revenue_per_day->pluck('revenue');
-
-    //     // Trả về dữ liệu dưới dạng JSON
-    //     return response()->json([
-    //         'labels' => $labels,
-    //         'revenues' => $revenues,
-    //     ]);
-    // }
+    
 
 
 
