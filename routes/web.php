@@ -111,6 +111,7 @@ Route::controller(CartController::class)->group(function () {
 
 Route::controller(VnPayController::class)->group(function () {
   Route::post('/create-payment', 'createPayment');
+  Route::post('/create-paymentid', 'createPaymentid');
 });
 
 Route::controller(OrderController::class)->group(function () {
