@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\user_voucher;
 use App\Models\voucher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -14,7 +15,13 @@ class voucherController extends Controller
          // Lọc và xóa các voucher đã hết hạn
         foreach ($vouchers as $voucher) {
             if ($voucher->ngay_ket_thuc < now()) {
+                $user_voucher=user_voucher::where('ma_voucher',$voucher->ma_voucher)->first();
+                if($user_voucher)
+                {
+                    $user_voucher->delete();
+                }
                 $voucher->delete();
+                
             }
         }
 
