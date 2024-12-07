@@ -479,65 +479,68 @@ class san_phamController extends Controller
             return response()->json(['error' => 'Cập nhật sản phẩm không thành công. Vui lòng thử lại.'], 500);
         }
     }
-    public function xoaSanPham($id)
-    {
-        Log::info("Bắt đầu xóa sản phẩm với ID: {$id}");
-    
-        // Tìm sản phẩm cần xóa
-        $sanPham = san_pham::find($id);
-    
-        if (!$sanPham) {
-            Log::warning("Sản phẩm không tồn tại với ID: {$id}");
-            return response()->json(['message' => 'Sản phẩm không tồn tại'], 404);
-        }
-    
-        Log::info("Sản phẩm tìm thấy: " . $sanPham->toJson());
-    
-        // Kiểm tra sản phẩm có trong giỏ hàng
-        $maBienThe = $sanPham->bien_the_san_pham->pluck('ma_bien_the');
-        Log::info("Mã biến thể liên quan: " . json_encode($maBienThe));
-    
-        $sanPhamTrongGioHang = gio_hang::whereIn('ma_bien_the', $maBienThe)->exists();
-        $sanPhamTrongDonDat = chi_tiet_don_dat::whereIn('ma_bien_the', $maBienThe)->exists();
-    
-        Log::info("Kiểm tra giỏ hàng: " . ($sanPhamTrongGioHang ? "Có" : "Không"));
-        Log::info("Kiểm tra chi tiết đơn đặt: " . ($sanPhamTrongDonDat ? "Có" : "Không"));
-    
-        if ($sanPhamTrongGioHang || $sanPhamTrongDonDat) {
-            Log::warning("Sản phẩm liên quan dữ liệu, chuyển sang trạng thái ẩn.");
-            $sanPham->trang_thai = 0; // Giả sử 0 là trạng thái ẩn
-            $sanPham->save();
-    
-            Log::info("Sản phẩm đã được ẩn thành công.");
-            return response()->json(['message' => 'Sản phẩm đã được ẩn vì có liên quan dữ liệu'], 200);
-        }
-    
-        // Xóa các liên kết liên quan
-        Log::info("Bắt đầu xóa liên kết liên quan.");
-    
-        // Xóa ảnh sản phẩm
-        $sanPham->anh_san_pham()->delete();
-        Log::info("Đã xóa ảnh sản phẩm.");
-    
-        // Xóa biến thể sản phẩm
-        $sanPham->bien_the_san_pham()->delete();
-        Log::info("Đã xóa biến thể sản phẩm.");
-    
-        // Xóa mô tả và chi tiết mô tả
-        $sanPham->mo_ta->each(function ($moTa) {
-            Log::info("Xóa chi tiết mô tả của mô tả ID: " . $moTa->id);
-            $moTa->chi_tiet_mo_ta()->delete();
-    
-            Log::info("Xóa mô tả ID: " . $moTa->id);
-            $moTa->delete();
-        });
-    
-        // Cuối cùng, xóa sản phẩm
-        $sanPham->delete();
-        Log::info("Sản phẩm và dữ liệu liên quan đã được xóa thành công.");
-    
-        return response()->json(['message' => 'Sản phẩm và các dữ liệu liên quan đã được xóa thành công'], 200);
+   
+
+public function xoaSanPham($id)
+{
+    Log::info("Bắt đầu xóa sản phẩm với ID: {$id}");
+
+    // Tìm sản phẩm cần xóa
+    $sanPham = san_pham::find($id);
+
+    if (!$sanPham) {
+        Log::warning("Sản phẩm không tồn tại với ID: {$id}");
+        return response()->json(['message' => 'Sản phẩm không tồn tại'], 404);
     }
-    
+
+    Log::info("Sản phẩm tìm thấy: " . $sanPham->toJson());
+
+    // Kiểm tra sản phẩm có trong giỏ hàng
+    $maBienThe = $sanPham->bien_the_san_pham->pluck('ma_bien_the');
+    Log::info("Mã biến thể liên quan: " . json_encode($maBienThe));
+
+    $sanPhamTrongGioHang = gio_hang::whereIn('ma_bien_the', $maBienThe)->exists();
+    $sanPhamTrongDonDat = chi_tiet_don_dat::whereIn('ma_bien_the', $maBienThe)->exists();
+
+    Log::info("Kiểm tra giỏ hàng: " . ($sanPhamTrongGioHang ? "Có" : "Không"));
+    Log::info("Kiểm tra chi tiết đơn đặt: " . ($sanPhamTrongDonDat ? "Có" : "Không"));
+
+    if ($sanPhamTrongGioHang || $sanPhamTrongDonDat) {
+        Log::warning("Sản phẩm liên quan dữ liệu, chuyển sang trạng thái ẩn.");
+        $sanPham->trang_thai = 0; // Giả sử 0 là trạng thái ẩn
+        $sanPham->save();
+
+        Log::info("Sản phẩm đã được ẩn thành công.");
+        return response()->json(['message' => 'Sản phẩm đã được ẩn vì có liên quan dữ liệu'], 200);
+    }
+
+    // Xóa các liên kết liên quan
+    Log::info("Bắt đầu xóa liên kết liên quan.");
+
+    // Xóa ảnh sản phẩm
+    $sanPham->anh_san_pham()->delete();
+    Log::info("Đã xóa ảnh sản phẩm.");
+
+    // Xóa biến thể sản phẩm
+    $sanPham->bien_the_san_pham()->delete();
+    Log::info("Đã xóa biến thể sản phẩm.");
+
+    // Xóa mô tả và chi tiết mô tả
+    $sanPham->mo_ta->each(function ($moTa) {
+        Log::info("Xóa chi tiết mô tả của mô tả ID: " . $moTa->id);
+        $moTa->chi_tiet_mo_ta()->delete();
+
+        Log::info("Xóa mô tả ID: " . $moTa->id);
+        $moTa->delete();
+    });
+
+    // Cuối cùng, xóa sản phẩm
+    $sanPham->delete();
+    Log::info("Sản phẩm và dữ liệu liên quan đã được xóa thành công.");
+
+    return response()->json(['message' => 'Sản phẩm và các dữ liệu liên quan đã được xóa thành công'], 200);
+}
+
+
 
 }
