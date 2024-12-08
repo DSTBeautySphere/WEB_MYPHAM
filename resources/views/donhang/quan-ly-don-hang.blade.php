@@ -1,5 +1,5 @@
 @extends('layout.index')
-@section('title','Category Management')
+@section('title','Quản lý đơn hàng')
 @section('css')
 <style>
     .table-container {
@@ -116,8 +116,23 @@
                                 <td>{{ $don->phuong_thuc_thanh_toan ?? 'N/A' }}</td>
                                 <td>{{ number_format($don->tong_tien_cuoi_cung, 0, '.', ',') }} đ</td>
                                 <td>{{ $don->trang_thai_don_dat }}</td>
-                                <td>{{ $don->ngay_dat }}</td>
-                                <td>{{ $don->trang_thai_giao_hang }}</td>
+                                <td>{{\Carbon\Carbon::parse($don->ngay_dat)->format('d/m/Y') }}</td>
+                                <td>
+                                    <select class="form-control trang-thai-giao-hang" data-id="{{ $don->ma_don_dat }}">
+                                        <option value="Chờ xác nhận" {{ $don->trang_thai_giao_hang == 'Chờ xác nhận' ? 'selected' : '' }}>
+                                            Chờ xác nhận
+                                        </option>
+                                        <option value="Chờ lấy hàng" {{ $don->trang_thai_giao_hang == 'Chờ lấy hàng' ? 'selected' : '' }}>
+                                            Chờ lấy hàng
+                                        </option>
+                                        <option value="Đang giao" {{ $don->trang_thai_giao_hang == 'Đang giao' ? 'selected' : '' }}>
+                                            Đang giao
+                                        </option>
+                                        <option value="Đã hoàn thành" {{ $don->trang_thai_giao_hang == 'Đã hoàn thành' ? 'selected' : '' }}>
+                                            Đã hoàn thành
+                                        </option>
+                                    </select>
+                                </td>
                                
                                 <td>
                                     <button class="btn btn-info show-details" 
@@ -330,7 +345,23 @@ $(document).ready(function () {
                             <td>${parseFloat(order.tong_tien_cuoi_cung).toLocaleString()} đ</td>
                             <td>${order.trang_thai_don_dat}</td>
                             <td>${order.ngay_dat}</td>
-                            <td>${order.trang_thai_giao_hang}</td>
+                            
+                           <td>
+                                <select class="form-control trang-thai-giao-hang" data-id="${order.ma_don_dat}">
+                                    <option value="Chờ xác nhận" ${order.trang_thai_giao_hang === 'Chờ xác nhận' ? 'selected' : ''}>
+                                        Chờ xác nhận
+                                    </option>
+                                    <option value="Chờ lấy hàng" ${order.trang_thai_giao_hang === 'Chờ lấy hàng' ? 'selected' : ''}>
+                                        Chờ lấy hàng
+                                    </option>
+                                    <option value="Đang giao" ${order.trang_thai_giao_hang === 'Đang giao' ? 'selected' : ''}>
+                                        Đang giao
+                                    </option>
+                                    <option value="Đã hoàn thành" ${order.trang_thai_giao_hang === 'Đã hoàn thành' ? 'selected' : ''}>
+                                        Đã hoàn thành
+                                    </option>
+                                </select>
+                            </td>
                             <td>
                                 <button class="btn btn-info show-details" 
                                         data-id="${order.ma_don_dat}">
@@ -347,6 +378,71 @@ $(document).ready(function () {
                     e.preventDefault();
                     const donDatId = $(this).data('id');
                     // Call the modal display logic here
+                    $.ajax({
+                        url: `/don-dat/${donDatId}`,
+                        method: 'GET',
+                        success: function (data) {
+                            // Điền thông tin vào modal
+                            $('#invoice-id').text(data.ma_don_dat);
+                            $('#invoice-voucher-code').text(data.ma_voucher || 'Không có');
+                            $('#invoice-phone').text(data.so_dien_thoai);
+                            $('#invoice-address').text(data.dia_chi_giao_hang);
+                            $('#invoice-payment-method').text(data.phuong_thuc_thanh_toan || 'N/A');
+                            $('#invoice-order-date').text(data.ngay_dat);
+                            $('#invoice-payment-date').text(data.ngay_thanh_toan || 'N/A');
+                            $('#invoice-delivery-fee').text(data.phi_van_chuyen || '0');
+                            $('#invoice-discount').text(data.giam_gia || '0');
+                            $('#invoice-final-amount').text(data.tong_tien_cuoi_cung || '0');
+                            $('#invoice-status').text(data.trang_thai_don_dat);
+
+                            // Cập nhật chi tiết đơn hàng
+                            let detailsHtml = '';
+                            data.chi_tiet_don_dat.forEach(item => {
+                                detailsHtml += `
+                                    <tr>
+                                        <td>${item.ma_bien_the}</td>
+                                        <td>${item.ten_san_pham}</td>
+                                        <td>${item.chi_tiet_tuy_chon || 'N/A'}</td>
+                                        <td>${item.gia_ban}</td>
+                                        <td>${item.so_luong}</td>
+                                        <td>${(item.gia_ban * item.so_luong).toFixed(2)}</td>
+                                    </tr>`;
+                            });
+                            $('#invoice-details-table tbody').html(detailsHtml);
+
+                            // Hiển thị modal
+                            $('#invoiceDetailModal').modal('show');
+                        },
+                        error: function () {
+                            alert('Không thể tải chi tiết đơn hàng. Vui lòng thử lại sau!');
+                        }
+                    });
+                });
+                // Lắng nghe sự kiện thay đổi trên dropdown
+                $('.trang-thai-giao-hang').on('change', function () {
+                    let maDonDat = $(this).data('id'); // Lấy mã đơn đặt từ data-id
+                    let trangThaiGiaoHang = $(this).val(); // Lấy giá trị trạng thái được chọn
+
+                    // Gửi yêu cầu AJAX để cập nhật trạng thái
+                    $.ajax({
+                        url: '/capnhattrangthaiGH', // Đường dẫn xử lý trong controller
+                        type: 'POST',
+                        data: {
+                            ma_don_dat: maDonDat,
+                            trang_thai_giao_hang: trangThaiGiaoHang,
+                            _token: $('meta[name="csrf-token"]').attr('content'), // Token CSRF
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                alert('Cập nhật trạng thái thành công!');
+                            } else {
+                                alert('Cập nhật trạng thái thất bại: ' + response.message);
+                            }
+                        },
+                        error: function () {
+                            alert('Có lỗi xảy ra, vui lòng thử lại.');
+                        },
+                    });
                 });
             },
             error: function () {
@@ -356,6 +452,34 @@ $(document).ready(function () {
     });
 });
 
+$(document).ready(function () {
+    // Lắng nghe sự kiện thay đổi trên dropdown
+    $('.trang-thai-giao-hang').on('change', function () {
+        let maDonDat = $(this).data('id'); // Lấy mã đơn đặt từ data-id
+        let trangThaiGiaoHang = $(this).val(); // Lấy giá trị trạng thái được chọn
+
+        // Gửi yêu cầu AJAX để cập nhật trạng thái
+        $.ajax({
+            url: '/capnhattrangthaiGH', // Đường dẫn xử lý trong controller
+            type: 'POST',
+            data: {
+                ma_don_dat: maDonDat,
+                trang_thai_giao_hang: trangThaiGiaoHang,
+                _token: $('meta[name="csrf-token"]').attr('content'), // Token CSRF
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert('Cập nhật trạng thái thành công!');
+                } else {
+                    alert('Cập nhật trạng thái thất bại: ' + response.message);
+                }
+            },
+            error: function () {
+                alert('Có lỗi xảy ra, vui lòng thử lại.');
+            },
+        });
+    });
+});
 
 
 </script>

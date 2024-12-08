@@ -1,5 +1,5 @@
 @extends('layout.index')
-@section('title', 'Customer Management')
+@section('title', 'Quản lý khách hàng')
 
 @section('css')
     <style>

@@ -55,8 +55,8 @@
       <li><a class="app-menu__item active" href="/showquanlydonhang"><i class='app-menu__icon bx bx-task'></i><span
         class="app-menu__label">Quản lý đơn hàng</span></a></li>
 
-      <li><a class="app-menu__item " href="table-data-table.html"><i class='app-menu__icon bx bx-id-card'></i> <span
-            class="app-menu__label">Quản lý nhân viên</span></a></li>
+      {{-- <li><a class="app-menu__item " href="table-data-table.html"><i class='app-menu__icon bx bx-id-card'></i> <span
+            class="app-menu__label">Quản lý nhân viên</span></a></li> --}}
 
       <li><a class="app-menu__item" href="/showUser"><i class='app-menu__icon bx bx-user-voice'></i><span
             class="app-menu__label">Quản lý khách hàng</span></a></li>
@@ -76,11 +76,11 @@
       <li><a class="app-menu__item" href="/showphieunhap"><i
             class='app-menu__icon bx bx-pie-chart-alt-2'></i><span class="app-menu__label">Nhập kho</span></a>
       </li>
-      <li><a class="app-menu__item" href="page-calendar.html"><i class='app-menu__icon bx bx-calendar-check'></i><span
+      {{-- <li><a class="app-menu__item" href="page-calendar.html"><i class='app-menu__icon bx bx-calendar-check'></i><span
             class="app-menu__label">Lịch công tác </span></a></li>
 
       <li><a class="app-menu__item" href="#"><i class='app-menu__icon bx bx-cog'></i><span class="app-menu__label">Cài
-            đặt hệ thống</span></a></li>
+            đặt hệ thống</span></a></li> --}}
     </ul>
   </aside>
   <main class="app-content">
@@ -101,13 +101,13 @@
     </div>
 
 
-    <div class="text-center" style="font-size: 13px">
+    {{-- <div class="text-center" style="font-size: 13px">
       <p><b>Copyright
           <script type="text/javascript">
             document.write(new Date().getFullYear());
           </script> Phần mềm quản lý bán hàng | Dev By Duy
         </b></p>
-    </div>
+    </div> --}}
   </main>
   @yield('js')
   <script src="js/jquery-3.2.1.min.js"></script>

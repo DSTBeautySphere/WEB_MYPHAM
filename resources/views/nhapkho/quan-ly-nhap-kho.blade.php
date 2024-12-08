@@ -268,7 +268,8 @@
                         }
                     },
                     error: function () {
-                        alert('Đã xảy ra lỗi khi lấy dữ liệu.');
+                        alert('Nhà cung cấp không có sản phẩm.');
+                        $('#product-body').empty();
                     }
                 });
             } else {

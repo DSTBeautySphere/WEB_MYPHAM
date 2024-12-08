@@ -78,10 +78,11 @@ class phieu_nhapController extends Controller
                 if ($bienTheSanPham) {
                     // Tính giá bán (Giả sử giá bán được tính theo công thức đã được định nghĩa trước đó)
                     $giaBan = $chiTiet['giaBan'] ;// Sử dụng thông tin từ chi tiết để tính giá bán
-
+                    $soLuong= $bienTheSanPham->so_luong_ton_kho + $chiTiet['soLuong'];
                     // Cập nhật giá bán
                     $bienTheSanPham->update([
                         'gia_ban' => $giaBan,
+                        'so_luong_ton_kho'=>$soLuong
                     ]);
                 }
             }

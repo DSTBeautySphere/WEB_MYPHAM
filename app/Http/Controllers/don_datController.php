@@ -71,7 +71,9 @@ class don_datController extends Controller
         if (!empty($status) && $status !== 'all') {
             $query->where('trang_thai_don_dat', $status);
         }
-
+        if (!empty($status) && $status !== 'all') {
+            $query->where('trang_thai_giao_hang', $status);
+        }
         // Lọc theo giá lớn hơn (nếu có)
         if (!empty($price)) {
             $query->where('tong_tien_cuoi_cung', '>', $price);
@@ -82,6 +84,26 @@ class don_datController extends Controller
 
         // Trả về JSON để AJAX xử lý
         return response()->json($orders);
+    }
+
+    public function capNhatTrangThaiGH(Request $request){
+        try{
+            $donDat= don_dat::find($request->input('ma_don_dat'));
+            if($donDat){
+                $donDat->trang_thai_giao_hang=$request->input('trang_thai_giao_hang');
+                $donDat->save();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Cập nhật trạng thái giao hàng thành công!',
+                ]);
+            }
+        }
+        catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi: ' . $e->getMessage(),
+            ]);
+        }
     }
 
 

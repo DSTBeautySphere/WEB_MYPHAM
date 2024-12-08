@@ -1,5 +1,5 @@
 @extends('layout.index')
-@section('title','Management Promotion')
+@section('title','Quản lý giảm giá')
 @section('css')
 <style>
     .promotion-info {
@@ -149,13 +149,13 @@
     
     
     <div class="product-list">
-        <h3>Product List</h3>
-        <input type="checkbox" id="check-all" class="check-all-checkbox"> Check All
+        <h3>Danh sách sản phẩm</h3>
+        <input type="checkbox" id="check-all" class="check-all-checkbox"> Chọn tất cả
 
         <div class="product-grid">
             
         </div>
-        <button type="button" id="apply-discount" class="btn btn-success">Apply Discount</button>
+        <button type="button" id="apply-discount" class="btn btn-success">Thêm giảm giá</button>
     </div>
     <div>
         <table>
@@ -163,9 +163,9 @@
                 <tr>
                    
                     <th>Tên sản phẩm</th>
-                    <th>Discount(%)</th>
+                    <th>Mức giảm giá(%)</th>
                     <th>Hình sản phẩm</th>
-                    <th>Delete</th>
+                    <th>Chức năng</th>
                 </tr>
             </thead>
             <tbody id="product-list-discount">

@@ -1,5 +1,5 @@
 @extends('layout.index')
-@section('title', 'Voucher Management')
+@section('title', 'Quản lý Voucher')
 
 @section('css')
 
@@ -18,7 +18,7 @@
     @endif
 
     <div class="card mb-4">
-        <div class="card-header">Add Voucher</div>
+        <div class="card-header">Thêm Voucher</div>
         <div class="card-body">
             <form id="add-voucher-form" method="POST" action="/themvoucher">
                 @csrf
