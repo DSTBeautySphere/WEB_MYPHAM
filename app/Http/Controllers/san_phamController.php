@@ -190,8 +190,8 @@ class san_phamController extends Controller
                 'bien_the.*.mau_sac' => 'nullable|string|max:100', 
                 'bien_the.*.loai_da' => 'nullable|string|max:100',  
                 'bien_the.*.dung_tich' => 'nullable|string|max:100',  
-                'bien_the.*.so_luong_ton_kho' => 'nullable|integer|min:0',
-                'bien_the.*.gia_ban' => 'nullable|numeric|min:0',
+                // 'bien_the.*.so_luong_ton_kho' => 'nullable|integer|min:0',
+                // 'bien_the.*.gia_ban' => 'nullable|numeric|min:0',
             
             ]);
 
@@ -239,8 +239,8 @@ class san_phamController extends Controller
                         'mau_sac' => $bienThe['mau_sac'] ?? null,
                         'loai_da' => $bienThe['loai_da'] ?? null,
                         'dung_tich' => $bienThe['dung_tich'] ?? null,  
-                        'so_luong_ton_kho' => $bienThe['so_luong_ton_kho'] ?? null,
-                        'gia_ban' => $bienThe['gia_ban'] ?? null,
+                        // 'so_luong_ton_kho' => $bienThe['so_luong_ton_kho'] ?? null,
+                        'gia_ban' => '0',
                         'trang_thai'=>"1"
                     ]);
                 }
@@ -275,6 +275,7 @@ class san_phamController extends Controller
 
             // Trả về thông báo thành công
             return response()->json([
+                'success' => true,
                 'message' => 'Sản phẩm đã được thêm thành công!',
                 'redirect_url' => route('showquanlysanpham'), // Gọi đúng tên route đã được gán
             ], 200);
@@ -283,6 +284,7 @@ class san_phamController extends Controller
         } catch (\Exception $e) {
             // Xử lý lỗi nếu có và trả về thông báo lỗi chi tiết
             return response()->json([
+                'success' => false,
                 'message' => 'Có lỗi xảy ra',
                 'error' => $e->getMessage(),
             ], 500);
@@ -365,68 +367,7 @@ class san_phamController extends Controller
         ]);
     }
 
-    // public function update(Request $request, $ma_san_pham)
-    // {
-        
-    //     try {
-    //         Log::info('Dữ liệu nhận được từ request:', $request->all());
-    //         // Cập nhật thông tin sản phẩm
-    //         $sanPham = san_pham::findOrFail($ma_san_pham);
-    //         $sanPham->ten_san_pham = $request->input('ten_san_pham');
-    //         $sanPham->ma_loai_san_pham = $request->input('ma_loai_san_pham');
-    //         $sanPham->ma_nha_cung_cap = $request->input('ma_nha_cung_cap');
-    //         $sanPham->save();
-
-    //         // Cập nhật ảnh sản phẩm (xóa ảnh cũ nếu có và thêm ảnh mới)
-    //         if ($request->has('anh_san_pham')) {
-    //             // Xóa ảnh cũ trước khi thêm ảnh mới
-    //             anh_san_pham::where('ma_san_pham', $ma_san_pham)->delete();
-
-    //             // Thêm ảnh mới
-    //             foreach ($request->input('anh_san_pham') as $anh) {
-    //                 anh_san_pham::create([
-    //                     'ma_san_pham' => $ma_san_pham,
-    //                     'url_anh' => $anh['url_anh'],
-    //                 ]);
-    //             }
-    //         }
-
-    //         // Cập nhật mô tả sản phẩm
-    //         if ($request->has('danhSachMoTa')) {
-    //             // Xóa các mô tả cũ
-    //             mo_ta::where('ma_san_pham', $ma_san_pham)->delete();
-
-    //             // Thêm mô tả mới
-    //             foreach ($request->input('danhSachMoTa') as $mota) {
-    //                 mo_ta::create([
-                       
-    //                     'ten_mo_ta' => $mota['mo_ta'], // Giả sử đây là trường mô tả
-    //                 ]);
-    //             }
-    //         }
-
-    //         // Cập nhật chi tiết mô tả sản phẩm
-    //         if ($request->has('danhSachChiTietMoTa')) {
-    //             // Xóa chi tiết mô tả cũ
-    //             chi_tiet_mo_ta::where('ma_san_pham', $ma_san_pham)->delete();
-
-    //             // Thêm chi tiết mô tả mới
-    //             foreach ($request->input('danhSachChiTietMoTa') as $chiTiet) {
-    //                 chi_tiet_mo_ta::create([
-                       
-    //                     'tieu_de' => $chiTiet['tieude'], // Sửa lại tên trường đúng
-    //                     'noi_dung' => $chiTiet['noidung'], // Sửa lại tên trường đúng
-    //                 ]);
-    //             }
-    //         }
-
-        
-    //         return response()->json(['success' => 'Cập nhật sản phẩm thành công!'], 200);
-    //     } catch (\Exception $e) {
-        
-    //         return response()->json(['error' => 'Cập nhật sản phẩm không thành công. Vui lòng thử lại.'], 500);
-    //     }
-    // }
+    
     public function update(Request $request, $ma_san_pham)
     {
         try {
@@ -538,7 +479,10 @@ public function xoaSanPham($id)
     $sanPham->delete();
     Log::info("Sản phẩm và dữ liệu liên quan đã được xóa thành công.");
 
-    return response()->json(['message' => 'Sản phẩm và các dữ liệu liên quan đã được xóa thành công'], 200);
+    return response()->json([
+        'success' => true,
+        'message' => 'Sản phẩm và các dữ liệu liên quan đã được xóa thành công'
+    ], 200);
 }
 
 

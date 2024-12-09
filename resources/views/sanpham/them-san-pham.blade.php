@@ -247,8 +247,8 @@
                                 <th>Loại Da</th>
                                 <th>Dung Tích</th>
                                
-                                <th>Số Lượng Tồn Kho</th>
-                                <th>Giá Bán</th>
+                                {{-- <th>Số Lượng Tồn Kho</th>
+                                <th>Giá Bán</th> --}}
                                 <th>Xóa</th>
                             </tr>
                         </thead>
@@ -725,8 +725,8 @@ $('#layMau').click(function() {
                             'mau_sac': mauItem || "",
                             'loai_da': loaiDaItem ||"",
                             'dung_tich': dungTichItem || "",  // Đảm bảo dung_tich là chuỗi hoặc null
-                            'so_luong_ton_kho': 1,
-                            'gia_ban': 10000
+                            // 'so_luong_ton_kho': 1,
+                            // 'gia_ban': 10000
                         });
                     });
                 });
@@ -741,8 +741,8 @@ $('#layMau').click(function() {
                         'loai_da': "",
                         'dung_tich': dungTichItem,
                        
-                        'so_luong_ton_kho': 1,
-                        'gia_ban': 10000
+                        // 'so_luong_ton_kho': 1,
+                        // 'gia_ban': 10000
                     });
                 });
             });
@@ -756,8 +756,8 @@ $('#layMau').click(function() {
                         'loai_da': loaiDaItem,
                         'dung_tich': "",
                        
-                        'so_luong_ton_kho': 1,
-                        'gia_ban': 100000
+                        // 'so_luong_ton_kho': 1,
+                        // 'gia_ban': 100000
                     });
                 });
             });
@@ -771,8 +771,8 @@ $('#layMau').click(function() {
                         'loai_da': loaiDaItem,
                         'dung_tich': dungTichItem,
                        
-                        'so_luong_ton_kho': 1,
-                        'gia_ban': 100000
+                        // 'so_luong_ton_kho': 1,
+                        // 'gia_ban': 100000
                     });
                 });
             });
@@ -784,8 +784,8 @@ $('#layMau').click(function() {
                     'mau_sac': mauItem,
                     'loai_da': "",
                     'dung_tich': "",                
-                    'so_luong_ton_kho': 1,
-                    'gia_ban': 10000
+                    // 'so_luong_ton_kho': 1,
+                    // 'gia_ban': 10000
                 });
             });
         }
@@ -797,8 +797,8 @@ $('#layMau').click(function() {
                     'loai_da': "",
                     'dung_tich': dungTichItem,
                     
-                    'so_luong_ton_kho': 1,
-                    'gia_ban': 10000
+                    // 'so_luong_ton_kho': 1,
+                    // 'gia_ban': 10000
                 });
             });
         }
@@ -810,8 +810,8 @@ $('#layMau').click(function() {
                     'loai_da': loaiDaItem,
                     'dung_tich': "",
                     
-                    'so_luong_ton_kho': 1,
-                    'gia_ban': 10000
+                    // 'so_luong_ton_kho': 1,
+                    // 'gia_ban': 10000
                 });
             });
         }
@@ -824,8 +824,8 @@ $('#layMau').click(function() {
             '<td contenteditable="true">' + sp.loai_da + '</td>' +
             '<td contenteditable="true">' + sp.dung_tich + '</td>' +
             
-            '<td contenteditable="true">' + sp.so_luong_ton_kho + '</td>' +
-            '<td contenteditable="true">' + sp.gia_ban + '</td>' +
+            // '<td contenteditable="true">' + sp.so_luong_ton_kho + '</td>' +
+            // '<td contenteditable="true">' + sp.gia_ban + '</td>' +
             '<td><button class="delete-row btn btn-danger">Xóa</button></td>' +
         '</tr>';
     });
@@ -843,8 +843,8 @@ $('#layMau').click(function() {
         '<td contenteditable="true"></td>' +
         '<td contenteditable="true"></td>' +
         '<td contenteditable="true"></td>' +
-        '<td contenteditable="true"></td>' +
-        '<td contenteditable="true"></td>' +
+        // '<td contenteditable="true"></td>' +
+        // '<td contenteditable="true"></td>' +
         '<td><button class="delete-row btn btn-danger">Xóa</button></td>' +
     '</tr>';
     $('#sanPhamMauGrid tbody').append(newRow);
@@ -871,8 +871,8 @@ $('#layMau').click(function() {
     var loaiDa = rowCells.eq(1).text().trim(); 
     var dungTich = rowCells.eq(2).text().trim();  // Cho phép Dung Tích để trống
 
-    var soLuongTonKho = rowCells.eq(3).text().trim(); 
-    var giaBan = rowCells.eq(4).text().trim();
+    // var soLuongTonKho = rowCells.eq(3).text().trim(); 
+    // var giaBan = rowCells.eq(4).text().trim();
 
     // Cập nhật mảng sanPhamMau
     if (sanPhamMau[rowIndex]) {
@@ -880,8 +880,8 @@ $('#layMau').click(function() {
             'mau_sac': mauSac || null, // Để trống nếu không có giá trị
             'loai_da': loaiDa || null,  // Để trống nếu không có giá trị
             'dung_tich': dungTich || null, // Cho phép để trống
-            'so_luong_ton_kho': soLuongTonKho || 0,  // Để trống nếu không có giá trị
-            'gia_ban': giaBan || 0  // Để trống nếu không có giá trị
+            // 'so_luong_ton_kho': soLuongTonKho || 0,  // Để trống nếu không có giá trị
+            // 'gia_ban': giaBan || 0  // Để trống nếu không có giá trị
         };
     }
 
@@ -921,8 +921,8 @@ $(document).on('blur', '#sanPhamMauGrid tbody td[contenteditable="true"]', funct
             '<td contenteditable="true"></td>' + 
             '<td contenteditable="true"></td>' +  
             '<td contenteditable="true"></td>' + 
-            '<td contenteditable="true"></td>' + 
-            '<td contenteditable="true"></td>' + 
+            // '<td contenteditable="true"></td>' + 
+            // '<td contenteditable="true"></td>' + 
             '<td><button class="delete-row btn btn-danger">Xóa</button></td>' +  
         '</tr>';
         $('#sanPhamMauGrid tbody').append(newRow);
@@ -1175,13 +1175,21 @@ $('#themSP').on('click', function(event) {
         contentType: false, // Không set content-type vì FormData sẽ tự động set
         processData: false, // Không chuyển dữ liệu thành một chuỗi query
         success: function(response) {
-            alert(response.message);
-            window.location.href = response.redirect_url;
+            // alert(response.message);
+            // window.location.href = response.redirect_url;
+            if (response.success) {
+                swal("Thành công!", response.message, "success").then(() => {
+                    window.location.href = response.redirect_url;
+                });
+            } else {
+                swal("Thất bại!", response.message, "error");
+            }
         },
         error: function(xhr, status, error) {
             var statusCode = xhr.status;
             var errorMessage = xhr.responseText || "Không có thông báo lỗi";
-            alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
+            // alert('Có lỗi xảy ra: \nMã trạng thái: ' + statusCode + '\nThông báo lỗi: ' + errorMessage);
+            swal("Có lỗi xảy ra!", "Mã trạng thái: " + statusCode + "\nThông báo lỗi: " + errorMessage, "error");
         }
     });
 });

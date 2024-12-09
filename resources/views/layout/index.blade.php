@@ -19,7 +19,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
-
+  {{-- Sweetalert2 --}}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.12/sweetalert2.css" integrity="sha512-K0TEY7Pji02TnO4NY04f+IU66vsp8z3ecHoID7y0FSVRJHdlaLp/TkhS5WDL3OygMkVns4bz0/ah4j8M3GgguA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
     @yield('css')
 <body onload="time()" class="app sidebar-mini rtl">
@@ -84,6 +86,17 @@
     </ul>
   </aside>
   <main class="app-content">
+    @if (Session::has('success'))
+      <script>
+          swal("Thành công!", "{{Session::get('success')}}", "success");
+      </script>
+      @endif
+
+      @if (Session::has('error'))
+      <script>
+          swal("Thất bại!", "{{Session::get('error')}}", "warning");
+      </script>
+      @endif
     {{-- Tiêu đề trang --}}
     <div class="row">
       <div class="col-md-12">
