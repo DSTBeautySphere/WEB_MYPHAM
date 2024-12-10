@@ -1,82 +1,68 @@
-<!-- @extends('layout.index')
-@section('title','Báo Cáo Doanh Thu')
-@section('css')
-<style>
-   
-</style>
-@endsection
-@section('content')
+# Thành viên
+<h4>Tên nhóm: Hello</h4>
+  
+| STT | Họ tên | Chức vụ  |
+|----------------|--------------------|--------------------|
+|  1  |  Ngô Hoàng Thông   |   Nhóm trưởng  |
+|  2  |  Huỳnh Phước Sang  |   Thành viên  |
+|  3  |  Nguyễn Khách Duy  |   Thành viên  |
+-----------------------------------------------
+### Sử dụng 
+ - .Net Framework version 4.8
+ - Visual studio 2022
+ - Visual studio code
+ - Laravel Framework
+-----------------------------------------------
 
-  @endsection
-@section('js')
+### Chi tiết
+<img src="https://i.imgur.com/FehXExF.jpg">
 
-@endsection -->
+-----------------------------------------------
+# Dự án
+
+## Phần mềm quản lý bán mỹ phẩm
+
+<h5>Mô tả Dự án:</h5> <p>Phần mềm Quản lý Shop Mỹ Phẩm là một hệ thống ứng dụng hiện đại được thiết kế để hỗ trợ các cửa hàng mỹ phẩm trong việc quản lý hàng hóa, đơn hàng, khách hàng và các chiến dịch khuyến mãi một cách hiệu quả. Hệ thống bao gồm giao diện web cho người dùng và ứng dụng desktop dành cho quản lý, cung cấp khả năng quản lý linh hoạt và tiện lợi.</p> <p>Giao diện web cho phép khách hàng dễ dàng tìm kiếm sản phẩm, thêm vào giỏ hàng, thanh toán, và đánh giá sản phẩm. Trong khi đó, ứng dụng desktop giúp nhà quản lý thực hiện các công việc như quản lý sản phẩm, khách hàng, nhân viên, và theo dõi doanh thu. Phần mềm cũng tích hợp AI để gợi ý sản phẩm, giúp nâng cao trải nghiệm mua sắm và tối ưu hóa quy trình quản lý.</p> <h5>Tính năng nổi bật:</h5> - Quản lý kho hàng chi tiết, bao gồm sản phẩm, số lượng tồn kho và nhà cung cấp. - Quản lý khách hàng thân thiết với thông tin mua sắm, lịch sử giao dịch, và chương trình khuyến mãi. - Báo cáo doanh thu và thống kê trực quan giúp người quản lý dễ dàng đưa ra quyết định kinh doanh.
+
+### Yêu cầu 
+<p>AI: Gợi ý sản phẩm theo nội dung  </p>
+<p>Web: PHP</p>
+<p>Ngôn ngữ: PHP </p>
+<p>Framework: Laravel</p>
+
+<p>Nghiệp vụ</p>
+
+| STT | Nghiệp vụ | Phân công  |
+|----------------|--------------------|--------------------|
+|  1  |  Tìm kiếm quần áo |     |
+|  2  |  Đăng nhập đăng ký |    |
+|  3  |  Xem thông tin mỹ phẩm [Trang chủ, tin tức, giới thiệu, sản phẩm chi tiết, đánh giá mỹ phẩm]  |    |
+|  4  |  Quản lý thông tin tài khoản [Thông tin KH, thông tin tài khoản, thông tin đơn hàng đã mua, quần áo yêu thích] |    |
+|  5  |  Mua hàng  |    |
+|  6 |  Thanh toán |   |
+|  7 |  Đánh giá |    |
+
+
+<p>App: Winform </p>
+<p>Ngôn ngữ: C# </p>
+
+| STT | Nghiệp vụ | Phân công  |
+|----------------|--------------------|--------------------|
+|  1  |  Đăng nhập/đăng xuất |     |
+|  2  | Phân quyền  |   |
+|  3  |  Quản lý mỹ phẩm |    |
+|  4  |  Quản lý khách hàng |    |
+|  5  |   Quản lý nhập kho |    |
+|  6  |   Thống kê |    |
+|  7  |   Báo cáo |    |
 
 
 
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Chức năng
+#### WEDSITE
+<p>Tìm kiếm và hiển thị thông tin mỹ phẩm:</p> <ul> <li>Tìm kiếm mỹ phẩm theo thương hiệu, loại da, công dụng, giá cả, v.v.</li> <li>Hiển thị thông tin chi tiết của sản phẩm, bao gồm mô tả, nhà cung cấp, đánh giá, v.v.</li> </ul> <p>Quản lý giỏ hàng, mua mỹ phẩm và thanh toán:</p> <ul> <li>Thêm sản phẩm vào giỏ hàng</li> <li>Xem lại giỏ hàng trước khi thanh toán</li> <li>Hỗ trợ thanh toán qua nhiều phương thức như ví điện tử</li> <li>Hiển thị chi tiết giỏ hàng và tổng số tiền</li> </ul> <p>Quản lý thông tin tài khoản:</p> <ul> <li>Đăng ký và đăng nhập tài khoản người dùng</li> <li>Quản lý thông tin cá nhân, mật khẩu</li> <li>Hiển thị lịch sử mua hàng và sản phẩm yêu thích</li> <li>Đánh giá sản phẩm đã mua</li> </ul>
+#### APP
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<p>
+Quản lý mỹ phẩm
+<p>Quản lý mỹ phẩm:</p> <ul> <li>Thêm và cập nhật mỹ phẩm</li> <li>Tra cứu thông tin mỹ phẩm</li> </ul> <p>Quản lý khách hàng:</p> <ul> <li>Thêm và cập nhật khách hàng</li> <li>Tra cứu thông tin khách hàng</li> </ul> <p>Quản lý khuyến mãi:</p> <ul> <li>Thêm và cập nhật chương trình khuyến mãi</li> <li>Tra cứu khuyến mãi áp dụng</li> </ul> <p>Quản lý nhân viên và phân quyền:</p> <ul> <li>Thêm và cập nhật thông tin nhân viên</li> <li>Phân quyền nhân viên theo chức vụ</li> </ul> <p>Báo cáo và thống kê:</p> <ul> <li>Báo cáo doanh thu hàng tháng</li> <li>Thống kê sản phẩm bán chạy và yêu thích</li> </ul>
