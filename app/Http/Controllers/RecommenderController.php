@@ -43,10 +43,7 @@ class RecommenderController extends Controller
                     DB::raw('COALESCE(btsp.gia_ban, 0) as Gia'),
                     DB::raw('COALESCE(btsp.trang_thai, "") as TrangThaiBienThe'),
                 ])
-                ->get();
-
-                
-            
+                ->get();       
             if ($sanPham->isEmpty()) {
                 return response()->json([
                     'message' => 'Không tìm thấy sản phẩm nào trong cơ sở dữ liệu.',
@@ -231,11 +228,11 @@ private function encodeSkinType($skinType)
         'Dry' => 3,
         'Combination' => 4,
         'Oily' => 5,
-        'Da Nhạy Cảm' => 1, // Sensitive
-        'Da Thường' => 2,    // Normal
-        'Da Khô' => 3,       // Dry
-        'Da Dầu' => 4,       // Oily
-        'Da Hỗn Hợp' => 5    // Combination
+        'Da Nhạy Cảm' => 1, 
+        'Da Thường' => 2,    
+        'Da Khô' => 3,       
+        'Da Dầu' => 4,       
+        'Da Hỗn Hợp' => 5    
     ];
     return $mapping[$skinType] ?? 0;
 }

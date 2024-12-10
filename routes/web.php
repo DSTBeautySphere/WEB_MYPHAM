@@ -118,6 +118,12 @@ Route::controller(OrderController::class)->group(function () {
   Route::post('/order/{id}/status', 'edit');
   Route::get('/order/user/{id}', 'show');
   Route::get('/order/{id}', 'detail');
+  Route::post('/huydon', 'huyDon');
+  Route::get('/laytinh', 'getProvinces');
+  Route::post('/layhuyen', 'getDistrictsByProvince');
+  Route::post('/layxa', 'getWards');
+  Route::post('/laydanhsachdichvu', 'getAvailableServices');
+  Route::post('/tinhphivanchuyen', 'calculateShippingFee');
 });
 
 Route::controller(ReviewController::class)->group(function () {
