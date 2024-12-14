@@ -276,7 +276,7 @@
 
     // Khởi tạo phân trang cho bảng categoryTable
     $('#categoryTable').DataTable({
-        "pageLength": 5, 
+        "pageLength": 10, 
         "lengthChange": false, 
         "paging": true, 
         "searching": true, 
@@ -296,7 +296,7 @@
                 { title: "Sản phẩm" },
                 { title: "Doanh thu" }
             ],
-            pageLength: 5, // Số dòng trên mỗi trang
+            pageLength: 10, // Số dòng trên mỗi trang
             //dom: 'lrtip', // Loại bỏ lengthMenu
             dom: 'ftp',
             language: {

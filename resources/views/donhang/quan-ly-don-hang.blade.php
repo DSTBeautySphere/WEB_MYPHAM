@@ -99,36 +99,36 @@
                             <th>Địa Chỉ</th>
                             <th>Phương Thức Thanh Toán</th>
                             <th>Số Tiền Cuối</th>
-                            <th>Trạng Thái Đơn Đặt</th>
                             <th>Ngày Đặt Hàng</th>
-                            <th>Trạng Thái Giao Hàng</th>
+                            <th>Trạng Thái Đơn Đặt</th>
+                            {{-- <th>Trạng Thái Giao Hàng</th> --}}
                             <th>Chức Năng</th>
                         </tr>
                     </thead>
                     <tbody id="invoice-body">
                         @foreach($donDat as $don)
                             <tr>
-                                <td><input type="checkbox" class="checkbox" /></td>
+                                <td><input type="checkbox" class="checkbox" name='check1' value="{{ $don->ma_don_dat }}" /></td>
                                 <td>{{ $don->ma_don_dat }}</td>
                                 <td>{{ $don->ma_voucher ?? 'N/A' }}</td>
                                 <td>{{ $don->so_dien_thoai }}</td>
                                 <td>{{ $don->dia_chi_giao_hang }}</td>
                                 <td>{{ $don->phuong_thuc_thanh_toan ?? 'N/A' }}</td>
                                 <td>{{ number_format($don->tong_tien_cuoi_cung, 0, '.', ',') }} đ</td>
-                                <td>{{ $don->trang_thai_don_dat }}</td>
+                                {{-- <td>{{ $don->trang_thai_don_dat }}</td> --}}
                                 <td>{{\Carbon\Carbon::parse($don->ngay_dat)->format('d/m/Y') }}</td>
                                 <td>
                                     <select class="form-control trang-thai-giao-hang" data-id="{{ $don->ma_don_dat }}">
-                                        <option value="Chờ xác nhận" {{ $don->trang_thai_giao_hang == 'Chờ xác nhận' ? 'selected' : '' }}>
+                                        <option value="Chờ xác nhận" {{ $don->trang_thai_don_dat == 'Chờ xác nhận' ? 'selected' : '' }}>
                                             Chờ xác nhận
                                         </option>
-                                        <option value="Chờ lấy hàng" {{ $don->trang_thai_giao_hang == 'Chờ lấy hàng' ? 'selected' : '' }}>
+                                        <option value="Chờ lấy hàng" {{ $don->trang_thai_don_dat == 'Chờ lấy hàng' ? 'selected' : '' }}>
                                             Chờ lấy hàng
                                         </option>
-                                        <option value="Đang giao" {{ $don->trang_thai_giao_hang == 'Đang giao' ? 'selected' : '' }}>
+                                        <option value="Đang giao" {{ $don->trang_thai_don_dat == 'Đang giao' ? 'selected' : '' }}>
                                             Đang giao
                                         </option>
-                                        <option value="Đã hoàn thành" {{ $don->trang_thai_giao_hang == 'Đã hoàn thành' ? 'selected' : '' }}>
+                                        <option value="Đã hoàn thành" {{ $don->trang_thai_don_dat == 'Đã hoàn thành' ? 'selected' : '' }}>
                                             Đã hoàn thành
                                         </option>
                                     </select>
@@ -175,12 +175,11 @@
                 <table id="invoice-details-table" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Product ID</th>
-                            <th>Product Name</th>
-                            <th>Option Details</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Amount</th>
+                            <th>Mã biến thể </th>
+                            <th>Tên sản phẩm</th>
+                            <th>Giá bán</th>
+                            <th>Số lượng</th>
+                            <th>Tổng tiền</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -263,6 +262,7 @@
 //     });
 // });
 
+//Chi Tiết
 $(document).ready(function () {
     // Khi nhấn nút "Chi Tiết"
     $('.show-details').on('click', function (e) {
@@ -295,11 +295,10 @@ $(document).ready(function () {
                     detailsHtml += `
                         <tr>
                             <td>${item.ma_bien_the}</td>
-                            <td>${item.ten_san_pham}</td>
-                            <td>${item.chi_tiet_tuy_chon || 'N/A'}</td>
-                            <td>${item.gia_ban}</td>
+                            <td>${item.bien_the_san_pham.san_pham.ten_san_pham}</td>
+                            <td>${parseFloat(item.gia_ban).toLocaleString()} </td>
                             <td>${item.so_luong}</td>
-                            <td>${(item.gia_ban * item.so_luong).toFixed(2)}</td>
+                            <td>${parseFloat(item.gia_ban * item.so_luong).toLocaleString()} </td>
                         </tr>`;
                 });
                 $('#invoice-details-table tbody').html(detailsHtml);
@@ -314,6 +313,7 @@ $(document).ready(function () {
     });
 });
 
+//lọc
 $(document).ready(function () {
     // Xử lý lọc khi có thay đổi trong các bộ lọc
     $('#filter-date, #filter-status, #filter-price').on('change', function () {
@@ -336,7 +336,7 @@ $(document).ready(function () {
                 response.forEach(order => {
                     tableHtml += `
                         <tr>
-                            <td><input type="checkbox" class="checkbox" /></td>
+                            <td><input type="checkbox" class="checkbox" name='check1' value="${order.ma_don_dat}"/></td>
                             <td>${order.ma_don_dat}</td>
                             <td>${order.ma_voucher || 'N/A'}</td>
                             <td>${order.so_dien_thoai}</td>
@@ -481,7 +481,47 @@ $(document).ready(function () {
     });
 });
 
+document.getElementById("all").addEventListener("change", function() {
+        const checkboxes = document.querySelectorAll(".checkbox");
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+    });
 
+$('#export-selected-pdf').click(function() {
+        var selectedInvoices = [];
+        $('input[name="check1"]:checked').each(function() {
+            var invoiceId = $(this).val();
+            selectedInvoices.push(invoiceId);
+        });
+
+        if (selectedInvoices.length === 0) {
+            alert('Vui lòng chọn ít nhất một hóa đơn!');
+            return;
+        }
+
+        // Gửi danh sách hóa đơn dưới dạng mảng đến API
+        $.ajax({
+        url: '/export-pdf',
+        method: 'GET',
+        data: { don_dat: selectedInvoices },
+        success: function(response) {
+            // Nếu xuất PDF thành công, có thể chuyển hướng hoặc làm gì đó
+            if (response.pdfPath) {
+                    window.location.href = response.pdfPath;  // Chuyển hướng tới file PDF đã lưu
+                }  // Chỉnh sửa theo đường dẫn thật của file PDF
+        },
+        error: function(xhr, status, error) {
+            // Khi có lỗi xảy ra, ta sẽ log thông tin lỗi vào console và hiển thị thông báo lỗi
+            console.log('Error: ' + error);  // Log thông báo lỗi ra console
+            console.log('Status: ' + status);  // Log tình trạng của lỗi (ví dụ: timeout, error, v.v.)
+            console.log('Response: ' + xhr.responseText);  // Log thông tin phản hồi từ server (nếu có)
+
+            alert('Có lỗi xảy ra khi xuất PDF: ' + error);  // Hiển thị thông báo lỗi chi tiết cho người dùng
+        }
+    });
+
+});
 </script>
 
 

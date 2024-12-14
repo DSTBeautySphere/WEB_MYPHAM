@@ -7,6 +7,8 @@ use App\Models\chi_tiet_gio_hang;
 use Illuminate\Http\Request;
 use App\Models\don_dat;
 use App\Models\gio_hang;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 
 class don_datController extends Controller
 {
@@ -46,7 +48,7 @@ class don_datController extends Controller
     public function show($id)
     {
         // Tìm đơn hàng theo ma_don_dat
-        $donDat = don_dat::with(['chi_tiet_don_dat'])->findOrFail($id);
+        $donDat = don_dat::with(['chi_tiet_don_dat.bien_the_san_pham.san_pham'])->findOrFail($id);
 
         // Trả về view với chi tiết đơn hàng
         return response()->json($donDat);
@@ -90,7 +92,7 @@ class don_datController extends Controller
         try{
             $donDat= don_dat::find($request->input('ma_don_dat'));
             if($donDat){
-                $donDat->trang_thai_giao_hang=$request->input('trang_thai_giao_hang');
+                $donDat->trang_thai_don_dat=$request->input('trang_thai_giao_hang');
                 $donDat->save();
                 return response()->json([
                     'success' => true,
@@ -103,6 +105,44 @@ class don_datController extends Controller
                 'success' => false,
                 'message' => 'Lỗi: ' . $e->getMessage(),
             ]);
+        }
+    }
+    public function exportPdf(Request $request)
+    {
+        try 
+        {
+            Log::info('Some message', $request->all());
+            // Lấy danh sách đơn đặt hàng được chọn
+            $selectedDonDat = $request->input('don_dat'); 
+
+            if (is_string($selectedDonDat)) {
+                $selectedDonDat = explode(',', $selectedDonDat);
+            }
+
+            if (empty($selectedDonDat)) {
+                return redirect()->back()->with('error', 'Vui lòng chọn ít nhất một đơn đặt hàng!');
+            }
+
+            // Lấy dữ liệu đơn đặt hàng cùng các chi tiết liên quan
+            $donDatList = don_dat::with('chi_tiet_don_dat.bien_the_san_pham.san_pham', 'user')
+                                ->whereIn('ma_don_dat', $selectedDonDat)
+                                ->get();
+
+            Log::debug('Retrieved orders: ', $donDatList->toArray());
+
+            // Tạo file PDF từ view
+            $pdfPath = public_path('pdf/don_dat.pdf');
+            $pdf = Pdf::loadView('donhang.pdf', compact('donDatList'));
+            $pdf->save($pdfPath);
+
+            // Trả về đường dẫn PDF cho client
+            return response()->json(['pdfPath' => asset('pdf/don_dat.pdf')], 200);
+        } 
+        catch (\Exception $e) 
+        {
+            // Ghi log lỗi nếu có vấn đề
+            Log::error('Lỗi xuất PDF: ' . $e->getMessage());
+            return response()->json(['error' => 'Có lỗi xảy ra khi xuất PDF'], 500);
         }
     }
 

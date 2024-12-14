@@ -77,6 +77,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/don-dat/{id}', [don_datController::class, 'show'])->name('don-dat.show');
     Route::get('/locdulieuDH', [don_datController::class, 'loc_du_lieuDH']);
     Route::post('/capnhattrangthaiGH',[don_datController::class,'capNhatTrangThaiGH']);
+    Route::get('/export-pdf', [don_datController::class, 'exportPdf']);
 
     //chi tiet don dat
     Route::post('themchitietdondat',[App\Http\Controllers\chi_tiet_don_datController::class,'themChiTietDonDat']);

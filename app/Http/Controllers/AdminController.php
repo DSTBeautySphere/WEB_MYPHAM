@@ -321,7 +321,7 @@ class AdminController extends Controller
 
     public function showQuanLySanPham(Request $request)
     {
-        $sanPham = san_pham::paginate(4); 
+        $sanPham = san_pham::paginate(8); 
 
     
         return view('sanpham.quan-ly-san-pham', compact('sanPham')); 
@@ -329,112 +329,14 @@ class AdminController extends Controller
 
     public function showQuanLyDonHang()
     {
-        $donDat = don_dat::with(['chi_tiet_don_dat'])->get();
+        $donDat = don_dat::with(['chi_tiet_don_dat.bien_the_san_pham.san_pham'])->get();
 
         return view('donhang.quan-ly-don-hang', compact('donDat'));
     }
     
   
 
-    // public function Statistics(Request $request)
-    // {
-    //     $now = Carbon::now('Asia/Ho_Chi_Minh')->endOfDay();
-    //     Log::info('Current DateTime (endOfDay): ', ['now' => $now]);
-
-    //     $year = Carbon::now('Asia/Ho_Chi_Minh')->subDays(365)->startOfYear()->toDateString();
-    //     Log::info('Start of Year (365 days ago): ', ['year' => $year]);
-
-    //     $start_of_month = Carbon::now('Asia/Ho_Chi_Minh')->startOfMonth();
-    //     Log::info('Start of Current Month: ', ['start_of_month' => $start_of_month]);
-
-    //     // Tổng đơn hàng hoàn tất trong năm
-    //     $total_year = don_dat::whereBetween('ngay_dat', [$year, $now])
-    //         ->where('trang_thai', "Hoàn tất")
-    //         ->get();
-    //     Log::info('Total orders in the last year: ', ['total_year' => $total_year->count()]);
-
-    //     // Tổng đơn hàng hoàn tất hôm nay
-    //     $ordersToday = don_dat::whereDate('ngay_dat', Carbon::today())
-    //         ->where('trang_thai', "Hoàn tất")
-    //         ->get();
-    //     Log::info('Orders for today: ', ['ordersToday' => $ordersToday->count()]);
-
-    //     // Tổng số lượng khách hàng
-    //     $userCount = User::count();
-    //     Log::info('Total users count: ', ['userCount' => $userCount]);
-
-    //     // Tổng số sản phẩm
-    //     $productCount = san_pham::count();
-    //     Log::info('Total products count: ', ['productCount' => $productCount]);
-
-    //     // Tính tổng doanh thu hôm nay từ cột tong_tien trong bảng hoa_don
-    //     $sum_today = hoa_don::whereDate('ngay_thanh_toan', Carbon::today())
-    //     ->whereHas('don_dat', function ($query) {
-    //         $query->where('trang_thai', 'Hoàn tất');
-    //     })
-    //     ->sum('tong_tien');
-    //     Log::info('Total revenue for today: ', ['sum_today' => $sum_today]);
-
-    //     $sum_year = hoa_don::whereBetween('ngay_thanh_toan', [$year, $now])
-    //         ->whereHas('don_dat', function ($query) {
-    //             $query->where('trang_thai', 'Hoàn tất');
-    //         })
-    //         ->sum('tong_tien');
-    //     Log::info('Total revenue for the last year: ', ['sum_year' => $sum_year]);
-
-       
-    //         // Doanh thu theo loại sản phẩm
-    //     $revenueByCategory = loai_san_pham::with(['san_pham.bien_the_san_pham.chi_tiet_don_dat.don_dat'])
-    //     ->get()
-    //     ->map(function ($category) {
-    //         $totalRevenue = $category->san_pham->flatMap(function ($product) {
-    //             return $product->bien_the_san_pham->flatMap(function ($variation) {
-    //                 return $variation->chi_tiet_don_dat->filter(function ($orderDetail) {
-    //                     return $orderDetail->don_dat && $orderDetail->don_dat->trang_thai === 'Hoàn tất';
-    //                 });
-    //             });
-    //         })->sum(function ($orderDetail) {
-    //             return $orderDetail->so_luong * $orderDetail->gia_ban;
-    //         });
-
-    //         return [
-    //             'category' => $category->ten_loai_san_pham,
-    //             'revenue' => $totalRevenue,
-    //         ];
-    //     });
-    //     Log::info('Revenue by category: ', ['revenueByCategory' => $revenueByCategory]);
-
-    //     // Doanh thu theo sản phẩm
-    //     $revenueByProduct = san_pham::with(['bien_the_san_pham.chi_tiet_don_dat.don_dat'])
-    //     ->get()
-    //     ->map(function ($product) {
-    //         $totalRevenue = $product->bien_the_san_pham->flatMap(function ($variation) {
-    //             return $variation->chi_tiet_don_dat->filter(function ($orderDetail) {
-    //                 return $orderDetail->don_dat && $orderDetail->don_dat->trang_thai === 'Hoàn tất';
-    //             });
-    //         })->sum(function ($orderDetail) {
-    //             return $orderDetail->so_luong * $orderDetail->gia_ban;
-    //         });
-
-    //         return [
-    //             'product' => $product->ten_san_pham,
-    //             'revenue' => $totalRevenue,
-    //         ];
-    //     });
-    //     Log::info('Revenue by product: ', ['revenueByProduct' => $revenueByProduct]);
-
-    //     // Trả về view
-    //     return view('baocao-thongke.bao-cao-doanh-thu', compact(
-    //         'userCount',
-    //         'sum_today',
-    //         'sum_year',
-    //         'ordersToday',
-    //         'now',
-    //         'year',
-    //         'revenueByCategory',
-    //         'revenueByProduct'
-    //     ));
-    // }
+  
     public function Statistics(Request $request)
     {
         $now = Carbon::now('Asia/Ho_Chi_Minh')->endOfDay();

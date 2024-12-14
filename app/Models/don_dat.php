@@ -42,9 +42,6 @@ class don_dat extends Model
     {
         return $this->hasMany(chi_tiet_don_dat::class, 'ma_don_dat');
     }
-    // public function hoa_don()
-    // {
-    //     return $this->hasOne(hoa_don::class, 'ma_don_dat');
-    // }
+  
   
 }
