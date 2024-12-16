@@ -6,6 +6,7 @@ use App\Http\Controllers\loai_san_phamController;
 use App\Http\Controllers\nha_cung_capController;
 use App\Http\Controllers\san_phamController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\doi_traController;
 use App\Http\Controllers\don_datController;
 use App\Http\Controllers\khuyen_mai_san_phamController;
 use App\Http\Controllers\phieu_nhapController;
@@ -137,4 +138,10 @@ Route::prefix('admin')->group(function () {
     //phieu nhap
     Route::get('/showqlphieunhap',[phieu_nhapController::class,'layPhieuNhap']);
     Route::get('/chitietphieunhap/{id}', [phieu_nhapController::class, 'chiTietPhieuNhap']);
+
+
+    // doi tra 
+    Route::get('/danhsachdoitra',[doi_traController::class,'danhSachDoiTra']);
+    Route::post('/chapnhandoitra/{id}', [doi_traController::class, 'acceptRequest']);
+    Route::post('/tuchoidoitra/{id}', [doi_traController::class, 'rejectRequest']);
 // });

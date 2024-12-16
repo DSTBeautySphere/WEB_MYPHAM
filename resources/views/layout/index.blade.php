@@ -57,8 +57,8 @@
       <li><a class="app-menu__item active" href="/showquanlydonhang"><i class='app-menu__icon bx bx-task'></i><span
         class="app-menu__label">Quản lý đơn hàng</span></a></li>
 
-      {{-- <li><a class="app-menu__item " href="table-data-table.html"><i class='app-menu__icon bx bx-id-card'></i> <span
-            class="app-menu__label">Quản lý nhân viên</span></a></li> --}}
+      <li><a class="app-menu__item " href="/danhsachdoitra"><i class='app-menu__icon bx bx-revision'></i> <span
+            class="app-menu__label">Quản lý đổi trả</span></a></li>
 
       <li><a class="app-menu__item" href="/showUser"><i class='app-menu__icon bx bx-user-voice'></i><span
             class="app-menu__label">Quản lý khách hàng</span></a></li>
@@ -76,7 +76,7 @@
             class="app-menu__label">Quản lý voucher</span></a></li>
 
       <li><a class="app-menu__item" href="/showphieunhap"><i
-            class='app-menu__icon bx bx-pie-chart-alt-2'></i><span class="app-menu__label">Nhập kho</span></a>
+            class='app-menu__icon bx bx-store-alt'></i><span class="app-menu__label">Nhập kho</span></a>
       </li>
       {{-- <li><a class="app-menu__item" href="page-calendar.html"><i class='app-menu__icon bx bx-calendar-check'></i><span
             class="app-menu__label">Lịch công tác </span></a></li>
