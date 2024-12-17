@@ -464,7 +464,7 @@ $(document).ready(function () {
             type: 'POST',
             data: {
                 ma_don_dat: maDonDat,
-                trang_thai_giao_hang: trangThaiGiaoHang,
+                trang_thai_don_dat: trangThaiGiaoHang,
                 _token: $('meta[name="csrf-token"]').attr('content'), // Token CSRF
             },
             success: function (response) {

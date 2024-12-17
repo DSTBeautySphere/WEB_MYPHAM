@@ -92,7 +92,35 @@ class don_datController extends Controller
         try{
             $donDat= don_dat::find($request->input('ma_don_dat'));
             if($donDat){
-                $donDat->trang_thai_don_dat = $request->input('trang_thai_giao_hang');
+                $trangThaiDonDat = $request->input('trang_thai_don_dat');
+
+                // Cập nhật trạng thái đơn đặt
+                $donDat->trang_thai_don_dat = $trangThaiDonDat;
+
+                 // Kiểm tra nếu trạng thái là "Đang giao"
+                if ($trangThaiDonDat === 'Đang giao') {
+                    $chiTietDonDats = $donDat->chi_tiet_don_dat; // Lấy danh sách chi tiết đơn đặt
+                    foreach ($chiTietDonDats as $chiTiet) {
+                        $bienTheSanPham = $chiTiet->bien_the_san_pham; // Lấy biến thể sản phẩm
+                        if ($bienTheSanPham) {
+                            // Trừ số lượng tồn kho
+                            $bienTheSanPham->so_luong_ton_kho -= $chiTiet->so_luong;
+
+                            // Đảm bảo số lượng tồn kho không âm
+                            if ($bienTheSanPham->so_luong_ton_kho < 0) {
+                                $bienTheSanPham->so_luong_ton_kho = 0;
+                            }
+
+                            $bienTheSanPham->save(); // Lưu thay đổi
+                        }
+                    }
+                }
+
+                // Kiểm tra nếu trạng thái là "Đã hoàn thành" và phương thức thanh toán không phải "CARD"
+                if ($trangThaiDonDat === 'Đã hoàn thành' && $donDat->phuong_thuc_thanh_toan !== 'CARD') {
+                    $donDat->ngay_thanh_toan = now(); // Cập nhật ngày thanh toán là thời điểm hiện tại
+                    $donDat->trang_thai_thanh_toan = 'Đã thanh toán'; // Cập nhật trạng thái thanh toán
+                }
                 $donDat->save();
                 return response()->json([
                     'success' => true,
