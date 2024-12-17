@@ -43,5 +43,9 @@ class don_dat extends Model
         return $this->hasMany(chi_tiet_don_dat::class, 'ma_don_dat');
     }
   
+    public function doi_tra()
+    {
+        return $this->hasMany(doi_tra::class, 'ma_don_dat', 'ma_don_dat');
+    }
   
 }

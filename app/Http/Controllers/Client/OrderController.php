@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\doi_tra;
 use App\Models\don_dat;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,10 +33,10 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
-    }
+    // public function store(Request $request)
+    // {
+    //     //
+    // }
 
     /**
      * Display the specified resource.
@@ -42,9 +44,9 @@ class OrderController extends Controller
     public function show(string $id)
     {
         try {
-            $order = DB::table('don_dat')
-                ->where('don_dat.ma_user', $id)
-                ->get();
+            $order = don_dat::with('doi_tra','doi_tra.bien_the_san_pham.san_pham.anh_san_pham')  // eager load quan hệ 'doiTra'
+            ->where('ma_user', $id)  // Lọc theo ma_user
+            ->get();
 
             return response()->json($order);
         } catch (Exception $e) {
@@ -159,35 +161,35 @@ class OrderController extends Controller
     }
 
     public function getWards(Request $request)
-{
-    // Token và URL API
-    $token = env('GHN_API_TOKEN'); // Lấy từ .env
-    $baseUrl = env('GHN_BASE_URL', 'https://online-gateway.ghn.vn/shiip/public-api');
+    {
+        // Token và URL API
+        $token = env('GHN_API_TOKEN'); // Lấy từ .env
+        $baseUrl = env('GHN_BASE_URL', 'https://online-gateway.ghn.vn/shiip/public-api');
 
-    // Lấy district_id từ request
-    $districtId = $request->input('districtId');
+        // Lấy district_id từ request
+        $districtId = $request->input('districtId');
 
-    // Gửi yêu cầu đến GHN API để lấy phường xã theo quận huyện
-    $response = Http::withHeaders([
-        'Token' => $token,
-    ])->get("{$baseUrl}/master-data/ward", [
-        'district_id' => $districtId,  // Thêm district_id vào query params
-    ]);
-
-    // Xử lý kết quả trả về
-    if ($response->successful()) {
-        return response()->json([
-            'success' => true,
-            'data' => $response->json('data'),
+        // Gửi yêu cầu đến GHN API để lấy phường xã theo quận huyện
+        $response = Http::withHeaders([
+            'Token' => $token,
+        ])->get("{$baseUrl}/master-data/ward", [
+            'district_id' => $districtId,  // Thêm district_id vào query params
         ]);
-    }
 
-    // Xử lý lỗi nếu có
-    return response()->json([
-        'success' => false,
-        'message' => $response->json('message', 'Unable to fetch wards.'),
-    ], $response->status());
-}
+        // Xử lý kết quả trả về
+        if ($response->successful()) {
+            return response()->json([
+                'success' => true,
+                'data' => $response->json('data'),
+            ]);
+        }
+
+        // Xử lý lỗi nếu có
+        return response()->json([
+            'success' => false,
+            'message' => $response->json('message', 'Unable to fetch wards.'),
+        ], $response->status());
+    }
 
 public function getAvailableServices(Request $request)
 {
@@ -267,6 +269,56 @@ public function calculateShippingFee(Request $request)
         'message' => $response->json('message', 'Không thể tính phí vận chuyển.'),
     ], $response->status());
 }
+
+    // public function layDoiHang($id)
+    // {
+        
+    // }
+
+    public function store(Request $request)
+    {
+        // Validate dữ liệu đầu vào
+        $request->validate([
+            'ma_don_dat' => 'required|exists:don_dat,ma_don_dat',
+            'ma_bien_the' => 'required|exists:bien_the_san_pham,ma_bien_the',
+            'ly_do_doi_tra' => 'required|string|max:255',
+            'anh1' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'anh2' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'anh3' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        // Upload ảnh lên Cloudinary và chỉ định thư mục
+        $imagePaths = [];
+        foreach (['anh1', 'anh2', 'anh3'] as $key) {
+            if ($request->hasFile($key)) {
+                $uploadedFile = Cloudinary::upload(
+                    $request->file($key)->getRealPath(),
+                    ['folder' => 'PJ_MYPHAM/DoiHang'] // Đường dẫn thư mục trên Cloudinary
+                );
+
+                // Lấy đường dẫn URL từ Cloudinary
+                $imagePaths[$key] = $uploadedFile->getSecurePath();
+            }
+        }
+
+        // Tạo bản ghi đổi trả trong database
+        $doiTra = doi_tra::create([
+            'ma_don_dat' => $request->ma_don_dat,
+            'ma_bien_the' => $request->ma_bien_the,
+            'ly_do_doi_tra' => $request->ly_do_doi_tra,
+            'ngay_yeu_cau' => now(),
+            'anh1' => $imagePaths['anh1'] ?? null,
+            'anh2' => $imagePaths['anh2'] ?? null,
+            'anh3' => $imagePaths['anh3'] ?? null,
+            'trang_thai' => 'Yêu cầu đổi hàng',
+        ]);
+
+        // Trả về phản hồi JSON
+        return response()->json([
+            'message' => 'Yêu cầu đổi hàng đã được gửi thành công.',
+            'data' => $doiTra
+        ], 200);
+    }
 
 
 
