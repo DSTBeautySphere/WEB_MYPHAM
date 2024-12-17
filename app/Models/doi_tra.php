@@ -16,6 +16,9 @@ class doi_tra extends Model
         'ma_bien_the', 
         'ly_do_doi_tra', 
         'ngay_yeu_cau', 
+        'anh1',
+        'anh2',
+        'anh3',
         'trang_thai'
     ];
     public $timestamps = false;

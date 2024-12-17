@@ -124,6 +124,7 @@ Route::controller(OrderController::class)->group(function () {
   Route::post('/layxa', 'getWards');
   Route::post('/laydanhsachdichvu', 'getAvailableServices');
   Route::post('/tinhphivanchuyen', 'calculateShippingFee');
+  Route::post('/doihang', 'store');
 });
 
 Route::controller(ReviewController::class)->group(function () {
