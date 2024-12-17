@@ -92,7 +92,7 @@ class don_datController extends Controller
         try{
             $donDat= don_dat::find($request->input('ma_don_dat'));
             if($donDat){
-                $donDat->trang_thai_don_dat=$request->input('trang_thai_giao_hang');
+                $donDat->trang_thai_don_dat = $request->input('trang_thai_giao_hang');
                 $donDat->save();
                 return response()->json([
                     'success' => true,

@@ -34,6 +34,7 @@
                 <th>Sản Phẩm</th>
                 <th>Lý Do Đổi Trả</th>
                 <th>Ngày Yêu Cầu</th>
+                <th>Hình Ảnh</th>
                 <th>Trạng Thái</th>
                 <th>Chức Năng</th>
             </tr>
@@ -47,6 +48,38 @@
                 <td>{{ $item->bien_the_san_pham->san_pham->ten_san_pham ?? 'N/A' }}</td>
                 <td>{{ $item->ly_do_doi_tra }}</td>
                 <td>{{ \Carbon\Carbon::parse($item->ngay_yeu_cau)->format('d/m/Y') }}</td>
+                {{-- <td>
+                    <div class="d-flex flex-wrap justify-content-start">
+                        @if($item->anh1)
+                            <img src="{{ asset($item->anh1) }}" alt="Ảnh 1" class="img-thumbnail" 
+                                style="width: 50px; height: 50px; margin: 2px;">
+                        @endif
+                        @if($item->anh2)
+                            <img src="{{ asset($item->anh2) }}" alt="Ảnh 2" class="img-thumbnail" 
+                                style="width: 50px; height: 50px; margin: 2px;">
+                        @endif
+                        @if($item->anh3)
+                            <img src="{{ asset($item->anh3) }}" alt="Ảnh 3" class="img-thumbnail" 
+                                style="width: 50px; height: 50px; margin: 2px;">
+                        @endif
+                    </div>
+                </td> --}}
+                <td>
+                    <div class="d-flex flex-wrap justify-content-start">
+                        @if($item->anh1)
+                            <img src="{{ asset($item->anh1) }}" alt="Ảnh 1" class="img-thumbnail preview-image" 
+                                style="width: 50px; height: 50px; margin: 2px;" data-bs-toggle="modal" data-bs-target="#imageModal">
+                        @endif
+                        @if($item->anh2)
+                            <img src="{{ asset($item->anh2) }}" alt="Ảnh 2" class="img-thumbnail preview-image" 
+                                style="width: 50px; height: 50px; margin: 2px;" data-bs-toggle="modal" data-bs-target="#imageModal">
+                        @endif
+                        @if($item->anh3)
+                            <img src="{{ asset($item->anh3) }}" alt="Ảnh 3" class="img-thumbnail preview-image" 
+                                style="width: 50px; height: 50px; margin: 2px;" data-bs-toggle="modal" data-bs-target="#imageModal">
+                        @endif
+                    </div>
+                </td>
                 <td>
                     {{-- <select name="trang_thai"  class="form-control status-dropdown" data-id="{{ $item->ma_doi_tra }}">
                         <option value="Chờ xử lý" {{ $item->trang_thai === 'Chờ xử lý' ? 'selected' : '' }}>Chờ xử lý</option>
@@ -55,15 +88,15 @@
                     </select> --}}
                     {{-- {{$item->trang_thai}} --}}
                     <span 
-                        class="badge {{ ($item->trang_thai === 'Chờ xử lý' || $item->trang_thai === 'Đã chấp nhận') ? 'bg-success' : 'bg-danger' }}" 
-                        data-status="{{ ($item->trang_thai === 'Chờ xử lý' || $item->trang_thai === 'Đã chấp nhận') ? 'active' : 'inactive' }}"
+                        class="badge {{ ($item->trang_thai === 'Yêu cầu đổi trả' || $item->trang_thai === 'Đã chấp nhận') ? 'bg-success' : 'bg-danger' }}" 
+                        data-status="{{ ($item->trang_thai === 'Yêu cầu đổi trả' || $item->trang_thai === 'Đã chấp nhận') ? 'active' : 'inactive' }}"
                         style="cursor: pointer;">
                         {{ $item->trang_thai }}
                     </span>
                 </td>
                 <td>
                     {{-- <button class="btn btn-info btn-sm view-details" data-id="{{ $item->ma_doi_tra }}">Xem Chi Tiết</button> --}}
-                    @if($item->trang_thai === 'Chờ xử lý')
+                    @if($item->trang_thai === 'Yêu cầu đổi trả')
                         <button class="btn btn-success btn-sm accept-request" data-id="{{ $item->ma_doi_tra }}">Chấp Nhận</button>
                         <button class="btn btn-danger btn-sm reject-request" data-id="{{ $item->ma_doi_tra }}">Từ Chối</button>
                     @endif
@@ -74,6 +107,21 @@
     </table>
     <div class="pagination-wrapper d-flex justify-content-center">
         {{ $doi_tra->links('vendor.pagination.bootstrap-4') }}
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            {{-- <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Xem Ảnh</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div> --}}
+            <div class="modal-body text-center">
+                <img id="modalImage" src="" alt="Preview" class="img-fluid" style="max-height: 80vh;">
+            </div>
+        </div>
     </div>
 </div>
 @endsection
@@ -113,32 +161,42 @@ document.querySelectorAll('.accept-request').forEach(button => {
 });
 
 $('.reject-request').on('click', function() {
-        var id = $(this).data('id'); // Lấy id yêu cầu đổi trả
-        
-        if (confirm('Bạn có chắc chắn muốn từ chối yêu cầu này?')) {
-            // Gửi request tới controller để cập nhật trạng thái
-            $.ajax({
-                url: '/tuchoidoitra/' + id, // API để từ chối yêu cầu đổi trả
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}', // Thêm CSRF token để bảo mật
-                    id: id
-                },
-                success: function(response) {
-                    if (response.success) {
-                        alert('Yêu cầu đã được từ chối!');
-                        // Cập nhật giao diện nếu cần (ví dụ, thay đổi trạng thái hiển thị)
-                        location.reload(); // Reload lại trang để cập nhật trạng thái
-                    } else {
-                        alert('Có lỗi xảy ra, vui lòng thử lại!');
-                    }
-                },
-                error: function() {
+    var id = $(this).data('id'); // Lấy id yêu cầu đổi trả
+    
+    if (confirm('Bạn có chắc chắn muốn từ chối yêu cầu này?')) {
+        // Gửi request tới controller để cập nhật trạng thái
+        $.ajax({
+            url: '/tuchoidoitra/' + id, // API để từ chối yêu cầu đổi trả
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}', // Thêm CSRF token để bảo mật
+                id: id
+            },
+            success: function(response) {
+                if (response.success) {
+                    alert('Yêu cầu đã được từ chối!');
+                    // Cập nhật giao diện nếu cần (ví dụ, thay đổi trạng thái hiển thị)
+                    location.reload(); // Reload lại trang để cập nhật trạng thái
+                } else {
                     alert('Có lỗi xảy ra, vui lòng thử lại!');
                 }
-            });
-        }
+            },
+            error: function() {
+                alert('Có lỗi xảy ra, vui lòng thử lại!');
+            }
+        });
+    }
+});
+
+// Lắng nghe sự kiện click trên ảnh
+document.querySelectorAll('.preview-image').forEach(image => {
+    image.addEventListener('click', function() {
+        // Lấy URL của ảnh được click
+        const imageUrl = this.src;
+        // Đặt URL vào modal
+        document.getElementById('modalImage').src = imageUrl;
     });
+});
 
 </script>
 @endsection

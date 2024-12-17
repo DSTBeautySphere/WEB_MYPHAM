@@ -11,7 +11,7 @@ class anh_san_pham extends Model
 
     protected $table = 'anh_san_pham';
     protected $primaryKey = 'ma_anh_san_pham';
-    protected $fillable = ['ma_san_pham', 'url_anh', 'la_anh_chinh'];
+    protected $fillable = ['ma_san_pham', 'url_anh', 'la_anh_chinh','anh1','anh2','anh3'];
     public $timestamps = false;
 
 

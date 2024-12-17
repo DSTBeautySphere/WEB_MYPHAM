@@ -32,7 +32,7 @@ class doi_traController extends Controller
             // Tạo một đơn đặt mới dựa trên thông tin từ đơn đặt cũ
             $newOrder = $donDat->replicate(); // Sao chép thông tin từ đơn đặt cũ
             $newOrder->ngay_dat = now(); // Cập nhật ngày đặt mới
-            $newOrder->trang_thai_don_dat = 'Chờ xác nhận'; // Trạng thái mặc định
+            $newOrder->trang_thai_don_dat = 'Chờ lấy hàng'; // Trạng thái mặc định
             $newOrder->tong_tien_cuoi_cung = 0; // Đặt tổng tiền cuối cùng về 0
             $newOrder->save();
     
