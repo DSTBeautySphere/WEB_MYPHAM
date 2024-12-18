@@ -56,7 +56,7 @@
                         <div class="numbers">
                             <p class="text-sm mb-0 text-uppercase font-weight-bold">Đơn đặt trong ngày</p>
                             <h5 class="font-weight-bolder">
-                                {!! $ordersToday !!}
+                                {!! $ordersTodayCount !!}
                             </h5>
                             <span class="text-danger text-sm font-weight-bolder">{!! date("d-m-Y",strtotime($now)) !!}</span>
                                     {{-- | {!! date("d-m-Y",strtotime($now)) !!}</span> --}}

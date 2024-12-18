@@ -358,6 +358,7 @@ class AdminController extends Controller
         $ordersToday = don_dat::whereDate('ngay_dat', Carbon::today())
             ->where('trang_thai_don_dat', "Đã hoàn thành")
             ->get();
+        $ordersTodayCount = $ordersToday->count();
         Log::info('Orders for today: ', ['ordersToday' => $ordersToday->count()]);
     
         // Tổng số lượng khách hàng
@@ -426,6 +427,7 @@ class AdminController extends Controller
             'sum_today',
             'sum_year',
             'ordersToday',
+            'ordersTodayCount',
             'now',
             'year',
             'revenueByCategory',
