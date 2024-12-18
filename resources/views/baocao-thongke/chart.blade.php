@@ -118,40 +118,41 @@
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header pb-0">
-                <h6>Fun Statistic</h6>
+                <h6>Thống kê theo ngày</h6>
             </div>
             <div class="card-body ms-8">
                 <div class="row">
                     <div class="col-md-5">
-                        <label for="start_time" class="form-control-label">Start Time</label>
+                        <label for="start_time" class="form-control-label">Thời gian bắt đầu</label>
                         <div class="form-group" style="text-align:center">
                             <input name="start_time" id="start_time" class="form-control datepicker" placeholder="Please select date" type="date">
                         </div>
                     </div>
                     <div class="col-md-5">
-                        <label for="end_time" class="form-control-label">End Time</label>
+                        <label for="end_time" class="form-control-label">Thời gian kết thúc</label>
                         <div class="form-group" style="text-align:center">
                             <input name="end_time" id="end_time" value="{!! date('Y-m-d') !!}" class="form-control datepicker" placeholder="Please select date" type="date">
                         </div>
                     </div>
                     <div class="col-md-2">
+                        <label for="end_time" class="form-control-label"><br></label>
                         <div class="form-group">
-                            <button id="btn-statistical-filter" class="form-control">Accept</button>
+                            <button id="btn-statistical-filter" class="form-control">Chấp nhận</button>
                         </div>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="statistical" class="form-control-label">Filter Time</label>
+                        <label for="statistical" class="form-control-label">Thời gian lọc</label>
                         <div class="form-group" style="text-align:center">
                             <select id="statistical" style="width: 70%" class="statistical-filter form-control">
-                                <option value="null" selected>Selected</option>
-                                <option value="week">This Week</option>
-                                <option value="last_week">Last Week</option>
-                                <option value="this_month">This Month</option>
-                                <option value="last_month">Last Month</option>
-                                <option value="year">This Year</option>
-                                <option value="last_year">Last Year</option>
-                                <option value="all_time">All Time</option>
+                                <option value="null" selected>Chọn</option>
+                                <option value="week">Tuần này</option>
+                                <option value="last_week">Tuần trước</option>
+                                <option value="this_month">Tháng này</option>
+                                <option value="last_month">Tháng trước</option>
+                                <option value="year">Năm nay</option>
+                                <option value="last_year">Năm trước</option>
+                                <option value="all_time">Tất cả</option>
                             </select>
                         </div>
                     </div>
@@ -276,12 +277,30 @@
 
     // Khởi tạo phân trang cho bảng categoryTable
     $('#categoryTable').DataTable({
-        "pageLength": 10, 
-        "lengthChange": false, 
-        "paging": true, 
-        "searching": true, 
-        "ordering": true, 
-        "info":false,
+        // "pageLength": 10, 
+        // "lengthChange": false, 
+        // "paging": true, 
+        // "searching": true, 
+        // "ordering": true, 
+        // "info":false,
+        columns: [
+                { title: "Loại sản phẩm" },
+                { title: "Doanh thu" }
+            ],
+            pageLength: 10, // Số dòng trên mỗi trang
+            //dom: 'lrtip', // Loại bỏ lengthMenu
+            dom: 'ftp',
+            language: {
+                search: "Tìm kiếm:",
+                
+            
+                paginate: {
+                    first: "Đầu",
+                    last: "Cuối",
+                    next: ">",
+                    previous: "<"
+                },
+            }
     });
 
        // Chuẩn bị dữ liệu cho bảng
