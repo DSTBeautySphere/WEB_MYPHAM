@@ -33,6 +33,7 @@ class RecommenderController extends Controller
             $soGoiY = $request->input('so_goi_y', 5);
             $sanPham = DB::table('san_pham as sp')
                 ->join('bien_the_san_pham as btsp', 'sp.ma_san_pham', '=', 'btsp.ma_san_pham')
+                ->join('loai_san_pham as lsp', 'sp.ma_loai_san_pham', '=', 'lsp.ma_loai_san_pham')
                 ->select([ 
                     'sp.ma_san_pham', 
                     DB::raw('COALESCE(sp.ten_san_pham, "") as Name'),
@@ -42,6 +43,7 @@ class RecommenderController extends Controller
                     DB::raw('COALESCE(btsp.dung_tich, "") as DungTich'),
                     DB::raw('COALESCE(btsp.gia_ban, 0) as Gia'),
                     DB::raw('COALESCE(btsp.trang_thai, "") as TrangThaiBienThe'),
+                    DB::raw('COALESCE(lsp.ten_loai_san_pham, "") as TenLoaiSanPham'),
                 ])
                 ->get();       
             if ($sanPham->isEmpty()) {
@@ -59,6 +61,7 @@ class RecommenderController extends Controller
                     $item['LoaiDa'] ?? '',
                     $item['DungTich'] ?? '',
                     $item['Gia'] ?? 0,
+                    $item['TenLoaiSanPham'] ?? '',
                 ]));
                 return $item;
             });
@@ -92,17 +95,44 @@ class RecommenderController extends Controller
                 $selectedProduct = $sanPham->firstWhere('ma_san_pham', $maSanPham);
                 return $item['ten_san_pham'] !== $selectedProduct['Name'];
             });
-            $uniqueProducts = [];
+            $validProducts = [];
             foreach ($similarProducts as $item) {
-                if (!in_array($item['ma_san_pham'], array_column($uniqueProducts, 'ma_san_pham'))) {
-                    $uniqueProducts[] = $item;
+                if (!in_array($item['ma_san_pham'], array_column($validProducts, 'ma_san_pham'))) {
+                    
+                    // Kiểm tra xem sản phẩm có hợp lệ hay không
+                    $ktsp = san_pham::with(['loai_san_pham', 'anh_san_pham', 'bien_the_san_pham', 'khuyen_mai_san_pham'])
+                        ->withCount(['danh_gia as so_sao_trung_binh' => function ($query) {
+                            $query->select(DB::raw('ROUND(AVG(so_sao), 0)')); // Làm tròn số sao trung bình
+                        }])
+                        ->whereHas('bien_the_san_pham')
+                        ->where('trang_thai', "1") 
+                        ->where('ma_san_pham', $item['ma_san_pham']) 
+                        ->first(); 
+            
+                    // Nếu sản phẩm hợp lệ, thêm vào danh sách sản phẩm hợp lệ
+                    if ($ktsp) {
+                        $validProducts[] = $ktsp;
+                    } else {
+                      
+                        $soGoiY++;
+                    }
                 }
-                if (count($uniqueProducts) >= $soGoiY) {
-                    break; 
+                if (count($validProducts) >= $soGoiY) {
+                    break;
                 }
             }
-            $recommendedProducts = san_pham::with(['loai_san_pham', 'anh_san_pham', 'bien_the_san_pham', 'khuyen_mai_san_pham'])->whereIn('ma_san_pham', array_column($uniqueProducts, 'ma_san_pham'))->get();
-
+            
+            
+            // Truy vấn danh sách sản phẩm gợi ý cuối cùng
+            $recommendedProducts = san_pham::with(['loai_san_pham', 'anh_san_pham', 'bien_the_san_pham', 'khuyen_mai_san_pham'])
+                ->withCount(['danh_gia as so_sao_trung_binh' => function ($query) {
+                    $query->select(DB::raw('ROUND(AVG(so_sao), 0)')); // Làm tròn số sao trung bình
+                }])
+                ->whereHas('bien_the_san_pham') // Chỉ chọn sản phẩm có biến thể
+                ->where('trang_thai', "1") // Trạng thái phải là 1
+                ->whereIn('ma_san_pham', array_column($validProducts, 'ma_san_pham')) // Chỉ lấy sản phẩm hợp lệ
+                ->get();
+            
             return response()->json($recommendedProducts);
         } catch (\Exception $e) {
             Log::error($e->getMessage());

@@ -30,7 +30,7 @@ class VnPayController extends Controller
             "giam_gia"=>$request->discount,
             "tong_tien_cuoi_cung" => $vnp_Amount,
             "so_dien_thoai" => $request->phone,
-            "dia_chi_giao_hang" => $request->address,
+            "dia_chi_giao_hang" => $request->dia_chi,
             "ghi_chu" => $request->note,
             "ngay_du_kien_giao"=>now(),
             "ngay_thanh_toan"=>now(),
@@ -58,7 +58,7 @@ class VnPayController extends Controller
                 "so_luong" => $item->so_luong,
                 "gia_ban" => $item->gia_ban
             ]);
-            $variant->so_luong_ton_kho -= $item->so_luong;
+            // $variant->so_luong_ton_kho -= $item->so_luong;
             $variant->save();
             $item->delete();
         }
@@ -122,11 +122,11 @@ class VnPayController extends Controller
             "giam_gia"=>$request->discount,
             "tong_tien_cuoi_cung" => $vnp_Amount,
             "so_dien_thoai" => $request->phone,
-            "dia_chi_giao_hang" => $request->address,
+            "dia_chi_giao_hang" => $request->dia_chi,
             "ghi_chu" => $request->note,
             "ngay_du_kien_giao"=>now(),
             "ngay_thanh_toan"=>now(),
-            "phuong_thuc_thanh_toan" => "CARD",
+            "phuong_thuc_thanh_toan" => "Tiền mặt",
             "trang_thai_thanh_toan" => "Chờ thanh toán",
             "trang_thai_don_dat" => "Chờ xác nhận"
         ]);
@@ -150,7 +150,7 @@ class VnPayController extends Controller
                 "so_luong" => $item->so_luong,
                 "gia_ban" => $item->gia_ban
             ]);
-            $variant->so_luong_ton_kho -= $item->so_luong;
+            // $variant->so_luong_ton_kho -= $item->so_luong;
             $variant->save();
             $item->delete();
         }
