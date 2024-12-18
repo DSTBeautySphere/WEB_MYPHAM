@@ -24,11 +24,11 @@
                     <i class="fas fa-plus"></i> Tạo mới biến thể
                 </button>
                 </div>
-                <div class="col-sm-2">
+                {{-- <div class="col-sm-2">
                     <a class="btn btn-delete btn-sm nhap-tu-file" title="Nhập" onclick="myFunction(this)">
                         <i class="fas fa-file-upload"></i> Tải từ file
                     </a>
-                </div>
+                </div> --}}
             </div>
 
             <table class="table table-hover table-bordered" id="sampleTable">

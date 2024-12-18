@@ -33,10 +33,12 @@ Route::prefix('admin')->group(function () {
 
     Route::middleware(['admin'])->group(function () {
         // Route::get('/layphieunhapwf',[App\Http\Controllers\WFController::class,'layPhieuNhap']);
+       
     });
+    
 });
     //san pham
-    
+  
     Route::post('/xoasanpham',[App\Http\Controllers\san_phamController::class,'xoa_san_pham']);
     Route::post('/capnhatsanpham',[App\Http\Controllers\san_phamController::class,'cap_nhat_san_pham']);
     Route::get('/showthemsanpham',[App\Http\Controllers\AdminController::class,'showThemSanPham']);
@@ -114,8 +116,8 @@ Route::prefix('admin')->group(function () {
 
     //User
     Route::get('/showUser',[UserController::class,'showUser']);
-    Route::get('/locUser',[UserController::class,'LocUser']);
-    Route::get('/timKiem',[UserController::class,'timKiem']);
+    Route::get('/locUser',[UserController::class,'LocUser'])->name('LocUser');
+    Route::get('/timKiem',[UserController::class,'timKiem'])->name('timKiem');
     Route::get('/thongTinUser/{id}',[UserController::class,'thongTinUser']);
     Route::post('/update-status/{id}', [UserController::class, 'updateStatus']);
 

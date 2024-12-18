@@ -142,16 +142,14 @@ $(document).ready(function() {
 
                 if (response.message) {
                     console.log("Thông báo thành công: " + response.message); // In thông báo thành công
-                    swal("Thành công!", response.message, "success")
-                        .then(() => {
-                            window.location.href = response.redirect_url; // Chuyển hướng sau khi thành công
-                        });
+                    alert("Thành công! "); // Sử dụng alert
+                    window.location.href = response.redirect_url;
                 }
             },
             error: function(xhr, status, error) {
                 console.log("Lỗi yêu cầu AJAX:");
                 console.log(xhr.responseText); // In lỗi trả về từ server
-                swal("Lỗi!", "Email hoặc mật khẩu không đúng", "error");
+                alert("Lỗi! Email hoặc mật khẩu không đúng");
             }
         });
     });

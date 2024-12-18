@@ -30,9 +30,9 @@ class UserController extends Controller
 
 
         if ($request->status === null) {
-            $users = User::all(); 
+            $users = User::paginate(4);  
         } else {
-            $users = $query->get(); 
+            $users = $query->paginate(4); 
         }
         // $users = $query->paginate(3); // 10 dòng mỗi trang
 
@@ -42,7 +42,8 @@ class UserController extends Controller
     
         // return view('khachHang.user-management', compact('users'));
 
-         return response()->json($users);
+        // return response()->json($users);
+        return view("khachHang.user-management", compact('users'));
     }
     public function timKiem(Request $request){
         $query = User::query();
@@ -52,9 +53,9 @@ class UserController extends Controller
         }
         
         if ($request->name === null) {
-            $users = User::all(); 
+            $users = User::paginate(4); 
         } else {
-            $users = $query->get(); 
+            $users = $query->paginate(4); 
         }
         // $users = $query->paginate(3); // 10 dòng mỗi trang
 
@@ -62,8 +63,8 @@ class UserController extends Controller
         //     return response()->json($users);
         // }
     
-        //return view('khachHang.user-management', compact('users'));
-        return response()->json($users);
+        return view('khachHang.user-management', compact('users'));
+        //return response()->json($users);
     }
 
     public function thongTinUser($userId)

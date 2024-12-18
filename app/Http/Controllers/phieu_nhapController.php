@@ -22,7 +22,7 @@ class phieu_nhapController extends Controller
 
         if ($maNhaCungCap) {
             $bienTheSanPhams = bien_the_san_pham::with(['san_pham.anh_san_pham'])
-                ->where('so_luong_ton_kho', '>', 0)
+                ->where('so_luong_ton_kho', '>=', 0)
                 ->whereHas('san_pham', function ($query) use ($maNhaCungCap) {
                     $query->where('ma_nha_cung_cap', $maNhaCungCap);
                 })

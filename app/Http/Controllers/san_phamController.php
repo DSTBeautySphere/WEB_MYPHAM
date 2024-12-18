@@ -239,7 +239,7 @@ class san_phamController extends Controller
                         'mau_sac' => $bienThe['mau_sac'] ?? null,
                         'loai_da' => $bienThe['loai_da'] ?? null,
                         'dung_tich' => $bienThe['dung_tich'] ?? null,  
-                        // 'so_luong_ton_kho' => $bienThe['so_luong_ton_kho'] ?? null,
+                        'so_luong_ton_kho' => 0,
                         'gia_ban' => '0',
                         'trang_thai'=>"1"
                     ]);

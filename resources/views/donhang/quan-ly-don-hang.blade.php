@@ -29,13 +29,10 @@
                 <select class="form-control" id="filter-status">
                     <option value="">Chọn trạng thái</option>
                     <option value="all">Tất Cả</option>
-                    <option value="chothanhtoan">Chờ Thanh Toán</option>
-                    <option value="choxacnhan">Chờ Xác Nhận</option>
-                    <option value="cholayhang">Chờ Lấy Hàng</option>
-                    <option value="danggiahang">Đang Giao Hàng</option>
-                    <option value="trahang">Trả Hàng</option>
-                    <option value="duocgiao">Được Giao</option>
-                    <option value="dahuy">Đã Hủy</option>
+                    <option value="Chờ xác nhận">Chờ Xác Nhận</option>
+                    <option value="Chờ lấy hàng">Chờ Lấy Hàng</option>
+                    <option value="Đang giao">Đang Giao Hàng</option>
+                    <option value="Đã hoàn thành">Đã Hoàn Thành</option>
                 </select>
             </div>
 
@@ -50,14 +47,14 @@
             </div>
         </div>
 
-        <div class="row" style="margin-top: 10px">
+        {{-- <div class="row" style="margin-top: 10px">
             <div class="col-md-8">
                 <input type="text" class="form-control" id="search-invoice" placeholder="Tìm kiếm mã đơn hàng">
             </div>
             <div class="col-md-4">
                 <button class="btn btn-primary w-100" id="search-button">Tìm kiếm</button>
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>
 
@@ -343,21 +340,21 @@ $(document).ready(function () {
                             <td>${order.dia_chi_giao_hang}</td>
                             <td>${order.phuong_thuc_thanh_toan || 'N/A'}</td>
                             <td>${parseFloat(order.tong_tien_cuoi_cung).toLocaleString()} đ</td>
-                            <td>${order.trang_thai_don_dat}</td>
+                           
                             <td>${order.ngay_dat}</td>
                             
                            <td>
                                 <select class="form-control trang-thai-giao-hang" data-id="${order.ma_don_dat}">
-                                    <option value="Chờ xác nhận" ${order.trang_thai_giao_hang === 'Chờ xác nhận' ? 'selected' : ''}>
+                                    <option value="Chờ xác nhận" ${order.trang_thai_don_dat === 'Chờ xác nhận' ? 'selected' : ''}>
                                         Chờ xác nhận
                                     </option>
-                                    <option value="Chờ lấy hàng" ${order.trang_thai_giao_hang === 'Chờ lấy hàng' ? 'selected' : ''}>
+                                    <option value="Chờ lấy hàng" ${order.trang_thai_don_dat === 'Chờ lấy hàng' ? 'selected' : ''}>
                                         Chờ lấy hàng
                                     </option>
-                                    <option value="Đang giao" ${order.trang_thai_giao_hang === 'Đang giao' ? 'selected' : ''}>
+                                    <option value="Đang giao" ${order.trang_thai_don_dat === 'Đang giao' ? 'selected' : ''}>
                                         Đang giao
                                     </option>
-                                    <option value="Đã hoàn thành" ${order.trang_thai_giao_hang === 'Đã hoàn thành' ? 'selected' : ''}>
+                                    <option value="Đã hoàn thành" ${order.trang_thai_don_dat === 'Đã hoàn thành' ? 'selected' : ''}>
                                         Đã hoàn thành
                                     </option>
                                 </select>
@@ -376,8 +373,11 @@ $(document).ready(function () {
                 // Rebind the "Chi Tiết" button click event
                 $('.show-details').on('click', function (e) {
                     e.preventDefault();
+
+                    // Lấy mã đơn đặt hàng từ data-id
                     const donDatId = $(this).data('id');
-                    // Call the modal display logic here
+
+                    // Gửi yêu cầu AJAX để lấy dữ liệu chi tiết đơn hàng
                     $.ajax({
                         url: `/don-dat/${donDatId}`,
                         method: 'GET',
@@ -401,11 +401,10 @@ $(document).ready(function () {
                                 detailsHtml += `
                                     <tr>
                                         <td>${item.ma_bien_the}</td>
-                                        <td>${item.ten_san_pham}</td>
-                                        <td>${item.chi_tiet_tuy_chon || 'N/A'}</td>
-                                        <td>${item.gia_ban}</td>
+                                        <td>${item.bien_the_san_pham.san_pham.ten_san_pham}</td>
+                                        <td>${parseFloat(item.gia_ban).toLocaleString()} </td>
                                         <td>${item.so_luong}</td>
-                                        <td>${(item.gia_ban * item.so_luong).toFixed(2)}</td>
+                                        <td>${parseFloat(item.gia_ban * item.so_luong).toLocaleString()} </td>
                                     </tr>`;
                             });
                             $('#invoice-details-table tbody').html(detailsHtml);
@@ -419,29 +418,32 @@ $(document).ready(function () {
                     });
                 });
                 // Lắng nghe sự kiện thay đổi trên dropdown
-                $('.trang-thai-giao-hang').on('change', function () {
-                    let maDonDat = $(this).data('id'); // Lấy mã đơn đặt từ data-id
-                    let trangThaiGiaoHang = $(this).val(); // Lấy giá trị trạng thái được chọn
+                $(document).ready(function () {
+                    // Lắng nghe sự kiện thay đổi trên dropdown
+                    $('.trang-thai-giao-hang').on('change', function () {
+                        let maDonDat = $(this).data('id'); // Lấy mã đơn đặt từ data-id
+                        let trangThaiGiaoHang = $(this).val(); // Lấy giá trị trạng thái được chọn
 
-                    // Gửi yêu cầu AJAX để cập nhật trạng thái
-                    $.ajax({
-                        url: '/capnhattrangthaiGH', // Đường dẫn xử lý trong controller
-                        type: 'POST',
-                        data: {
-                            ma_don_dat: maDonDat,
-                            trang_thai_giao_hang: trangThaiGiaoHang,
-                            _token: $('meta[name="csrf-token"]').attr('content'), // Token CSRF
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                alert('Cập nhật trạng thái thành công!');
-                            } else {
-                                alert('Cập nhật trạng thái thất bại: ' + response.message);
-                            }
-                        },
-                        error: function () {
-                            alert('Có lỗi xảy ra, vui lòng thử lại.');
-                        },
+                        // Gửi yêu cầu AJAX để cập nhật trạng thái
+                        $.ajax({
+                            url: '/capnhattrangthaiGH', // Đường dẫn xử lý trong controller
+                            type: 'POST',
+                            data: {
+                                ma_don_dat: maDonDat,
+                                trang_thai_don_dat: trangThaiGiaoHang,
+                                _token: $('meta[name="csrf-token"]').attr('content'), // Token CSRF
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    alert('Cập nhật trạng thái thành công!');
+                                } else {
+                                    alert('Cập nhật trạng thái thất bại: ' + response.message);
+                                }
+                            },
+                            error: function () {
+                                alert('Có lỗi xảy ra, vui lòng thử lại.');
+                            },
+                        });
                     });
                 });
             },

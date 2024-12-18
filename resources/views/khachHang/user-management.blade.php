@@ -34,24 +34,16 @@
 
         {{-- Search and Filter --}}
         <div class="row mb-4">
-            <div class="col-md-6">
+            {{-- <div class="col-md-6">
                 <form class="d-flex">
                     <input type="text" class="form-control me-2" placeholder="Tìm kiếm người dùng..." id="searchUser" />
                     <button class="btn btn-primary" type="button">
                         <i class="fas fa-search"></i>
                     </button>
                 </form>
-            </div>
-            {{-- <div class="col-md-3">
-                <div class="form-floating">
-                    <select id="genderFilter" class="form-select" style="width: 80%;">
-                        <option value="">Giới tính</option>
-                        <option value="Nam">Nam</option>
-                        <option value="Nữ">Nữ</option>
-                    </select>
-                </div>
             </div> --}}
-            <div class="col-md-3">
+           
+            {{-- <div class="col-md-3">
                 <div class="form-floating">
                     <select id="statusFilter" class="form-select" style="width: 80%;">
                         <option value=" ">Trạng thái</option>
@@ -59,7 +51,36 @@
                         <option value="0">Không hoạt động</option>
                     </select>
                 </div>
+            </div> --}}
+
+            <div class="col-md-6">
+                <form class="d-flex" method="GET" action="{{ route('timKiem') }}">
+                    <input 
+                        type="text" 
+                        name="name" 
+                        class="form-control me-2" 
+                        placeholder="Tìm kiếm người dùng..." 
+                        value="{{ request('name') }}" 
+                    />
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
             </div>
+    
+            <!-- Form lọc trạng thái -->
+            <div class="col-md-3">
+                <form method="GET" action="{{ route('LocUser') }}">
+                    <div class="form-floating">
+                        <select name="status" id="statusFilter" class="form-select" style="width: 100%;" onchange="this.form.submit()">
+                            <option value="" {{ request('status') == '' ? 'selected' : '' }}>Trạng thái</option>
+                            <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Hoạt động</option>
+                            <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Không hoạt động</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+
         </div>
 
         {{-- User Table --}}
@@ -80,7 +101,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($users as $user)
+                        {{-- @foreach ($users as $user)
                             <tr>
                                 <td>{{ $user->ma_user }}</td>
                                 <td>{{ $user->ten_dang_nhap }}</td>
@@ -100,15 +121,31 @@
                                 </td>
                                 <td>
                                     <a href="#" class="btn btn-info btn-sm" data-id="{{ $user->ma_user }}">Chi tiết</a>
-                                    {{-- <a href="{{ route('users.edit', $user->ma_user) }}" class="btn btn-warning btn-sm">Sửa</a>
-                                    <form action="{{ route('users.destroy', $user->ma_user) }}" method="POST" style="display:inline-block;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
-                                    </form> --}}
+                                   
                                 </td>
                             </tr>
-                        @endforeach
+                        @endforeach --}}
+                        @forelse ($users as $user)
+                        <tr>
+                            <td>{{ $user->ma_user }}</td>
+                            <td>{{ $user->ten_dang_nhap }}</td>
+                            <td>{{ $user->ho_ten }}</td>
+                            <td>{{ $user->gioi_tinh }}</td>
+                            <td>{{ $user->so_dien_thoai }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->ngay_sinh }}</td>
+                            <td>
+                                <span class="badge {{ $user->trang_thai == 1 ? 'bg-success' : 'bg-danger' }}">
+                                    {{ $user->trang_thai == 1 ? 'Hoạt động' : 'Không hoạt động' }}
+                                </span>
+                            </td>
+                            <td><a href="#" class="btn btn-info btn-sm" data-id="{{ $user->ma_user }}">Chi tiết</a></td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="9" class="text-center">Không có người dùng nào tìm thấy.</td>
+                        </tr>
+                    @endforelse
                     </tbody>
                 </table>
                 <div class="pagination-wrapper d-flex justify-content-center">
@@ -160,78 +197,45 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     $(document).ready(function () {
-        $("#statusFilter").on("change", function () {
+    //     $("#statusFilter").on("change", function () {
            
-            const status = $("#statusFilter").val();
+    //         const status = $("#statusFilter").val();
 
-            console.log({  status }); // Kiểm tra giá trị
+    //         console.log({  status }); // Kiểm tra giá trị
 
-            $.ajax({
-                url: "/locUser",
-                method: "GET",
-                data: {status: status || "" },
-                success: function (data) {
-                    console.log(data); // Kiểm tra phản hồi
-                    updateUserList(data);
-                },
-                error: function (err) {
-                    console.error("Lỗi khi lọc dữ liệu:", err.responseText); // Kiểm tra lỗi
-                },
-            });
-        });
+    //         $.ajax({
+    //             url: "/locUser",
+    //             method: "GET",
+    //             data: {status: status || "" },
+    //             success: function (data) {
+    //                 console.log(data); // Kiểm tra phản hồi
+    //                 //updateUserList(data);
+    //             },
+    //             error: function (err) {
+    //                 console.error("Lỗi khi lọc dữ liệu:", err.responseText); // Kiểm tra lỗi
+    //             },
+    //         });
+    //     });
 
-        $("#searchUser").on("change", function () {
+    //     $("#searchUser").on("change", function () {
            
-            
+    //         const name = $(this).val();
 
-            const name = $(this).val();
+    //        $.ajax({
+    //            url: "/timKiem",
+    //            method: "GET",
+    //            data: {name },
+    //            success: function (data) {
+    //                console.log(data); // Kiểm tra phản hồi
+    //                updateUserList(data);
+    //            },
+    //            error: function (err) {
+    //                console.error("Lỗi khi lọc dữ liệu:", err.responseText); // Kiểm tra lỗi
+    //            },
+    //        });
+    //    });
 
-           $.ajax({
-               url: "/timKiem",
-               method: "GET",
-               data: {name },
-               success: function (data) {
-                   console.log(data); // Kiểm tra phản hồi
-                   updateUserList(data);
-               },
-               error: function (err) {
-                   console.error("Lỗi khi lọc dữ liệu:", err.responseText); // Kiểm tra lỗi
-               },
-           });
-       });
-
-        function updateUserList(users) {
-            const tableBody = $("#userTable tbody");
-            tableBody.empty();
-
-            users.forEach((user, index) => {
-                const row = `
-                    <tr>
-                        <td>${user.ma_user}</td>
-                        <td>${user.ten_dang_nhap}</td>
-                        <td>${user.ho_ten}</td>
-                        <td>${user.gioi_tinh}</td>
-                        <td>${user.so_dien_thoai}</td>
-                        <td>${user.email}</td>
-                        <td>${user.ngay_sinh}</td>
-                       <td>
-                           <span 
-                                class="badge {{ $user->trang_thai ? 'bg-success' : 'bg-danger' }}" 
-                                data-id="{{ $user->ma_user }}" 
-                                data-status="{{ $user->trang_thai ? 'active' : 'inactive' }}"
-                                style="cursor: pointer;">
-                                {{ $user->trang_thai ? 'Hoạt động' : 'Không hoạt động' }}
-                            </span>
-                        </td>
-                        <td>
-                            <a href="#" class="btn btn-info btn-sm" data-id="{{ $user->ma_user }}">Chi tiết</a>
-                        </td>
-                    </tr>
-                `;
-                tableBody.append(row);
-            });
-           
-        }
+     
     });
     // $(document).ready(function () {
     //     // Lọc theo trạng thái

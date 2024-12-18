@@ -73,9 +73,6 @@ class don_datController extends Controller
         if (!empty($status) && $status !== 'all') {
             $query->where('trang_thai_don_dat', $status);
         }
-        if (!empty($status) && $status !== 'all') {
-            $query->where('trang_thai_giao_hang', $status);
-        }
         // Lọc theo giá lớn hơn (nếu có)
         if (!empty($price)) {
             $query->where('tong_tien_cuoi_cung', '>', $price);

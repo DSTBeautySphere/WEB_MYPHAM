@@ -90,7 +90,9 @@
                                 <span class="badge bg-danger">Hết hàng</span>
                             @endif
                         </td>
-                        <td>  {{ number_format($item->bien_the_san_pham->first()->gia_ban, 0, ',', '.') }} đ</td>
+                        <td>  
+                            {{ number_format(optional($item->bien_the_san_pham->first())->gia_ban, 0, ',', '.') }} đ
+                        </td>
                         <td>{{ $item->loai_san_pham->ten_loai_san_pham }}</td>
                         <td>
                             @if ($item->trang_thai == 1)
