@@ -1,12 +1,5 @@
 # Thành viên
 <h4>Tên nhóm: Hello</h4>
-  
-| STT | Họ tên | Chức vụ  |
-|----------------|--------------------|--------------------|
-|  1  |  Ngô Hoàng Thông   |   Nhóm trưởng  |
-|  2  |  Huỳnh Phước Sang  |   Thành viên  |
-|  3  |  Nguyễn Khách Duy  |   Thành viên  |
------------------------------------------------
 ### Sử dụng 
  - .Net Framework version 4.8
  - Visual studio 2022
@@ -34,7 +27,7 @@
 
 | STT | Nghiệp vụ | Phân công  |
 |----------------|--------------------|--------------------|
-|  1  |  Tìm kiếm quần áo |     |
+|  1  |  Tìm kiếm mỹ phẩm |     |
 |  2  |  Đăng nhập đăng ký |    |
 |  3  |  Xem thông tin mỹ phẩm [Trang chủ, tin tức, giới thiệu, sản phẩm chi tiết, đánh giá mỹ phẩm]  |    |
 |  4  |  Quản lý thông tin tài khoản [Thông tin KH, thông tin tài khoản, thông tin đơn hàng đã mua, quần áo yêu thích] |    |
